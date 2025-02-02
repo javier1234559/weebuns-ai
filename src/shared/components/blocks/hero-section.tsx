@@ -8,32 +8,35 @@ import { cn } from "@/shared/lib/utils";
 import { Icons } from "@/shared/components/ui/icons";
 import Image from "next/image";
 
-
 export function HeroSection() {
   const { resolvedTheme } = useTheme();
 
   const heroData = {
     title: "Nâng Cao Tiếng Anh Cùng Trí Tuệ Nhân Tạo",
-    description: "Cải thiện kỹ năng tiếng Anh của bạn thông qua các công cụ AI tiên tiến: Luyện viết, Đối thoại thông minh, Phân tích giọng nói và nhiều tính năng hữu ích khác",
+    description:
+      "Cải thiện kỹ năng tiếng Anh của bạn thông qua các công cụ AI tiên tiến: Luyện viết, Đối thoại thông minh, Phân tích giọng nói và nhiều tính năng hữu ích khác",
     primaryCta: {
       text: "Get Started",
       href: "/signup",
     },
     mockupImage: {
-      light: "https://www.launchuicomponents.com/app-light.png",
-      dark: "https://www.launchuicomponents.com/app-dark.png",
+      light: "/images/hero-section/hero-section-light.png",
+      dark: "/images/hero-section/hero-section-light.png",
       alt: "UI Components Preview",
-    }
+    },
   };
 
-  const imageSrc = resolvedTheme === "light" ? heroData.mockupImage.light : heroData.mockupImage.dark;
+  const imageSrc =
+    resolvedTheme === "light"
+      ? heroData.mockupImage.light
+      : heroData.mockupImage.dark;
 
   return (
     <section
       className={cn(
         "relative  text-foreground",
         "px-4 py-12 md:py-24 lg:py-32",
-        "overflow-hidden",
+        "overflow-hidden"
       )}
     >
       <div className="relative mx-auto flex max-w-screen-xl flex-col gap-12 lg:gap-24">
@@ -58,7 +61,7 @@ export function HeroSection() {
               "max-w-[550px] animate-appear opacity-0 [animation-delay:150ms]",
               "text-base sm:text-lg md:text-xl",
               "text-muted-foreground",
-              "font-medium",
+              "font-medium"
             )}
           >
             {heroData.description}
@@ -76,7 +79,7 @@ export function HeroSection() {
                 "bg-gradient-to-b from-brand to-brand/90 dark:from-brand/90 dark:to-brand/80",
                 "hover:from-brand/95 hover:to-brand/85 dark:hover:from-brand/80 dark:hover:to-brand/70",
                 "text-white shadow-lg",
-                "transition-all duration-300",
+                "transition-all duration-300"
               )}
             >
               <a href={heroData.primaryCta.href}>{heroData.primaryCta.text}</a>
@@ -89,13 +92,13 @@ export function HeroSection() {
               className={cn(
                 "animate-appear opacity-0 [animation-delay:700ms]",
                 "shadow-[0_0_50px_-12px_rgba(0,0,0,0.3)] dark:shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)]",
-                "border-brand/10 dark:border-brand/5",
+                "border-brand/10 dark:border-brand/5"
               )}
             >
               <Image
                 src={imageSrc}
                 alt={heroData.mockupImage.alt}
-                className="h-auto w-full"
+                className="h-auto w-full object-cover"
                 loading="lazy"
                 decoding="async"
                 width={800}

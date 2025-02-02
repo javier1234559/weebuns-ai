@@ -9,28 +9,28 @@ const Header = () => {
   const tabs = [
     {
       id: "home",
-      label: "Writing Agent",
+      label: "Writing",
       icon: <HomeIcon className="size-4" />,
-      href: "/writing-agent"
+      href: "/writing-agent",
     },
     {
       id: "about",
       label: "Giới thiệu",
       icon: <InfoIcon className="size-4" />,
-      href: "/about"
+      href: "/about",
     },
     {
       id: "services",
       label: "Dịch vụ",
       icon: <ContactIcon className="size-4" />,
-      href: "/services"
+      href: "/services",
     },
     {
       id: "contact",
       label: "Liên hệ",
       icon: <ContactIcon className="size-4" />,
-      href: "/contact"
-    }
+      href: "/contact",
+    },
   ];
 
   return (
@@ -63,9 +63,7 @@ const Header = () => {
             >
               Sign Up
             </Button>
-            <Button
-              className="bg-primary text-primary-foreground transition-colors hover:bg-primary/90"
-            >
+            <Button className="bg-primary text-primary-foreground transition-colors hover:bg-primary/90">
               Sign In
             </Button>
           </div>
