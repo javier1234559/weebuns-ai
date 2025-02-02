@@ -1,8 +1,8 @@
 "use client";
 
 import { Toaster } from "sonner";
-import { PlateEditor } from "@/components/editor/plate-editor";
-import { SettingsProvider } from "@/components/editor/settings";
+import { PlateEditor } from "@/shared/components/editor/plate-editor";
+import { SettingsProvider } from "@/shared/components/editor/settings";
 import { cn } from "@/shared/lib/utils";
 
 interface MainEditorProps {

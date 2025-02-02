@@ -48,6 +48,7 @@
     "@udecode/plate-code-block": "^43.0.0",
     "@udecode/plate-combobox": "^43.0.0",
     "@udecode/plate-comments": "^43.0.0",
+    "@udecode/plate-core": "^43.0.5",
     "@udecode/plate-date": "^43.0.0",
     "@udecode/plate-dnd": "^43.0.1",
     "@udecode/plate-docx": "^43.0.5",
@@ -122,6 +123,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/prismjs": "^1.26.5",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@typescript-eslint/parser": "^8.22.0",

@@ -21,7 +21,6 @@ import {
   Check,
   Star,
   BookOpenCheck,
-  Send,
   Globe,
   Shuffle,
 } from "lucide-react";

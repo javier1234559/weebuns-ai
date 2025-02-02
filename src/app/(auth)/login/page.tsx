@@ -1,9 +1,7 @@
 import { FormEvent } from 'react'
-import { useRouter } from 'next/router'
 import toast from 'react-hot-toast'
 
 export default function LoginPage() {
-  const router = useRouter()
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -19,7 +17,6 @@ export default function LoginPage() {
     })
 
     if (response.ok) {
-      router.push('/profile')
     } else {
       toast.error('Invalid credentials')
     }
