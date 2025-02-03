@@ -82,6 +82,7 @@
     --brand: 31 97% 72%;
     --brand-foreground: 27 96% 61%
   }
+
   [data-registry="plate"].dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -110,6 +111,7 @@
     --brand: 213.3 93.9% 67.8%;
     --highlight: 48 96% 53%;
   }
+
   [data-registry="plate"] {
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -145,6 +147,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -175,5 +178,9 @@
   .animate-appear-zoom {
     opacity: 0;
     animation: appear-zoom 0.5s ease-out forwards;
+  }
+
+  .thin-scrollbar {
+    @apply scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-300;
   }
 }

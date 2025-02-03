@@ -32,10 +32,10 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
   return (
     <div
       ref={ref}
-      className="flex flex-col overflow-y-auto bg-background p-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-300"
+      className="flex flex-col overflow-y-auto bg-background p-4 "
       style={{ height: "786px" }}
     >
-      <div className="flex-1 space-y-4 overflow-auto p-4">
+      <div className="thin-scrollbar flex-1 space-y-4 overflow-auto p-4">
         <AnimatePresence>
           {isFirstMessage && (
             <motion.div
