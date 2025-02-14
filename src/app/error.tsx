@@ -1,8 +1,6 @@
-'use client';
-
+"use client";
 import AppLink from "@/shared/components/common/app-link";
 import { AlertCircle } from "lucide-react";
-
 
 export default function Error({
   error,
@@ -22,13 +20,11 @@ export default function Error({
         </h1>
         <div className="mb-8">
           <p className="mb-4 text-gray-600">
-            Đã có vấn đề xảy ra với website. Đây có thể là lỗi tạm thời,
-            vui lòng thử lại.
+            Đã có vấn đề xảy ra với website. Đây có thể là lỗi tạm thời, vui
+            lòng thử lại.
           </p>
           {error.digest && (
-            <p className="text-sm text-gray-500">
-              Mã lỗi: {error.digest}
-            </p>
+            <p className="text-sm text-gray-500">Mã lỗi: {error.digest}</p>
           )}
         </div>
         <div className="space-x-4">
@@ -39,11 +35,11 @@ export default function Error({
             Thử lại
           </button>
           <AppLink
-          href="/"
-          className="inline-flex items-center rounded-md border border-transparent px-2 py-1 text-base font-medium text-gray-600"
-        >
-          Trở về trang chủ
-        </AppLink>
+            href="/"
+            className="inline-flex items-center rounded-md border border-transparent px-2 py-1 text-base font-medium text-gray-600"
+          >
+            Trở về trang chủ
+          </AppLink>
         </div>
       </div>
     </div>

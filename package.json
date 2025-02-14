@@ -7,11 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix"
+    "lint:fix": "eslint ./src --fix",
+    "gen:types": "swagger-typescript-api-es"
   },
   "dependencies": {
     "@ai-sdk/openai": "^1.1.6",
     "@ariakit/react": "^0.4.15",
+    "@deepgram/sdk": "^3.10.1",
     "@emoji-mart/data": "1.2.1",
     "@faker-js/faker": "^9.4.0",
     "@next/bundle-analyzer": "^15.1.6",
@@ -122,6 +124,10 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.3",
+    "@graphql-codegen/typescript": "^4.1.0",
+    "@graphql-codegen/typescript-operations": "^4.3.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@types/node": "^20",
     "@types/prismjs": "^1.26.5",
     "@types/react": "^18",
@@ -132,6 +138,7 @@
     "eslint-config-next": "14.0.0",
     "eslint-plugin-tailwindcss": "^3.18.0",
     "postcss": "^8",
+    "swagger-typescript-api-es": "^0.0.11",
     "tailwind-scrollbar": "^4.0.0",
     "tailwindcss": "^3",
     "typescript": "^5"

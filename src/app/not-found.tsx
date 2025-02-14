@@ -1,5 +1,3 @@
-'use client'
-
 import AppLink from "@/shared/components/common/app-link";
 
 export default function NotFound() {

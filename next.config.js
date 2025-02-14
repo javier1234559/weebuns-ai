@@ -13,12 +13,6 @@ const nextConfig = {
     maxInactiveAge: 25 * 1000,
     pagesBufferLength: 2,
   },
-  images: {
-    domains: ['www.launchuicomponents.com'],
-  },
-  experimental: {
-    serverActions: true,
-  },
   webpack: (config) => {
     config.externals = [...(config.externals || []), 'undici'];
     return config;

@@ -112,7 +112,7 @@ export default function WritingAgentLayout() {
           <CardHeader>
             <CardTitle>
               <div className="text-lg font-medium">Writing Agent</div>
-              <p className="text-sm font-normal text-muted-foreground">
+              <p className="text-muted-foreground text-sm font-normal">
                 Write your essay with the help of the Writing Agent.
               </p>
             </CardTitle>

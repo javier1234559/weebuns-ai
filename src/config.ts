@@ -1,0 +1,9 @@
+export const globalConfig = {
+  API_URL: process.env.VITE_API_URL,
+  GRAPHQL_URL: process.env.VITE_GRAPHQL_URL,
+  GOOGLE_CLIENT_ID: process.env.VITE_GOOGLE_CLIENT_ID,
+  FACEBOOK_CLIENT_ID: process.env.VITE_FACEBOOK_CLIENT_ID,
+  UPLOADTHING_TOKEN: process.env.VITE_UPLOADTHING_TOKEN,
+  DEEPGRAM_API_KEY: process.env.VITE_DEEPGRAM_API_KEY,
+  AI_API_KEY: process.env.VITE_AI_API_KEY,
+};

@@ -15,22 +15,22 @@ const Header = () => {
       href: "/writing-agent",
     },
     {
+      id: "speaking",
+      label: "Speaking",
+      icon: <InfoIcon className="size-4" />,
+      href: "/voice-agent",
+    },
+    {
+      id: "blog",
+      label: "Blog",
+      icon: <BookOpenIcon className="size-4" />,
+      href: "/blog",
+    },
+    {
       id: "about",
-      label: "Giới thiệu",
+      label: "About",
       icon: <InfoIcon className="size-4" />,
       href: "/about",
-    },
-    {
-      id: "services",
-      label: "Dịch vụ",
-      icon: <ContactIcon className="size-4" />,
-      href: "/services",
-    },
-    {
-      id: "contact",
-      label: "Liên hệ",
-      icon: <ContactIcon className="size-4" />,
-      href: "/contact",
     },
   ];
 

@@ -15,6 +15,12 @@ export enum RouteNames {
   WritingAgentCreate = "/writing-agent/create",
   WritingAgentEdit = "/writing-agent/edit/:id",
   WritingAgentDetail = "/writing-agent/detail/:id",
+
+
+  VoiceAgent = "/voice-agent",
+  VoiceAgentCreate = "/voice-agent/create",
+  VoiceAgentEdit = "/voice-agent/edit/:id",
+  VoiceAgentDetail = "/voice-agent/detail/:id",
 }
 
 export function replaceRouteName(
