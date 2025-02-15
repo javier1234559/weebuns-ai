@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { Button } from "@/shared/components/ui/button";
-import { useScrollToBottom } from "@/shared/hooks/useScrollToBottom";
+import { Button } from "@/components/ui/button";
+import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 
 interface Example {
   id: number;

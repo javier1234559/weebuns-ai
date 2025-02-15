@@ -1,6 +1,6 @@
 import WritingAgentLayout from "@/feature/writing/components/WritingAgentLayout";
-import AppBreadcrumb from "@/shared/components/common/app-bread-crumb";
-import { RouteNames } from "@/shared/constraints/route-name";
+import AppBreadcrumb from "@/components/common/app-bread-crumb";
+import { RouteNames } from "@/constraints/route-name";
 
 export default function NewWriting() {
   const breadcrumb = [

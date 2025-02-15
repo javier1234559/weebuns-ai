@@ -1,12 +1,12 @@
 "use client";
 
 import { useChat } from "ai/react";
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
-import { ChatBubble } from "@/shared/components/ui/chat-bubble";
+import { ChatBubble } from "@/components/ui/chat-bubble";
 import { motion, AnimatePresence } from "framer-motion";
-import { useScrollToBottom } from "@/shared/hooks/useScrollToBottom";
+import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 import { useEffect } from "react";
 
 interface ChatPanelProps {

@@ -1,5 +1,5 @@
-import { Button } from "@/shared/components/ui/button";
-import { useScrollToBottom } from "@/shared/hooks/useScrollToBottom";
+import { Button } from "@/components/ui/button";
+import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 import { useEffect, useState } from "react";
 
 interface Outline {

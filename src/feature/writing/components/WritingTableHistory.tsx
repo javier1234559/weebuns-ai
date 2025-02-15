@@ -8,23 +8,23 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/shared/components/ui/table";
-import { Button } from "@/shared/components/ui/button";
-import { Badge } from "@/shared/components/ui/badge";
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { PlusIcon } from "lucide-react";
-import { RouteNames, replaceRouteName } from "@/shared/constraints/route-name";
+import { RouteNames, replaceRouteName } from "@/constraints/route-name";
 import Link from "next/link";
-import { Input } from "@/shared/components/ui/input";
-import useSearchQuery from "@/shared/hooks/useSearchQuery";
+import { Input } from "@/components/ui/input";
+import useSearchQuery from "@/hooks/useSearchQuery";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/shared/components/ui/select";
-import AppNavigation from "@/shared/components/common/app-pagination";
-import AppPagination from "@/shared/components/common/app-pagination";
+} from "@/components/ui/select";
+import AppNavigation from "@/components/common/app-pagination";
+import AppPagination from "@/components/common/app-pagination";
 
 function WritingTableHistory() {
   const { queries, updateQuery } = useSearchQuery();

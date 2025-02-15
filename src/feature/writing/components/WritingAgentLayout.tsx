@@ -1,20 +1,20 @@
 "use client";
 
-import MainEditor from "@/shared/components/feature/MainEditor";
-import { SplitPane, Pane } from "@/shared/components/feature/SplitLayout";
-import { useIsMobile } from "@/shared/hooks/useMediaQuery";
+import MainEditor from "@/components/feature/MainEditor";
+import { SplitPane, Pane } from "@/components/feature/SplitLayout";
+import { useIsMobile } from "@/hooks/useMediaQuery";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from "@/shared/components/ui/card";
+} from "@/components/ui/card";
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/shared/components/ui/tabs";
+} from "@/components/ui/tabs";
 import {
   MessageSquare,
   BookOpen,
@@ -29,8 +29,8 @@ import { VocabularyPanel } from "@/feature/writing/components/vocabulary-panel";
 import { OutlinePanel } from "@/feature/writing/components/outline-panel";
 import { ExamplesPanel } from "@/feature/writing/components/examples-panel";
 import { EvaluationPanel } from "@/feature/writing/components/evaluation-panel";
-import { Input } from "@/shared/components/ui/input";
-import { Button } from "@/shared/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 export default function WritingAgentLayout() {

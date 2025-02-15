@@ -1,4 +1,4 @@
-import AppLink from "@/shared/components/common/app-link";
+import AppLink from "@/components/common/app-link";
 
 export default function NotFound() {
   return (

@@ -1,6 +1,6 @@
 import WritingTableHistory from "@/feature/writing/components/WritingTableHistory";
-import AppBreadcrumb from "@/shared/components/common/app-bread-crumb";
-import { RouteNames } from "@/shared/constraints/route-name";
+import AppBreadcrumb from "@/components/common/app-bread-crumb";
+import { RouteNames } from "@/constraints/route-name";
 
 export default function Writing() {
   const breadcrumb = [{ title: "Writing", href: RouteNames.WritingAgent }];

@@ -4,11 +4,11 @@ import React, { useRef, useEffect } from "react";
 import { useChat } from "ai/react";
 import { Speaker } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/shared/components/ui/button";
-import { Input } from "@/shared/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useDeepgram } from "@/hooks/useDeepgram";
-import { toast } from "react-hot-toast";
-import { useScrollToBottom } from "@/shared/hooks/useScrollToBottom";
+import { toast } from "sonner";
+import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 import { useSuggestChat } from "@/feature/speaking/hooks/useSuggestChat";
 import AudioRecorder from "./audio-recorder";
 
@@ -40,7 +40,7 @@ const VoiceChat = ({ context }: VoiceChatProps) => {
     } catch (error) {
       console.error("Error processing audio:", error);
       toast.error(
-        "An error occurred while processing audio. Please try again."
+        "An error occurred while processing audio. Please try again.",
       );
     }
   };

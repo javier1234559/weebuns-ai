@@ -1,6 +1,6 @@
 import React, { useRef, useState, useCallback } from "react";
 import { Mic, StopCircle, Send, Trash2 } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 interface AudioRecorderProps {
   onRecordingComplete: (blob: Blob) => void;
