@@ -62,7 +62,7 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
       });
       console.log(userData);
       // dispatch(login(userData));
-      router.push(RouteNames.Dashboard);
+      router.push(RouteNames.Home);
     } catch (error) {
       console.error("Failed to login:", error);
       // Handle error (show toast notification, error message, etc.)

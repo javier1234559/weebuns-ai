@@ -17,6 +17,12 @@ const nextConfig = {
     config.externals = [...(config.externals || []), 'undici'];
     return config;
   },
+  images: {
+    domains: ["cms.youpass.vn", "weebuns.blog"],
+  },
+  experimental: {
+    runtime: 'nodejs',
+  },
 }
 
 // @ts-ignore

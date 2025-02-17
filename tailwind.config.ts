@@ -6,6 +6,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/feature/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -175,16 +176,20 @@ const config: Config = {
         ],
       },
       screens: {
-        "main-hover": {
-          raw: "(hover: hover)",
-        },
+        raw: "(hover: hover)",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
       },
     },
   },
   plugins: [
+    require("@tailwindcss/aspect-ratio"),
     require("tailwindcss-animate"),
-    require("tailwind-scrollbar-hide"),
     require("tailwind-scrollbar"),
   ],
 };
+
 export default config;

@@ -75,7 +75,7 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
       });
       console.log(userData);
       // dispatch(login(userData));
-      router.push(RouteNames.Dashboard);
+      router.push(RouteNames.Home);
     } catch (error) {
       console.error("Failed to register:", error);
     }

@@ -3,18 +3,8 @@
 import MainEditor from "@/components/feature/MainEditor";
 import { SplitPane, Pane } from "@/components/feature/SplitLayout";
 import { useIsMobile } from "@/hooks/useMediaQuery";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   MessageSquare,
   BookOpen,
@@ -92,7 +82,7 @@ export default function WritingAgentLayout() {
   const handleRandomTopic = () => {
     setTopic(
       Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15)
+        Math.random().toString(36).substring(2, 15),
     );
   };
 
@@ -112,7 +102,7 @@ export default function WritingAgentLayout() {
           <CardHeader>
             <CardTitle>
               <div className="text-lg font-medium">Writing Agent</div>
-              <p className="text-muted-foreground text-sm font-normal">
+              <p className="text-sm font-normal text-muted-foreground">
                 Write your essay with the help of the Writing Agent.
               </p>
             </CardTitle>

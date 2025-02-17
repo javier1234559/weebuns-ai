@@ -94,7 +94,7 @@ function WritingTableHistory() {
             </SelectContent>
           </Select>
         </div>
-        <Link href={RouteNames.WritingAgentCreate} className="ml-auto">
+        <Link href={RouteNames.WritingCreate} className="ml-auto">
           <Button size="sm">
             <PlusIcon className="size-4" />
             <span>New Writing</span>
@@ -123,7 +123,7 @@ function WritingTableHistory() {
               <TableCell className="space-x-2 text-right">
                 {post.status === "Draft" ? (
                   <Link
-                    href={replaceRouteName(RouteNames.WritingAgentEdit, {
+                    href={replaceRouteName(RouteNames.WritingEdit, {
                       id: post.id.toString(),
                     })}
                   >
@@ -133,7 +133,7 @@ function WritingTableHistory() {
                   </Link>
                 ) : (
                   <Link
-                    href={replaceRouteName(RouteNames.WritingAgentDetail, {
+                    href={replaceRouteName(RouteNames.WritingDetail, {
                       id: post.id.toString(),
                     })}
                   >

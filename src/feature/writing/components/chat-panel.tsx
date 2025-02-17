@@ -32,7 +32,7 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
   return (
     <div
       ref={ref}
-      className="bg-background flex flex-col overflow-y-auto p-4 "
+      className="flex flex-col overflow-y-auto bg-background p-4 "
       style={{ height: "786px" }}
     >
       <div className="thin-scrollbar flex-1 space-y-4 overflow-auto p-4">

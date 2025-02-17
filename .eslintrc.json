@@ -8,7 +8,11 @@
   ],
   "settings": {
     "tailwindcss": {
-      "callees": ["cn", "clsx", "twMerge"],
+      "callees": [
+        "cn",
+        "clsx",
+        "twMerge"
+      ],
       "config": "tailwind.config.ts",
       "classRegex": "^(class(Name)?|tw)$"
     }
@@ -19,7 +23,7 @@
     "tailwindcss/enforces-shorthand": "warn",
     "tailwindcss/migration-from-tailwind-2": "warn",
     "tailwindcss/no-arbitrary-value": "off",
-    "tailwindcss/no-custom-classname": "warn",
-    "tailwindcss/no-contradicting-classname": "error"
+    "tailwindcss/no-contradicting-classname": "error",
+    "tailwindcss/no-custom-classname": "off"
   }
 }

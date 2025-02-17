@@ -22,7 +22,7 @@ export default function FluidTabs({ tabs }: FluidTabsProps) {
   const [prevPath, setPrevPath] = useState(pathname);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const activeTab = tabs.find(tab => tab.href === pathname)?.id || tabs[0].id;
+  const activeTab = tabs.find((tab) => tab.href === pathname)?.id || tabs[0].id;
 
   useEffect(() => {
     return () => {
@@ -44,7 +44,8 @@ export default function FluidTabs({ tabs }: FluidTabsProps) {
     }, 300);
   };
 
-  const getTabIndex = (tabId: string) => tabs.findIndex((tab) => tab.id === tabId);
+  const getTabIndex = (tabId: string) =>
+    tabs.findIndex((tab) => tab.id === tabId);
 
   return (
     <div className="flex w-full items-center justify-center">
@@ -53,7 +54,9 @@ export default function FluidTabs({ tabs }: FluidTabsProps) {
           <motion.div
             key={activeTab}
             className="absolute inset-y-0 my-0.5 rounded-full bg-accent/20 shadow-sm"
-            initial={{ x: `${getTabIndex(tabs.find(tab => tab.href === prevPath)?.id || tabs[0].id) * 100}%` }}
+            initial={{
+              x: `${getTabIndex(tabs.find((tab) => tab.href === prevPath)?.id || tabs[0].id) * 100}%`,
+            }}
             animate={{ x: `${getTabIndex(activeTab) * 100}%` }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             style={{ width: `${100 / tabs.length}%` }}
@@ -64,12 +67,13 @@ export default function FluidTabs({ tabs }: FluidTabsProps) {
             key={tab.id}
             href={tab.href}
             className={`
-              relative z-10 flex w-full items-center justify-center gap-1.5
-              rounded-full px-3 py-1.5 text-sm font-medium
+              relative z-10 flex w-full items-center justify-center gap-1
+              rounded-full px-1.5 py-1.5 text-sm font-medium
               transition-all duration-300
-              ${activeTab === tab.id
-                ? "text-primary"
-                : "text-muted-foreground hover:text-foreground"
+              ${
+                activeTab === tab.id
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
               }
               ${touchedTab === tab.id ? "blur-sm" : ""}
             `}

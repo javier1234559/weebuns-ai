@@ -79,7 +79,7 @@ const VoiceChat = ({ context }: VoiceChatProps) => {
   }, [messages, scrollToBottom]);
 
   return (
-    <div className="bg-background flex h-screen flex-col">
+    <div className="flex h-screen flex-col bg-background">
       <div ref={ref} className="flex-1 space-y-4 overflow-y-auto p-4">
         <AnimatePresence>
           {messages.length === 0 && (
@@ -89,7 +89,7 @@ const VoiceChat = ({ context }: VoiceChatProps) => {
               exit={{ opacity: 0, y: -20 }}
               className="space-y-4"
             >
-              <div className="bg-card rounded-lg p-4 shadow">
+              <div className="rounded-lg bg-card p-4 shadow">
                 <p className="text-foreground">{firstGreeting}</p>
               </div>
 
@@ -149,7 +149,7 @@ const VoiceChat = ({ context }: VoiceChatProps) => {
         </AnimatePresence>
       </div>
 
-      <div className="bg-card border-t p-4">
+      <div className="border-t bg-card p-4">
         <AudioRecorder onRecordingComplete={handleRecordingComplete} />
         <form onSubmit={handleSubmit} className="mt-2 flex items-center gap-2">
           <Input

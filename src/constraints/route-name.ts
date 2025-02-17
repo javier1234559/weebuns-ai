@@ -1,7 +1,7 @@
 export enum RouteNames {
   EMPTY = "",
-  Home = "/",
-  Dashboard = "/app",
+  Landing = "/",
+  Home = "/home",
   About = "/about",
   Blog = "/blog",
 
@@ -11,21 +11,38 @@ export enum RouteNames {
   ME = "/me",
   Logout = "/logout",
 
-  WritingAgent = "/writing-agent",
-  WritingAgentCreate = "/writing-agent/create",
-  WritingAgentEdit = "/writing-agent/edit/:id",
-  WritingAgentDetail = "/writing-agent/detail/:id",
+  Lesson = "/lesson",
+  MyVocabulary = "/my-vocabulary",
 
+  Writing = "/lesson/writing",
+  WritingCreate = "/lesson/writing/create",
+  WritingEdit = "/lesson/writing/edit/:id",
+  WritingDetail = "/lesson/writing/detail/:id",
 
-  VoiceAgent = "/voice-agent",
-  VoiceAgentCreate = "/voice-agent/create",
-  VoiceAgentEdit = "/voice-agent/edit/:id",
-  VoiceAgentDetail = "/voice-agent/detail/:id",
+  Vocabulary = "/lesson/vocabulary",
+  VocabularyCreate = "/lesson/vocabulary/create",
+  VocabularyEdit = "/lesson/vocabulary/edit/:id",
+  VocabularyDetail = "/lesson/vocabulary/detail/:id",
+
+  Speaking = "/lesson/speaking",
+  SpeakingCreate = "/lesson/speaking/create",
+  SpeakingEdit = "/lesson/speaking/edit/:id",
+  SpeakingDetail = "/lesson/speaking/detail/:id",
+
+  Reading = "/lesson/reading",
+  ReadingCreate = "/lesson/reading/create",
+  ReadingEdit = "/lesson/reading/edit/:id",
+  ReadingDetail = "/lesson/reading/detail/:id",
+
+  Listening = "/lesson/listening",
+  ListeningCreate = "/lesson/listening/create",
+  ListeningEdit = "/lesson/listening/edit/:id",
+  ListeningDetail = "/lesson/listening/detail/:id",
 }
 
 export function replaceRouteName(
   routeName: RouteNames,
-  params: Record<string, string>
+  params: Record<string, string>,
 ) {
   console.log(routeName, params);
   return routeName.replace(/:id/g, params.id);
