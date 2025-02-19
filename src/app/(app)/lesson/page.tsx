@@ -33,10 +33,10 @@ export default function LessonPage() {
       <div className="w-full px-4 py-2">
         <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
       </div>
-      <div className="mb-8 w-full p-4">
+      <div className="w-full p-4">
         <h1 className="text-4xl font-bold">Bài Học</h1>
       </div>
-      <div className="mx-auto max-w-4xl p-4">
+      <div className="max-w-4xl p-4">
         <Tabs defaultValue="speaking">
           <TabsList>
             {tabs.map((tab) => (

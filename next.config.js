@@ -18,7 +18,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["cms.youpass.vn", "weebuns.blog"],
+    domains: ["cms.youpass.vn", "weebuns.blog", "images.pexels.com"],
   },
   experimental: {
     runtime: 'nodejs',

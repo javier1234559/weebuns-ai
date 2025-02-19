@@ -111,27 +111,29 @@ export const StreakSection = () => {
   }, []);
 
   return (
-    <div className="rounded-lg border bg-background p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h3 className="text-lg font-medium">
-          Biểu đồ &quot;chăm chỉ&quot; của bạn
-        </h3>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Mức độ:</span>
-          <div className="flex gap-1">
-            {[1, 2, 3, 4].map((level) => (
-              <div
-                key={level}
-                className="size-3 rounded bg-primary"
-                style={{ opacity: level * 0.25 }}
-              />
-            ))}
+    <Card>
+      <CardContent className="p-6">
+        <div className="mb-6 flex items-center justify-between">
+          <CardTitle className="text-lg font-medium">
+            Biểu đồ &quot;chăm chỉ&quot; của bạn
+          </CardTitle>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Mức độ:</span>
+            <div className="flex gap-1">
+              {[1, 2, 3, 4].map((level) => (
+                <div
+                  key={level}
+                  className="size-3 rounded bg-primary"
+                  style={{ opacity: level * 0.25 }}
+                />
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      <StreakCalendar activities={sampleActivities} />
-    </div>
+        <StreakCalendar activities={sampleActivities} />
+      </CardContent>
+    </Card>
   );
 };
 

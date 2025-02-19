@@ -8,16 +8,7 @@
   --background-end-rgb: 255, 255, 255;
   --brand: 200 92% 45%;
   --brand-foreground: 0 0% 100%;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-    --brand: 200 92% 45%;
-    --brand-foreground: 0 0% 100%;
-  }
+  --input: 0 0% 92%;
 }
 
 /* light-blue-theme.css */
@@ -86,9 +77,9 @@
     /* UI Utilities */
     --border: 240 5% 84%;
     /* #D4D4D8 */
-    --input: 240 5% 84%;
     --ring: 200 92% 45%;
     /* Same as brand */
+    --input: 0 0% 92%;
 
     /* Learning Progress Colors */
     --beginner: 142 72% 50%;
@@ -171,7 +162,7 @@
     /* UI Utilities */
     --border: 240 21% 25%;
     /* #313147 */
-    --input: 240 21% 25%;
+    --input: 0 0% 29%;
     --ring: 200 92% 45%;
     /* Keep Light Blue */
 

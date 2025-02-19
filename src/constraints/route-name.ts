@@ -10,7 +10,7 @@ export enum RouteNames {
   SignIn = "/sign-in",
   ME = "/me",
   Logout = "/logout",
-
+  ForgotPassword = "/forgot-password",
   Lesson = "/lesson",
   MyVocabulary = "/my-vocabulary",
 

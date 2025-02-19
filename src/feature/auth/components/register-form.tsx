@@ -5,22 +5,15 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Image from "next/image";
+import Link from "next/link";
+
 import { login } from "@/store/authSlice";
 import authApi from "@/feature/auth/services/authApi";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { RouteNames } from "@/constraints/route-name";
-
-interface RegisterFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const schema = yup.object().shape({
   firstName: yup
@@ -51,7 +44,7 @@ const schema = yup.object().shape({
 
 type FormData = yup.InferType<typeof schema>;
 
-export function RegisterForm({ className, ...props }: RegisterFormProps) {
+export function RegisterForm() {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -82,120 +75,164 @@ export function RegisterForm({ className, ...props }: RegisterFormProps) {
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Register</CardTitle>
-          <CardDescription>Create a new account to get started</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="firstName">First Name</Label>
-                <Input
-                  id="firstName"
-                  type="text"
-                  {...register("firstName")}
-                  aria-invalid={!!errors.firstName}
-                />
-                {errors.firstName && (
-                  <p className="text-sm text-red-500">
-                    {errors.firstName.message}
-                  </p>
-                )}
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="w-full max-w-[1000px] overflow-hidden rounded-3xl bg-card shadow-lg">
+        <div className="grid lg:grid-cols-2">
+          {/* Left Section - With image and overlay */}
+          <div className="relative h-full p-4">
+            <div className="relative h-full overflow-hidden rounded-2xl">
+              {/* Background Image */}
+              <Image
+                src="/images/building.jpg"
+                alt="Building"
+                fill
+                className="object-cover"
+                priority
+              />
+              {/* Overlay Content */}
+              <div className="relative z-10 h-full bg-black/40 p-8 text-white">
+                <h1 className="mb-12 text-2xl font-semibold">Sign up.</h1>
+                <div className="space-y-4">
+                  <p className="text-xl">Purchase your own ticket,</p>
+                  <p className="text-xl">Select the date and time,</p>
+                  <p className="text-xl">Pay through the application,</p>
+                  <p className="text-xl">And enjoy your holiday!</p>
+                  <div className="mt-4 h-1 w-20 bg-white" />
+                </div>
               </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="lastName">Last Name</Label>
-                <Input
-                  id="lastName"
-                  type="text"
-                  {...register("lastName")}
-                  aria-invalid={!!errors.lastName}
-                />
-                {errors.lastName && (
-                  <p className="text-sm text-red-500">
-                    {errors.lastName.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  id="username"
-                  type="text"
-                  {...register("username")}
-                  aria-invalid={!!errors.username}
-                />
-                {errors.username && (
-                  <p className="text-sm text-red-500">
-                    {errors.username.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  {...register("email")}
-                  aria-invalid={!!errors.email}
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  {...register("password")}
-                  aria-invalid={!!errors.password}
-                />
-                {errors.password && (
-                  <p className="text-sm text-red-500">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input
-                  id="confirmPassword"
-                  type="password"
-                  {...register("confirmPassword")}
-                  aria-invalid={!!errors.confirmPassword}
-                />
-                {errors.confirmPassword && (
-                  <p className="text-sm text-red-500">
-                    {errors.confirmPassword.message}
-                  </p>
-                )}
-              </div>
-
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Creating account..." : "Create account"}
-              </Button>
-              <Button variant="outline" className="w-full">
-                Register with Google
-              </Button>
             </div>
-            <div className="mt-4 text-center text-sm">
-              Already have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
-                Login
-              </a>
+          </div>
+
+          {/* Right Section - Register Form */}
+          <div className="p-8 lg:p-12">
+            <div className="mx-auto max-w-md space-y-8">
+              <div className="text-center lg:text-left">
+                <h2 className="mb-2 text-2xl font-bold">Create Account</h2>
+                <p className="text-muted-foreground">
+                  Sign up to get started with your account
+                </p>
+              </div>
+
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name</Label>
+                    <Input
+                      id="firstName"
+                      type="text"
+                      {...register("firstName")}
+                    />
+                    {errors.firstName && (
+                      <p className="text-sm text-red-500">
+                        {errors.firstName.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name</Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      {...register("lastName")}
+                    />
+                    {errors.lastName && (
+                      <p className="text-sm text-red-500">
+                        {errors.lastName.message}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="username">Username</Label>
+                  <Input
+                    id="username"
+                    type="text"
+                    placeholder="johndoe"
+                    {...register("username")}
+                  />
+                  {errors.username && (
+                    <p className="text-sm text-red-500">
+                      {errors.username.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="example@gmail.com"
+                    {...register("email")}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    {...register("password")}
+                  />
+                  {errors.password && (
+                    <p className="text-sm text-red-500">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Input
+                    id="confirmPassword"
+                    type="password"
+                    {...register("confirmPassword")}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-sm text-red-500">
+                      {errors.confirmPassword.message}
+                    </p>
+                  )}
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Creating account..." : "Create account"}
+                </Button>
+              </form>
+
+              <div className="text-center text-sm">
+                Already have an account?{" "}
+                <Link
+                  href={RouteNames.SignIn}
+                  className="text-primary hover:underline"
+                >
+                  Login here
+                </Link>
+              </div>
+
+              <div className="mt-8 text-center">
+                <Link
+                  href={RouteNames.Landing}
+                  className="text-sm text-muted-foreground hover:underline"
+                >
+                  skip for now →
+                </Link>
+              </div>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

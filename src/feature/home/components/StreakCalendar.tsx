@@ -32,7 +32,6 @@ const ACTIVITY_ICONS = {
   speaking: "🗣️",
 } as const;
 const BASE_INTENSITY = 0.7;
-const HOVER_OPACITY = 0.15;
 
 interface ActivityData {
   date: string;

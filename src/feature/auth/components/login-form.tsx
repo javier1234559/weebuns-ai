@@ -1,29 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Image from "next/image";
+import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
+
 import { login } from "@/store/authSlice";
 import authApi from "@/feature/auth/services/authApi";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 import { RouteNames } from "@/constraints/route-name";
-import Link from "next/link";
 import GoogleForm from "@/feature/auth/components/google-form";
-
-interface LoginFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 const schema = yup.object().shape({
   email: yup
@@ -39,7 +31,8 @@ const schema = yup.object().shape({
 
 type FormData = yup.InferType<typeof schema>;
 
-export function LoginForm({ className, ...props }: LoginFormProps) {
+export function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -76,78 +69,132 @@ export function LoginForm({ className, ...props }: LoginFormProps) {
   };
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  {...register("email")}
-                  aria-invalid={!!errors.email}
-                />
-                {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email.message}</p>
-                )}
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
+    <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="w-full max-w-[1000px] overflow-hidden rounded-3xl bg-card shadow-lg">
+        <div className="grid lg:grid-cols-2">
+          {/* Left Section - Updated with image and overlay */}
+          <div className="relative h-full p-4">
+            <div className="relative h-full overflow-hidden rounded-2xl">
+              {/* Background Image */}
+              <Image
+                src="/images/tree-of-mountant.jpg"
+                alt="Tree of Mountant"
+                fill
+                className="object-cover"
+                priority
+              />
+              {/* Overlay Content */}
+              <div className="relative z-10 h-full bg-black/40 p-8 text-white">
+                <h1 className="mb-12 text-2xl font-semibold">Ticketed.</h1>
+                <div className="space-y-4">
+                  <p className="text-xl">Purchase your own ticket,</p>
+                  <p className="text-xl">Select the date and time,</p>
+                  <p className="text-xl">Pay through the application,</p>
+                  <p className="text-xl">And enjoy your holiday!</p>
+                  <div className="mt-4 h-1 w-20 bg-white" />
                 </div>
-                <Input
-                  id="password"
-                  type="password"
-                  {...register("password")}
-                  aria-invalid={!!errors.password}
-                />
-                {errors.password && (
-                  <p className="text-sm text-red-500">
-                    {errors.password.message}
-                  </p>
-                )}
               </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox id="rememberMe" {...register("rememberMe")} />
-                <Label
-                  htmlFor="rememberMe"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Remember me
-                </Label>
-              </div>
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Logging in..." : "Login"}
-              </Button>
-              <GoogleForm onSubmit={handleGoogleLogin} />
             </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
+          </div>
+
+          {/* Right Section */}
+          <div className="p-8 lg:p-12">
+            <div className="mx-auto max-w-md space-y-8">
+              <div className="text-center lg:text-left">
+                <h2 className="mb-2 text-2xl font-bold">Welcome Back!</h2>
+                <p className="text-muted-foreground">
+                  Continue with Google or enter your details.
+                </p>
+              </div>
+
+              <GoogleForm onSubmit={handleGoogleLogin} />
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium">
+                    Username
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="example@gmail.com"
+                    {...register("email")}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="password" className="text-sm font-medium">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="******"
+                      {...register("password")}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? (
+                        <EyeOff className="size-4" />
+                      ) : (
+                        <Eye className="size-4" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-red-500">
+                      {errors.password.message}
+                    </p>
+                  )}
+                  <div className="text-right">
+                    <Link
+                      href={RouteNames.ForgotPassword}
+                      className="text-sm text-primary hover:underline"
+                    >
+                      Forgot password?
+                    </Link>
+                  </div>
+                </div>
+
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Logging in..." : "Login"}
+                </Button>
+              </form>
+
+              <div className="text-center text-sm">
+                {"Doesn't have an account? "}
+                <Link
+                  href={RouteNames.SignUp}
+                  className="text-primary hover:underline"
+                >
+                  Sign Up for free
+                </Link>
+              </div>
+            </div>
+
+            <div className="mt-8 text-center">
               <Link
-                href={RouteNames.SignUp}
-                className="underline underline-offset-4"
+                href={RouteNames.Landing}
+                className="text-sm text-muted-foreground hover:underline"
               >
-                Sign up
+                skip for now →
               </Link>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

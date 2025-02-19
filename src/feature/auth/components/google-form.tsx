@@ -65,10 +65,13 @@ function GoogleForm({ onSubmit }: GoogleFormProps) {
   // })
 
   return (
-    <Button data-testid="google-login-btn" onClick={() => login()}>
-      {/* <Google className="mr-2" /> */}
-      <span>Login with Google</span>
-    </Button>
+    <button
+      className="flex w-full items-center justify-center gap-2 rounded-lg border p-2 transition-colors hover:bg-gray-50"
+      onClick={() => login()}
+    >
+      <AppIcon icon="google" size={20} />
+      Login with Google
+    </button>
   );
 }
 

@@ -1,23 +1,33 @@
-import { cn } from '@/lib/utils'
-import React, { SVGProps } from 'react'
+import { cn } from "@/lib/utils";
+import React, { SVGProps } from "react";
 
 interface IAppIconProps extends SVGProps<SVGSVGElement> {
-  src: string
+  icon: string;
+  size?: number;
 }
 
 function AppIcon(props: IAppIconProps) {
-  const { src, className = '', viewBox, width = 16, height = width } = props
+  const {
+    icon,
+    className = "",
+    size = 16,
+    viewBox = "0 0 24 24",
+    ...rest
+  } = props;
+
+  const iconPath = `/svg/${icon}.svg#${icon}`;
 
   return (
     <svg
-      width={width}
-      height={height}
+      width={size}
+      height={size}
       viewBox={viewBox}
-      className={cn('pointer-events-none size-full duration-300', className)}
+      className={cn("pointer-events-none duration-300", className)}
+      {...rest}
     >
-      <use href={src} width={width} height={height} />
+      <use href={iconPath} width="100%" height="100%" />
     </svg>
-  )
+  );
 }
 
-export default AppIcon
+export default AppIcon;
