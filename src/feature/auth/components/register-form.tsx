@@ -83,7 +83,7 @@ export function RegisterForm() {
             <div className="relative h-full overflow-hidden rounded-2xl">
               {/* Background Image */}
               <Image
-                src="/images/building.jpg"
+                src="/images/auth/building.jpg"
                 alt="Building"
                 fill
                 className="object-cover"

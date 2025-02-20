@@ -59,6 +59,35 @@ const PaginationLink = ({
 )
 PaginationLink.displayName = "PaginationLink"
 
+
+type PaginationButtonProps = {
+  isActive?: boolean
+} & Pick<ButtonProps, "size"> &
+  React.ComponentProps<"button">
+
+
+const PaginationButton = ({
+  className,
+  isActive,
+  size = "icon",
+  ...props
+}: PaginationButtonProps) => (
+  <button
+    aria-current={isActive ? "page" : undefined}
+    className={cn(
+      buttonVariants({
+        variant: isActive ? "outline" : "ghost",
+        size,
+      }),
+      className
+    )}
+    {...props}
+  />
+)
+PaginationButton.displayName = "PaginationButton"
+
+
+
 const PaginationPrevious = ({
   className,
   ...props
@@ -110,6 +139,7 @@ export {
   Pagination,
   PaginationContent,
   PaginationLink,
+  PaginationButton,
   PaginationItem,
   PaginationPrevious,
   PaginationNext,

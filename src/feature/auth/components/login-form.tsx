@@ -77,7 +77,7 @@ export function LoginForm() {
             <div className="relative h-full overflow-hidden rounded-2xl">
               {/* Background Image */}
               <Image
-                src="/images/tree-of-mountant.jpg"
+                src="/images/auth/tree-of-mountant.jpg"
                 alt="Tree of Mountant"
                 fill
                 className="object-cover"

@@ -56,6 +56,19 @@ const config: Config = {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        error: {
+          DEFAULT: "hsl(var(--error))",
+          foreground: "hsl(var(--error-foreground))",
+        },
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -69,6 +82,16 @@ const config: Config = {
         highlight: {
           DEFAULT: "hsl(var(--highlight))",
           foreground: "hsl(var(--highlight-foreground))",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
         },
       },
       keyframes: {
@@ -132,6 +155,14 @@ const config: Config = {
             opacity: "0",
           },
         },
+        fadeIn: {
+          "0%": {
+            opacity: "0.5",
+          },
+          "100%": {
+            opacity: "1",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -141,6 +172,7 @@ const config: Config = {
         appear: "appear 0.5s ease-out forwards",
         "appear-zoom": "appear-zoom 0.5s ease-out forwards",
         "fade-bottom": "fade-bottom 1s ease-in-out",
+        fadeIn: "fadeIn 0.5s ease-in-out forwards",
       },
       fontFamily: {
         heading: [
@@ -176,7 +208,6 @@ const config: Config = {
         ],
       },
       screens: {
-        // raw: "(hover: hover)",
         sm: "640px",
         md: "768px",
         lg: "1024px",

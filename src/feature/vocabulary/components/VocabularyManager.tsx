@@ -58,7 +58,7 @@ function VocabularyManager() {
       {
         label: "Due for Review(SRS)",
         value: "review",
-        content: <TableVocab vocabularies={data?.data || []} />,
+        content: <div>Review</div>,
       },
     ],
     [data?.data],
@@ -82,9 +82,13 @@ function VocabularyManager() {
           className="w-full"
         >
           <div className="mb-6 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-            <TabsList>
+            <TabsList className="gap-1 bg-background/50">
               {contentTabs.map((tab) => (
-                <TabsTrigger key={tab.value} value={tab.value}>
+                <TabsTrigger
+                  key={tab.value}
+                  value={tab.value}
+                  className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+                >
                   {tab.label}
                 </TabsTrigger>
               ))}

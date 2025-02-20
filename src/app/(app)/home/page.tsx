@@ -9,21 +9,29 @@ export default function HomePage() {
   const breadcrumb = [{ title: "Trang chủ", href: RouteNames.Home }];
 
   return (
-    <div className="container mx-auto mt-10 space-y-6 p-6">
-      <div className="w-full py-2 pr-4">
+    <div className="container mx-auto mt-20 space-y-6">
+      <div className="w-full px-4 py-2">
         <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
       </div>
       {/* Newsfeed Section */}
-      <NewsFeedSection />
+      <div className="w-full px-4">
+        <NewsFeedSection />
+      </div>
 
       {/* Test History Section */}
-      <TestHistoryTabs />
+      <div className="w-full px-4">
+        <TestHistoryTabs />
+      </div>
 
       {/* Target Setting Section */}
-      <TargetSettingSection />
+      <div className="w-full px-4">
+        <TargetSettingSection />
+      </div>
 
       {/* Streak Section */}
-      <StreakSection />
+      <div className="w-full px-4">
+        <StreakSection />
+      </div>
     </div>
   );
 }

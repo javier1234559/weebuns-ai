@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import viLocale from "@fullcalendar/core/locales/vi";
 import { StreakCalendar } from "@/feature/home/components/StreakCalendar";
 
@@ -113,7 +113,7 @@ export const StreakSection = () => {
   return (
     <Card>
       <CardContent className="p-6">
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6 flex flex-col items-center justify-center gap-2 md:flex-row md:justify-between">
           <CardTitle className="text-lg font-medium">
             Biểu đồ &quot;chăm chỉ&quot; của bạn
           </CardTitle>

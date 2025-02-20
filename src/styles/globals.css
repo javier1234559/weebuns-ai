@@ -2,18 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-  --brand: 200 92% 45%;
-  --brand-foreground: 0 0% 100%;
-  --input: 0 0% 92%;
-}
-
-/* light-blue-theme.css */
 @layer base {
   :root {
+    --foreground-rgb: 0, 0, 0;
+    --background-start-rgb: 214, 219, 220;
+    --background-end-rgb: 255, 255, 255;
+    --brand: 200 92% 45%;
+    --brand-foreground: 0 0% 100%;
+    --input: 0 0% 40%;
+
     /* Main Brand Colors */
     --brand: 200 92% 45%;
     /* #099DE0 - Light Blue */
@@ -79,7 +76,6 @@
     /* #D4D4D8 */
     --ring: 200 92% 45%;
     /* Same as brand */
-    --input: 0 0% 92%;
 
     /* Learning Progress Colors */
     --beginner: 142 72% 50%;
@@ -109,6 +105,14 @@
 
     /* Border Radius */
     --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
@@ -182,6 +186,14 @@
     --highlight: 45 93% 47%;
     --focus: 200 92% 45%;
     /* Keep Light Blue */
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
 

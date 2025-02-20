@@ -210,9 +210,9 @@ export const StreakCalendar: React.FC<StreakCalendarProps> = ({
         </Button>
       </div>
 
-      <div className="w-full">
+      <div className="w-full overflow-x-auto">
         {/* Header */}
-        <div className="mb-2 grid grid-cols-8">
+        <div className="mb-2 grid min-w-[600px] grid-cols-8">
           <div className="pl-4 text-left text-sm text-muted-foreground/80">
             Tuần
           </div>
@@ -226,7 +226,10 @@ export const StreakCalendar: React.FC<StreakCalendarProps> = ({
         {/* Calendar Grid */}
         <div>
           {weeks.map((week) => (
-            <div key={week.weekNumber} className="mb-1 grid grid-cols-8">
+            <div
+              key={week.weekNumber}
+              className="mb-1 grid min-w-[600px] grid-cols-8"
+            >
               <div className="pl-4 text-left text-sm text-muted-foreground/80">
                 Tuần {week.weekNumber}
               </div>

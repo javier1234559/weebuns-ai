@@ -48,7 +48,7 @@ export default function TableVocab({ vocabularies }: TableVocabProps) {
 
   return (
     <Card className="w-full">
-      <div className="rounded-md border">
+      <div className="rounded-md">
         <Table>
           <TableHeader>
             <TableRow>

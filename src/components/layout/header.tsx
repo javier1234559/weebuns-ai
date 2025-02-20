@@ -6,6 +6,7 @@ import AppLink from "@/components/common/app-link";
 import ThemeToggle from "@/components/feature/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { RouteNames } from "@/constraints/route-name";
+import useScroll from "@/hooks/useScroll";
 import {
   BookOpenIcon,
   HomeIcon,
@@ -22,6 +23,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isScrolled = useScroll({ threshold: 10 });
 
   const tabs = [
     {
@@ -57,7 +59,11 @@ const Header = () => {
   ];
 
   return (
-    <header className="w-full bg-transparent shadow-sm">
+    <header
+      className={`fixed left-0 right-0 top-0 z-50 w-full bg-transparent backdrop-blur-md shadow-sm transition-all duration-500 ${
+        isScrolled ? "bg-background/90" : "bg-transparent"
+      }`}
+    >
       <div className="container mx-auto">
         <nav className="flex h-16 items-center justify-between px-4 lg:px-8">
           <div className="shrink-0">
@@ -167,7 +173,11 @@ const Header = () => {
                         <Button className="w-full">Sign Up</Button>
                       </Link>
                       <Link href={RouteNames.SignIn}>
-                        <Button variant="outline" className="w-full">
+                        <Button
+                          variant="outline"
+                          className="w-full hover:bg-secondary/50"
+                          style={{ transition: "none" }}
+                        >
                           Sign In
                         </Button>
                       </Link>

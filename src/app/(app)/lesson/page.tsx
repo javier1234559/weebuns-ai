@@ -1,51 +1,55 @@
-import AppBreadcrumb from "@/components/common/app-bread-crumb";
-import { Tabs, TabsTrigger, TabsList } from "@/components/ui/tabs";
-import { RouteNames } from "@/constraints/route-name";
+import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
+import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
+import { LessonListView } from "@/feature/lesson/views/LessonListView";
+
+const configData = {
+  title: "Bài Học",
+  type: "Luyện tập",
+  keywords: ["Bài Học", "Weebuns", "Logical Framework"],
+  author: "Weebuns",
+  instructions: [
+    "1. Luyện IELTS với AI theo phương pháp Logical Framework của Weebuns.",
+  ],
+};
+
+export const metadata = {
+  title: configData.title,
+  description: configData.instructions.join("\n"),
+  keywords: configData.keywords,
+  author: configData.author,
+};
 
 export default function LessonPage() {
-  const breadcrumb = [{ title: "Bài Học", href: RouteNames.Lesson }];
-
-  const tabs = [
-    {
-      id: "speaking",
-      label: "Nghe",
-      href: RouteNames.Speaking,
-    },
-    {
-      id: "reading",
-      label: "Đọc",
-      href: RouteNames.Reading,
-    },
-    {
-      id: "listening",
-      label: "Nghe",
-      href: RouteNames.Listening,
-    },
-    {
-      id: "writing",
-      label: "Viết",
-      href: RouteNames.Writing,
-    },
-  ];
-
   return (
-    <div className="container mx-auto mt-20 max-w-7xl">
-      <div className="w-full px-4 py-2">
-        <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
+    <div className="container mx-auto mt-16">
+      {/* Header Section with subtle background */}
+      <div className="relative mb-8 mt-10 rounded-xl bg-card p-4">
+        <div className="mb-2">
+          <LessonBreadcrumb />
+        </div>
+
+        {/* Title Section with improved visual hierarchy */}
+        <div className="mb-6">
+          <LessonTitle
+            title={configData.title}
+            type={configData.type}
+            description={configData.instructions.join("\n")}
+            tooltipContent={
+              <div className="space-y-2">
+                {configData.instructions.map((instruction, index) => (
+                  <p key={index} className="text-sm">
+                    {instruction}
+                  </p>
+                ))}
+              </div>
+            }
+          />
+        </div>
       </div>
-      <div className="w-full p-4">
-        <h1 className="text-4xl font-bold">Bài Học</h1>
-      </div>
-      <div className="max-w-4xl p-4">
-        <Tabs defaultValue="speaking">
-          <TabsList>
-            {tabs.map((tab) => (
-              <TabsTrigger key={tab.id} value={tab.id}>
-                {tab.label}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+
+      {/* Main Content with improved spacing and visual separation */}
+      <div>
+        <LessonListView />
       </div>
     </div>
   );

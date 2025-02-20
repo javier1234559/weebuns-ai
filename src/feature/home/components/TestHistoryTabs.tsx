@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
 import { Pencil, BookOpen, Ear, MessageCircle } from "lucide-react";
 import {
   Card,
@@ -10,45 +11,134 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import EmptyState from "@/components/common/app-empty-state";
+import WritingTableHistory from "@/feature/writing/components/WritingTableHistory";
 
-const mainTabs = [
-  {
-    id: "writing",
-    label: "Writing",
-    icon: <Pencil className="size-4" />,
-  },
-  {
-    id: "reading",
-    label: "Reading",
-    icon: <BookOpen className="size-4" />,
-  },
-  {
-    id: "listening",
-    label: "Listening",
-    icon: <Ear className="size-4" />,
-  },
-  {
-    id: "speaking",
-    label: "Speaking",
-    icon: <MessageCircle className="size-4" />,
-  },
-];
-
-const subTabs = [
-  {
-    id: "by-name",
-    label: "Theo bài luyện tập",
-  },
-  {
-    id: "by-question",
-    label: "Theo bài thi",
-  },
-];
+type MainTabType = "writing" | "reading" | "listening" | "speaking";
+type SubTabType = "by-name" | "by-question";
 
 export function TestHistoryTabs() {
-  const handleStartExercise = () => {
+  const [activeMainTab, setActiveMainTab] = useState<MainTabType>("writing");
+  const [activeSubTab, setActiveSubTab] = useState<SubTabType>("by-name");
+
+  const handleStartExercise = useCallback(() => {
     console.log("Starting exercise...");
-  };
+  }, []);
+
+  const contentTabs = useMemo(
+    () => [
+      {
+        id: "writing",
+        label: "Writing",
+        icon: <Pencil className="size-4" />,
+        subTabs: [
+          {
+            id: "by-name",
+            label: "Theo bài luyện tập",
+            content: <WritingTableHistory />,
+          },
+          {
+            id: "by-question",
+            label: "Theo bài thi",
+            content: (
+              <EmptyState
+                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
+                onAction={handleStartExercise}
+                actionText="Tiến hành làm bài tập ngay"
+              />
+            ),
+          },
+        ],
+      },
+      {
+        id: "reading",
+        label: "Reading",
+        icon: <BookOpen className="size-4" />,
+        subTabs: [
+          {
+            id: "by-name",
+            label: "Theo bài luyện tập",
+            content: (
+              <EmptyState
+                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
+                onAction={handleStartExercise}
+                actionText="Tiến hành làm bài tập ngay"
+              />
+            ),
+          },
+          {
+            id: "by-question",
+            label: "Theo bài thi",
+            content: (
+              <EmptyState
+                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
+                onAction={handleStartExercise}
+                actionText="Tiến hành làm bài tập ngay"
+              />
+            ),
+          },
+        ],
+      },
+      {
+        id: "listening",
+        label: "Listening",
+        icon: <Ear className="size-4" />,
+        subTabs: [
+          {
+            id: "by-name",
+            label: "Theo bài luyện tập",
+            content: (
+              <EmptyState
+                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
+                onAction={handleStartExercise}
+                actionText="Tiến hành làm bài tập ngay"
+              />
+            ),
+          },
+          {
+            id: "by-question",
+            label: "Theo bài thi",
+            content: (
+              <EmptyState
+                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
+                onAction={handleStartExercise}
+                actionText="Tiến hành làm bài tập ngay"
+              />
+            ),
+          },
+        ],
+      },
+      {
+        id: "speaking",
+        label: "Speaking",
+        icon: <MessageCircle className="size-4" />,
+        subTabs: [
+          {
+            id: "by-name",
+            label: "Theo bài luyện tập",
+            content: (
+              <EmptyState
+                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
+                onAction={handleStartExercise}
+                actionText="Tiến hành làm bài tập ngay"
+              />
+            ),
+          },
+          {
+            id: "by-question",
+            label: "Theo bài thi",
+            content: (
+              <EmptyState
+                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
+                onAction={handleStartExercise}
+                actionText="Tiến hành làm bài tập ngay"
+              />
+            ),
+          },
+        ],
+      },
+    ],
+    [handleStartExercise]
+  );
 
   return (
     <Card className="w-full">
@@ -57,13 +147,16 @@ export function TestHistoryTabs() {
         <CardDescription>Xem lại các bài tập đã hoàn thành</CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="writing">
-          <TabsList className="mb-4 grid grid-cols-4">
-            {mainTabs.map((tab) => (
+        <Tabs
+          value={activeMainTab}
+          onValueChange={(value) => setActiveMainTab(value as MainTabType)}
+        >
+          <TabsList className="mb-4 grid grid-cols-4 gap-1 bg-background/50">
+            {contentTabs.map((tab) => (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
               >
                 {tab.icon}
                 {tab.label}
@@ -71,28 +164,28 @@ export function TestHistoryTabs() {
             ))}
           </TabsList>
 
-          {mainTabs.map((mainTab) => (
+          {contentTabs.map((mainTab) => (
             <TabsContent key={mainTab.id} value={mainTab.id}>
-              <Tabs defaultValue="by-name" className="w-full">
+              <Tabs
+                value={activeSubTab}
+                onValueChange={(value) => setActiveSubTab(value as SubTabType)}
+                className="w-full"
+              >
                 <TabsList className="mb-6 w-full">
-                  {subTabs.map((subTab) => (
+                  {mainTab.subTabs.map((subTab) => (
                     <TabsTrigger
                       key={subTab.id}
                       value={subTab.id}
-                      className="flex-1"
+                      className="flex flex-1 items-center gap-2 rounded-xl data-[state=active]:bg-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
                     >
                       {subTab.label}
                     </TabsTrigger>
                   ))}
                 </TabsList>
 
-                {subTabs.map((subTab) => (
+                {mainTab.subTabs.map((subTab) => (
                   <TabsContent key={subTab.id} value={subTab.id}>
-                    <EmptyState
-                      description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
-                      onAction={handleStartExercise}
-                      actionText="Tiến hành làm bài tập ngay"
-                    />
+                    {subTab.content}
                   </TabsContent>
                 ))}
               </Tabs>

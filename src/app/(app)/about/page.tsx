@@ -56,7 +56,7 @@ const faqs = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto max-w-4xl px-4 py-20">
+      <div className="container mx-auto px-4 py-20">
         <Reveal delay={0.2} width="100%">
           <div className="mb-20 text-center">
             <DrawCircleText

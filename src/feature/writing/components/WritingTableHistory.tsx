@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import {
   Table,
   TableBody,
@@ -15,7 +14,6 @@ import { PlusIcon } from "lucide-react";
 import { RouteNames, replaceRouteName } from "@/constraints/route-name";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import useSearchQuery from "@/hooks/useSearchQuery";
 import {
   Select,
   SelectContent,
@@ -23,11 +21,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import AppNavigation from "@/components/common/app-pagination";
-import AppPagination from "@/components/common/app-pagination";
+import EmptyState from "@/components/common/app-empty-state";
+import AppClientPagination from "@/components/common/app-client-pagination";
+import { useCallback, useState } from "react";
+
+const statusOptions = ["All", "Draft", "Submitted"];
 
 function WritingTableHistory() {
-  const { queries, updateQuery } = useSearchQuery();
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState<string>(statusOptions[0]);
+  const [page, setPage] = useState(1);
+  const [totalPages, _] = useState(10);
 
   const posts = [
     {
@@ -46,40 +50,44 @@ function WritingTableHistory() {
     },
   ];
 
-  const statusOptions = ["All", "Draft", "Submitted"];
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateQuery({ search: e.target.value });
+    setSearch(e.target.value);
   };
 
   const handleStatusFilter = (value: string) => {
-    updateQuery({ status: value === "All" ? "" : value });
+    setStatus(value === "All" ? "" : value);
   };
 
   const filteredPosts = posts.filter((post) => {
     const matchesSearch = post.title
       .toLowerCase()
-      .includes(queries.search?.toLowerCase() || "");
-    const matchesStatus = !queries.status || post.status === queries.status;
+      .includes(search.toLowerCase());
+    const matchesStatus = !status || post.status === status;
     return matchesSearch && matchesStatus;
   });
 
-  const handlePageChange = (page: number) => {
-    updateQuery({ page: page.toString() });
+  const handlePageChange = useCallback((page: number) => {
+    console.log("handlePageChange", page);
+    setPage(page);
+  }, []);
+
+  const handleStartExercise = () => {
+    console.log("Starting exercise...");
   };
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between pb-4">
+      <div className="my-4 flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center gap-4">
           <Input
             placeholder="Search by title..."
-            value={queries.search || ""}
+            value={search}
             onChange={handleSearch}
             style={{ width: "300px" }}
           />
           <Select
-            value={queries.status || "All"}
+            value={status || "All"}
             onValueChange={handleStatusFilter}
           >
             <SelectTrigger className="w-[180px]">
@@ -94,7 +102,7 @@ function WritingTableHistory() {
             </SelectContent>
           </Select>
         </div>
-        <Link href={RouteNames.WritingCreate} className="ml-auto">
+        <Link href={RouteNames.WritingCreate} className="md:ml-auto">
           <Button size="sm">
             <PlusIcon className="size-4" />
             <span>New Writing</span>
@@ -112,9 +120,20 @@ function WritingTableHistory() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredPosts.map((post) => (
-            <TableRow key={post.id}>
-              <TableCell>{post.title}</TableCell>
+          {filteredPosts.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="h-24 text-center">
+                <EmptyState
+                  description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
+                  onAction={handleStartExercise}
+                  actionText="Tiến hành làm bài tập ngay"
+                />
+              </TableCell>
+            </TableRow>
+          ) : (
+            filteredPosts.map((post) => (
+              <TableRow key={post.id}>
+                <TableCell>{post.title}</TableCell>
               <TableCell>
                 <Badge variant="secondary">{post.status}</Badge>
               </TableCell>
@@ -143,14 +162,15 @@ function WritingTableHistory() {
                   </Link>
                 )}
               </TableCell>
-            </TableRow>
-          ))}
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
       <div className="flex w-full justify-end pt-8">
-        <AppPagination
-          currentPage={1}
-          totalPages={10}
+        <AppClientPagination
+          currentPage={page}
+          totalPages={totalPages}
           onPageChange={handlePageChange}
         />
       </div>

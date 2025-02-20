@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Pagination,
   PaginationContent,
@@ -33,7 +35,7 @@ function AppPagination({
         >
           1
         </PaginationLink>
-      </PaginationItem>
+      </PaginationItem>,
     );
 
     if (totalPages <= maxVisiblePages) {
@@ -47,7 +49,7 @@ function AppPagination({
             >
               {i}
             </PaginationLink>
-          </PaginationItem>
+          </PaginationItem>,
         );
       }
     } else {
@@ -68,7 +70,7 @@ function AppPagination({
             >
               {i}
             </PaginationLink>
-          </PaginationItem>
+          </PaginationItem>,
         );
       }
 
@@ -86,7 +88,7 @@ function AppPagination({
             >
               {totalPages}
             </PaginationLink>
-          </PaginationItem>
+          </PaginationItem>,
         );
       }
     }

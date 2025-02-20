@@ -1,14 +1,12 @@
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
-import { Button } from "@/components/ui/button";
 import { RouteNames } from "@/constraints/route-name";
 import VocabularyManager from "@/feature/vocabulary/components/VocabularyManager";
-import { Plus } from "lucide-react";
 
 export default function MyVocabularyPage() {
   const breadcrumb = [{ title: "Sổ từ vựng", href: RouteNames.MyVocabulary }];
 
   return (
-    <div className="container mx-auto mt-20 max-w-7xl">
+    <div className="container mx-auto mt-20">
       <div className="w-full px-4 py-2">
         <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
       </div>
