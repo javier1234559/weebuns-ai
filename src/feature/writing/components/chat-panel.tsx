@@ -3,7 +3,6 @@
 import { useChat } from "ai/react";
 import { Button } from "@/components/ui/button";
 import { ChatBubble } from "@/components/ui/chat/chat-bubble";
-import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 import { CornerDownLeft } from "lucide-react";
 import { ChatBubbleMessage } from "@/components/ui/chat/chat-bubble";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
@@ -25,7 +24,7 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
     "Hello! I'm your writing assistant. How can I help you today?";
 
   return (
-    <div className="flex flex-col bg-background" style={{ height: "820px" }}>
+    <div className="flex flex-col bg-background" style={{ height: "790px" }}>
       <div className="flex-1 overflow-y-auto py-4">
         <ChatMessageList>
           {messages.length === 0 && (
@@ -40,7 +39,7 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
               variant={message.role === "user" ? "sent" : "received"}
             >
               <ChatBubbleAvatar
-                className="shadow-lg "
+                className="bg-card shadow-lg"
                 fallback={message.role === "user" ? "US" : "AI"}
               />
               <ChatBubbleMessage>{message.content}</ChatBubbleMessage>

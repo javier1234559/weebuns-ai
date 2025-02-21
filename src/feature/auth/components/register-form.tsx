@@ -120,6 +120,7 @@ export function RegisterForm() {
                     <Input
                       id="firstName"
                       type="text"
+                      placeholder="Enter your first name"
                       {...register("firstName")}
                     />
                     {errors.firstName && (
@@ -134,6 +135,7 @@ export function RegisterForm() {
                     <Input
                       id="lastName"
                       type="text"
+                      placeholder="Enter your last name"
                       {...register("lastName")}
                     />
                     {errors.lastName && (
@@ -149,7 +151,7 @@ export function RegisterForm() {
                   <Input
                     id="username"
                     type="text"
-                    placeholder="johndoe"
+                    placeholder="Enter your username"
                     {...register("username")}
                   />
                   {errors.username && (
@@ -164,7 +166,7 @@ export function RegisterForm() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="example@gmail.com"
+                    placeholder="Enter your email"
                     {...register("email")}
                   />
                   {errors.email && (
@@ -179,6 +181,7 @@ export function RegisterForm() {
                   <Input
                     id="password"
                     type="password"
+                    placeholder="Enter your password"
                     {...register("password")}
                   />
                   {errors.password && (
@@ -193,6 +196,7 @@ export function RegisterForm() {
                   <Input
                     id="confirmPassword"
                     type="password"
+                    placeholder="Confirm your password"
                     {...register("confirmPassword")}
                   />
                   {errors.confirmPassword && (

@@ -1,5 +1,6 @@
 import { RouteNames } from "@/constraints/route-name";
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
+import { ReadingDetailView } from "@/feature/reading/views/ReadingDetailView";
 
 export default function ReadingPageDetail({
   params,
@@ -18,11 +19,8 @@ export default function ReadingPageDetail({
       <div className="w-full px-4 py-2">
         <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
       </div>
-      <div className="mb-2 w-full p-4">
-        <h1 className="text-4xl font-bold">Chi tiết bài đọc</h1>
-      </div>
       <div className="w-full p-4">
-        <h1>Bài đọc {id}</h1>
+        <ReadingDetailView id={id} />
       </div>
     </div>
   );

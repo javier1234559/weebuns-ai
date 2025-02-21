@@ -24,15 +24,16 @@ import {
 import EmptyState from "@/components/common/app-empty-state";
 import AppClientPagination from "@/components/common/app-client-pagination";
 import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const statusOptions = ["All", "Draft", "Submitted"];
 
 function WritingTableHistory() {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>(statusOptions[0]);
   const [page, setPage] = useState(1);
   const [totalPages, _] = useState(10);
-
+  const router = useRouter();
   const posts = [
     {
       id: 1,
@@ -49,7 +50,6 @@ function WritingTableHistory() {
       updatedAt: "Feb 3, 2025",
     },
   ];
-
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -74,6 +74,7 @@ function WritingTableHistory() {
 
   const handleStartExercise = () => {
     console.log("Starting exercise...");
+    router.push(RouteNames.Writing);
   };
 
   return (
@@ -86,10 +87,7 @@ function WritingTableHistory() {
             onChange={handleSearch}
             style={{ width: "300px" }}
           />
-          <Select
-            value={status || "All"}
-            onValueChange={handleStatusFilter}
-          >
+          <Select value={status || "All"} onValueChange={handleStatusFilter}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
@@ -102,7 +100,7 @@ function WritingTableHistory() {
             </SelectContent>
           </Select>
         </div>
-        <Link href={RouteNames.WritingCreate} className="md:ml-auto">
+        <Link href={RouteNames.Writing} className="md:ml-auto">
           <Button size="sm">
             <PlusIcon className="size-4" />
             <span>New Writing</span>
@@ -134,34 +132,34 @@ function WritingTableHistory() {
             filteredPosts.map((post) => (
               <TableRow key={post.id}>
                 <TableCell>{post.title}</TableCell>
-              <TableCell>
-                <Badge variant="secondary">{post.status}</Badge>
-              </TableCell>
-              <TableCell>{post.createdAt}</TableCell>
-              <TableCell>{post.updatedAt}</TableCell>
-              <TableCell className="space-x-2 text-right">
-                {post.status === "Draft" ? (
-                  <Link
-                    href={replaceRouteName(RouteNames.WritingEdit, {
-                      id: post.id.toString(),
-                    })}
-                  >
-                    <Button variant="outline" size="sm">
-                      Continue Edit
-                    </Button>
-                  </Link>
-                ) : (
-                  <Link
-                    href={replaceRouteName(RouteNames.WritingDetail, {
-                      id: post.id.toString(),
-                    })}
-                  >
-                    <Button variant="outline" size="sm">
-                      View
-                    </Button>
-                  </Link>
-                )}
-              </TableCell>
+                <TableCell>
+                  <Badge variant="secondary">{post.status}</Badge>
+                </TableCell>
+                <TableCell>{post.createdAt}</TableCell>
+                <TableCell>{post.updatedAt}</TableCell>
+                <TableCell className="space-x-2 text-right">
+                  {post.status === "Draft" ? (
+                    <Link
+                      href={replaceRouteName(RouteNames.WritingEdit, {
+                        id: post.id.toString(),
+                      })}
+                    >
+                      <Button variant="outline" size="sm">
+                        Continue Edit
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Link
+                      href={replaceRouteName(RouteNames.WritingDetail, {
+                        id: post.id.toString(),
+                      })}
+                    >
+                      <Button variant="outline" size="sm">
+                        View
+                      </Button>
+                    </Link>
+                  )}
+                </TableCell>
               </TableRow>
             ))
           )}

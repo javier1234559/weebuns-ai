@@ -1,5 +1,6 @@
 import { RouteNames } from "@/constraints/route-name";
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
+import { ListeningDetailView } from "@/feature/listening/views/ListeningDetailView";
 
 export default function ListeningPageDetail({
   params,
@@ -18,11 +19,8 @@ export default function ListeningPageDetail({
       <div className="w-full px-4 py-2">
         <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
       </div>
-      <div className="mb-2 w-full p-4">
-        <h1 className="text-4xl font-bold">Chi tiết bài nghe</h1>
-      </div>
-      <div className="w-full p-4">
-        <h1>Bài nghe {id}</h1>
+      <div className="w-full py-4">
+        <ListeningDetailView id={id} />
       </div>
     </div>
   );

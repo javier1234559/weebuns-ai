@@ -21,7 +21,7 @@ export default function WritingPageDetail({
       <div className="mb-2 w-full p-4">
         <h1 className="text-4xl font-bold">Chi tiết bài viết</h1>
       </div>
-      <div className="w-full p-4">
+      <div className="mx-2 w-full py-2 md:mx-auto">
         <WritingDetailView id={id} />
       </div>
     </div>

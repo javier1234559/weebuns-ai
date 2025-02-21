@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/chat/chat-bubble";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { ChatInput } from "@/components/ui/chat/chat-input";
+import WaveAudio from "@/components/feature/WaveAudio";
 
 interface VoiceChatProps {
   context: string;
@@ -157,8 +158,12 @@ const VoiceChat = ({ context }: VoiceChatProps) => {
             ))}
           </div>
         )}
-        <div className="flex items-center justify-center py-2">
+        <div className="flex flex-col items-center justify-center gap-2 py-2">
           <AudioRecorder onRecordingComplete={handleRecordingComplete} />
+          <WaveAudio
+            audioUrl="https://utfs.io/f/fkClDhMQd7TEFE6MyrNOBZVRtYmaGTokEgPSMuA5U2jxqwiW"
+            onDelete={() => {}}
+          />
           <audio ref={audioRef} className="hidden" />
         </div>
         <form

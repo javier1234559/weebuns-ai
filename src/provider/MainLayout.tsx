@@ -38,7 +38,7 @@ export default function MainProviders({
                 <ToasterSonner />
                 <AppProgressBar
                   height="4px"
-                  color="#CFE1E2"
+                  color="hsl(var(--primary))"
                   options={{ showSpinner: false }}
                   shallowRouting
                 />

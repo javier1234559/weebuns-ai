@@ -117,17 +117,17 @@ function VocabularyManager() {
             </TabsContent>
           ))}
         </Tabs>
-      </Card>
 
-      {data.pagination && (
-        <div className="mt-8 flex justify-center">
-          <AppPagination
-            currentPage={data.pagination.currentPage}
-            totalPages={data.pagination.totalPages}
-            onPageChange={handlePageChange}
-          />
-        </div>
-      )}
+        {data.pagination && (
+          <div className="mt-8 flex justify-center">
+            <AppPagination
+              currentPage={data.pagination.currentPage}
+              totalPages={data.pagination.totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+      </Card>
     </div>
   );
 }

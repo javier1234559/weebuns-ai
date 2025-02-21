@@ -266,6 +266,9 @@ importers:
       '@uploadthing/react':
         specifier: 7.1.0
         version: 7.1.0(next@14.0.0(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)(uploadthing@7.2.0(next@14.0.0(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(tailwindcss@3.4.17))
+      '@wavesurfer/react':
+        specifier: ^1.0.9
+        version: 1.0.9(react@18.3.1)(wavesurfer.js@7.9.1)
       ai:
         specifier: ^4.1.15
         version: 4.1.15(react@18.3.1)(zod@3.24.1)
@@ -284,6 +287,9 @@ importers:
       date-fns:
         specifier: ^4.1.0
         version: 4.1.0
+      format-duration:
+        specifier: ^3.0.2
+        version: 3.0.2
       framer-motion:
         specifier: ^12.0.6
         version: 12.0.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3089,6 +3095,12 @@ packages:
   '@uploadthing/shared@7.1.0':
     resolution: {integrity: sha512-6cdS2hq9jUJFU/tqRKHs5XsDIwc6HdaVI4ka0vRy+IwjPnQBR0iXHwqyCtNNssCCAq4zQxrZr3iNEDPNqc0dqw==}
 
+  '@wavesurfer/react@1.0.9':
+    resolution: {integrity: sha512-HD3x+p48kWITd3tCOA7KG+6zae8btulNjSTdnRmgrtp9/XPzXc61ZCaPgbqT0gioPGhIcvBcpXZAmnhE8lUDBw==}
+    peerDependencies:
+      react: ^18.2.0 || ^19.0.0
+      wavesurfer.js: '>=7.7.14'
+
   '@whatwg-node/disposablestack@0.0.5':
     resolution: {integrity: sha512-9lXugdknoIequO4OYvIjhygvfSEgnO8oASLqLelnDhkRjgBZhc39shC3QSlZuyDO9bgYSIVa2cHAiN+St3ty4w==}
     engines: {node: '>=18.0.0'}
@@ -4156,6 +4168,9 @@ packages:
   form-data@4.0.1:
     resolution: {integrity: sha512-tzN8e4TX8+kkxGPK8D5u0FNmjPUjw3lwC9lSLxxoB/+GtsJG91CO8bSWy73APlgAZzZbXEYZJuxjkHH2w+Ezhw==}
     engines: {node: '>= 6'}
+
+  format-duration@3.0.2:
+    resolution: {integrity: sha512-pKzJDSRgK2lqAiPW3uizDaIJaJnataZclsahz25UMwfdryBGDa+1HlbXGjzpMvX/2kMh4O0sNevFXKaEfCjHsA==}
 
   formdata-polyfill@4.0.10:
     resolution: {integrity: sha512-buewHzMvYL29jdeQTVILecSaZKnt/RJWjoZCF5OW60Z67/GmSLBkOFM7qh1PI3zFNtJbaZL5eQu1vLfazOwj4g==}
@@ -6814,6 +6829,9 @@ packages:
   watchpack@2.4.0:
     resolution: {integrity: sha512-Lcvm7MGST/4fup+ifyKi2hjyIAwcdI4HRgtvTpIUxBRhB+RFtUh8XtDOxUfctVCnhVi+QQj49i91OyvzkJl6cg==}
     engines: {node: '>=10.13.0'}
+
+  wavesurfer.js@7.9.1:
+    resolution: {integrity: sha512-+pG8X9c9BrfAW8KR54OPzZcAj/57sOL08He/tc6/7Mt6NCX3IfDFwexQxXVTILggGZUOUk7tFKfny32yGrysKA==}
 
   wcwidth@1.0.1:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
@@ -9885,6 +9903,11 @@ snapshots:
       effect: 3.10.3
       sqids: 0.3.0
 
+  '@wavesurfer/react@1.0.9(react@18.3.1)(wavesurfer.js@7.9.1)':
+    dependencies:
+      react: 18.3.1
+      wavesurfer.js: 7.9.1
+
   '@whatwg-node/disposablestack@0.0.5':
     dependencies:
       tslib: 2.8.1
@@ -11228,6 +11251,8 @@ snapshots:
       asynckit: 0.4.0
       combined-stream: 1.0.8
       mime-types: 2.1.35
+
+  format-duration@3.0.2: {}
 
   formdata-polyfill@4.0.10:
     dependencies:
@@ -14267,6 +14292,8 @@ snapshots:
     dependencies:
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.11
+
+  wavesurfer.js@7.9.1: {}
 
   wcwidth@1.0.1:
     dependencies:
