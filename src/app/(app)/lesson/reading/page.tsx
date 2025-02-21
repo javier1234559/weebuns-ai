@@ -1,37 +1,16 @@
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
-import { LessonNavigation } from "@/feature/lesson/components/LessonNavigation";
-import {
-  ContainerSidebar,
-  LessonSidebarFilter,
-} from "@/feature/lesson/components/LessonSidebarContainer";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
+import { ReadingView } from "@/feature/reading/views/ReadingView";
 
 const configData = {
   title: "Reading",
   type: "Luyện tập",
-  keywords: ["Đọc", "Weebuns", "Logical Framework"],
+  keywords: ["Reading", "Weebuns", "Logical Framework"],
   author: "Weebuns",
   instructions: [
     "1. Luyện IELTS Reading với AI theo phương pháp Logical Framework của Weebuns.",
   ],
 };
-
-const filters: LessonSidebarFilter[] = [
-  {
-    title: "Nguồn tài liệu Reading",
-    items: [
-      { label: "Forecast T1/2025", value: "forecast" },
-      { label: "Livestream thầy Khoa", value: "livestream" },
-      { label: "C10-C19", value: "c10_c19" },
-      { label: "Recent Actual Tests", value: "recent_tests" },
-    ],
-  },
-  {
-    title: "Dạng đề Cambridge",
-    items: [{ label: "Agree or Disagree", value: "agree_disagree" }],
-  },
-];
 
 export const metadata = {
   title: configData.title,
@@ -40,16 +19,14 @@ export const metadata = {
   author: configData.author,
 };
 
-export default function LessonReadingPage() {
+export default function ReadingPage() {
   return (
     <div className="container mx-auto mt-16">
-      {/* Header Section with subtle background */}
       <div className="relative mb-8 mt-10 rounded-xl bg-card p-4">
         <div className="mb-2">
           <LessonBreadcrumb />
         </div>
 
-        {/* Title Section with improved visual hierarchy */}
         <div className="mb-6">
           <LessonTitle
             title={configData.title}
@@ -68,27 +45,8 @@ export default function LessonReadingPage() {
         </div>
       </div>
 
-      {/* Main Content with improved spacing and visual separation */}
       <div className="px-0">
-        <ContainerSidebar filters={filters}>
-          <SidebarTrigger className="my-2" />
-          {/* Navigation with shadow and rounded corners */}
-          <div className="my-2 max-w-3xl">
-            <div className="rounded-2xl p-1">
-              <LessonNavigation />
-            </div>
-          </div>
-          <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="prose max-w-none">
-              <h1 className="text-xl font-semibold text-gray-900">
-                IELTS Reading Practice
-              </h1>
-              <p className="text-gray-600">
-                Select a lesson from the sidebar to begin your practice session.
-              </p>
-            </div>
-          </div>
-        </ContainerSidebar>
+        <ReadingView />
       </div>
     </div>
   );

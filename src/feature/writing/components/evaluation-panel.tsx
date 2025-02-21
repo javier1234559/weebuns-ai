@@ -44,7 +44,7 @@ export function EvaluationPanel({ topic, content }: EvaluationPanelProps) {
       <div
         ref={ref}
         className="thin-scrollbar flex flex-col gap-4 overflow-y-auto bg-background p-4"
-        style={{ height: "730px" }}
+        style={{ height: "770px" }}
       >
         {history.map((evaluation, index) => (
           <div key={evaluation.id} className="rounded-lg border p-4">

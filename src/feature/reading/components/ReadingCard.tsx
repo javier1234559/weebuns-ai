@@ -5,11 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Lesson } from "@/feature/lesson/types/lesson";
 
-interface LessonCardProps {
+interface ReadingCardProps {
   lesson: Lesson;
 }
 
-export function LessonCard({ lesson }: LessonCardProps) {
+export function ReadingCard({ lesson }: ReadingCardProps) {
   const {
     id,
     title,
@@ -24,7 +24,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
   } = lesson;
 
   return (
-    <Link href={`/lessons/${id}`}>
+    <Link href={`/reading/${id}`}>
       <Card className="group flex h-full flex-col overflow-hidden border bg-background p-4 transition-all duration-200 hover:border-muted-foreground/50 hover:bg-[var(--card-hover)]">
         {/* Top Content */}
         <div className="flex-1 space-y-4">

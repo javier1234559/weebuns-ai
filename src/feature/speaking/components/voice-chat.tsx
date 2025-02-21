@@ -2,15 +2,22 @@
 
 import React, { useRef, useEffect } from "react";
 import { useChat } from "ai/react";
-import { Speaker } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AudioLines, Copy, CornerDownLeft, RefreshCcw } from "lucide-react";
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useDeepgram } from "@/hooks/useDeepgram";
 import { toast } from "sonner";
 import { useScrollToBottom } from "@/hooks/useScrollToBottom";
 import { useSuggestChat } from "@/feature/speaking/hooks/useSuggestChat";
 import AudioRecorder from "./audio-recorder";
+import {
+  ChatBubble,
+  ChatBubbleAvatar,
+  ChatBubbleMessage,
+  ChatBubbleAction,
+} from "@/components/ui/chat/chat-bubble";
+import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
+import { ChatInput } from "@/components/ui/chat/chat-input";
 
 interface VoiceChatProps {
   context: string;
@@ -78,89 +85,99 @@ const VoiceChat = ({ context }: VoiceChatProps) => {
     scrollToBottom();
   }, [messages, scrollToBottom]);
 
+  const actionIcons = [
+    { icon: AudioLines, type: "Listen" },
+    { icon: Copy, type: "Copy" },
+    { icon: RefreshCcw, type: "Regenerate" },
+  ];
+
   return (
-    <div className="flex h-screen flex-col bg-background">
-      <div ref={ref} className="flex-1 space-y-4 overflow-y-auto p-4">
-        <AnimatePresence>
+    <div className="flex h-screen flex-col rounded-lg bg-card">
+      <div ref={ref} className="flex-1 overflow-y-auto py-4">
+        <ChatMessageList>
           {messages.length === 0 && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-4"
-            >
-              <div className="rounded-lg bg-card p-4 shadow">
-                <p className="text-foreground">{firstGreeting}</p>
-              </div>
-
-              <div className="space-y-2">
-                {suggestedResponses.map((response, index) => (
-                  <motion.div
-                    key={response}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start"
-                      onClick={() => {
-                        setInput(response);
-                        handleSubmit(new Event("submit") as any);
-                      }}
-                    >
-                      {response}
-                    </Button>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+            <ChatBubble variant="received">
+              <ChatBubbleAvatar fallback="AI" />
+              <ChatBubbleMessage>{firstGreeting}</ChatBubbleMessage>
+            </ChatBubble>
           )}
-
           {messages.map((message, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className={`flex ${
-                message.role === "user" ? "justify-end" : "justify-start"
-              }`}
+            <ChatBubble
+              key={message.id}
+              variant={message.role === "user" ? "sent" : "received"}
             >
-              <div
-                className={`max-w-3/4 rounded-lg p-4 ${
-                  message.role === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-card text-card-foreground"
-                } shadow`}
-              >
-                <p>{message.content}</p>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="mt-2"
-                  onClick={() => handleTextToSpeech(message.content)}
-                >
-                  <Speaker className="mr-2 size-4" />
-                  Listen
-                </Button>
-              </div>
-            </motion.div>
+              <ChatBubbleAvatar
+                className="shadow-lg"
+                fallback={message.role === "user" ? "US" : "AI"}
+              />
+              <ChatBubbleMessage>
+                {message.content}
+
+                <div className="mt-2 flex items-center gap-2">
+                  {actionIcons.map(({ icon: Icon, type }) => (
+                    <ChatBubbleAction
+                      className="size-6"
+                      key={type}
+                      icon={<Icon className="size-3" />}
+                      onClick={() =>
+                        console.log(
+                          "Action " + type + " clicked for message " + index,
+                        )
+                      }
+                    />
+                  ))}
+                </div>
+              </ChatBubbleMessage>
+            </ChatBubble>
           ))}
-        </AnimatePresence>
+        </ChatMessageList>
       </div>
 
-      <div className="border-t bg-card p-4">
-        <AudioRecorder onRecordingComplete={handleRecordingComplete} />
-        <form onSubmit={handleSubmit} className="mt-2 flex items-center gap-2">
-          <Input
+      <div className="mx-2 border-t bg-card p-4 ">
+        {messages.length === 0 && (
+          <div className="mb-4 space-y-2">
+            {suggestedResponses.map((response, index) => (
+              <motion.div
+                key={response}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Button
+                  variant="outline"
+                  className="w-full justify-start text-wrap break-words px-2 py-4 leading-5"
+                  onClick={() => {
+                    setInput(response);
+                    handleSubmit(new Event("submit") as any);
+                  }}
+                >
+                  {response}
+                </Button>
+              </motion.div>
+            ))}
+          </div>
+        )}
+        <div className="flex items-center justify-center py-2">
+          <AudioRecorder onRecordingComplete={handleRecordingComplete} />
+          <audio ref={audioRef} className="hidden" />
+        </div>
+        <form
+          onSubmit={handleSubmit}
+          className="relative rounded-lg border bg-background p-1 focus-within:ring-1 focus-within:ring-ring"
+        >
+          <ChatInput
+            placeholder="Type your message here..."
             value={input}
             onChange={handleInputChange}
-            placeholder="Type your message..."
-            className="flex-1"
+            className="min-h-12 resize-none rounded-lg border-0 bg-background p-3 shadow-none focus-visible:ring-0"
           />
-          <Button type="submit">Send</Button>
+          <div className="flex items-center p-3 pt-0">
+            <Button size="sm" className="ml-auto gap-1.5" type="submit">
+              Send Message
+              <CornerDownLeft className="size-3.5" />
+            </Button>
+          </div>
         </form>
-        <audio ref={audioRef} className="hidden" />
       </div>
     </div>
   );

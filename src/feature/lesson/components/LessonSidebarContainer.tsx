@@ -112,7 +112,7 @@ export function ContainerSidebar({ children, filters }: ContainerSidebarProps) {
         </SidebarContent>
       </Sidebar>
 
-      <SidebarInset className="p-4 py-8">{children}</SidebarInset>
+      <SidebarInset className="px-4 py-8 md:p-4">{children}</SidebarInset>
     </SidebarProvider>
   );
 }

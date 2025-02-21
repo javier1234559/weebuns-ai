@@ -6,6 +6,7 @@ import {
   LessonSidebarFilter,
 } from "@/feature/lesson/components/LessonSidebarContainer";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
+import { SpeakingView } from "@/feature/speaking/views/SpeakingView";
 
 const configData = {
   title: "Speaking",
@@ -47,7 +48,7 @@ export const metadata = {
   author: configData.author,
 };
 
-export default function LessonSpeakingPage() {
+export default function SpeakingPage() {
   return (
     <div className="container mx-auto mt-16">
       {/* Header Section with subtle background */}
@@ -77,25 +78,7 @@ export default function LessonSpeakingPage() {
 
       {/* Main Content with improved spacing and visual separation */}
       <div className="px-0">
-        <ContainerSidebar filters={filters}>
-          <SidebarTrigger className="my-2" />
-          {/* Navigation with shadow and rounded corners */}
-          <div className="my-2 max-w-3xl">
-            <div className="rounded-2xl p-1">
-              <LessonNavigation />
-            </div>
-          </div>
-          <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="prose max-w-none">
-              <h1 className="text-xl font-semibold text-gray-900">
-                IELTS Speaking Practice
-              </h1>
-              <p className="text-gray-600">
-                Select a lesson from the sidebar to begin your practice session.
-              </p>
-            </div>
-          </div>
-        </ContainerSidebar>
+        <SpeakingView />
       </div>
     </div>
   );

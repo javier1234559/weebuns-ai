@@ -1,6 +1,6 @@
 import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
-import { LessonListView } from "@/feature/lesson/views/LessonListView";
+import { LessonView } from "@/feature/lesson/views/LessonView";
 
 const configData = {
   title: "Bài Học",
@@ -22,13 +22,11 @@ export const metadata = {
 export default function LessonPage() {
   return (
     <div className="container mx-auto mt-16">
-      {/* Header Section with subtle background */}
-      <div className="relative mb-8 mt-10 rounded-xl bg-card p-4">
+      <div className="relative mx-2 mb-8 mt-10 rounded-xl bg-card p-4 md:mx-0">
         <div className="mb-2">
           <LessonBreadcrumb />
         </div>
 
-        {/* Title Section with improved visual hierarchy */}
         <div className="mb-6">
           <LessonTitle
             title={configData.title}
@@ -47,9 +45,8 @@ export default function LessonPage() {
         </div>
       </div>
 
-      {/* Main Content with improved spacing and visual separation */}
-      <div>
-        <LessonListView />
+      <div className="mx-2 md:mx-0">
+        <LessonView />
       </div>
     </div>
   );

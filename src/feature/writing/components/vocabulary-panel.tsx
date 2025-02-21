@@ -69,7 +69,7 @@ export function VocabularyPanel({ topic, content }: VocabularyPanelProps) {
       </Button>
       <div
         className="thin-scrollbar flex flex-col gap-2 overflow-y-auto bg-background p-4"
-        style={{ height: "660px" }}
+        style={{ height: "710px" }}
       >
         {recommendations.map((item, index) => (
           <div key={index} className="rounded-lg border p-3">

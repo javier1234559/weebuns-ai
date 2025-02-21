@@ -2,12 +2,13 @@
 
 import { useChat } from "ai/react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Send } from "lucide-react";
-import { ChatBubble } from "@/components/ui/chat-bubble";
-import { motion, AnimatePresence } from "framer-motion";
+import { ChatBubble } from "@/components/ui/chat/chat-bubble";
 import { useScrollToBottom } from "@/hooks/useScrollToBottom";
-import { useEffect } from "react";
+import { CornerDownLeft } from "lucide-react";
+import { ChatBubbleMessage } from "@/components/ui/chat/chat-bubble";
+import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
+import { ChatBubbleAvatar } from "@/components/ui/chat/chat-bubble";
+import { ChatInput } from "@/components/ui/chat/chat-input";
 
 interface ChatPanelProps {
   topic: string;
@@ -19,59 +20,54 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
     api: "/api/ai/chat",
     body: { topic, content },
   });
-  const { ref, scrollToBottom } = useScrollToBottom<HTMLDivElement>();
 
-  const isFirstMessage = messages.length === 0;
   const greeting =
     "Hello! I'm your writing assistant. How can I help you today?";
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages, scrollToBottom]);
-
   return (
-    <div
-      ref={ref}
-      className="flex flex-col overflow-y-auto bg-background p-4 "
-      style={{ height: "786px" }}
-    >
-      <div className="thin-scrollbar flex-1 space-y-4 overflow-auto p-4">
-        <AnimatePresence>
-          {isFirstMessage && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-            >
-              <ChatBubble key={0} message={greeting} role="assistant" />
-            </motion.div>
+    <div className="flex flex-col bg-background" style={{ height: "820px" }}>
+      <div className="flex-1 overflow-y-auto py-4">
+        <ChatMessageList>
+          {messages.length === 0 && (
+            <ChatBubble variant="received">
+              <ChatBubbleAvatar fallback="AI" />
+              <ChatBubbleMessage>{greeting}</ChatBubbleMessage>
+            </ChatBubble>
           )}
-          {messages.map((m, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: i * 0.1 }}
+          {messages.map((message) => (
+            <ChatBubble
+              key={message.id}
+              variant={message.role === "user" ? "sent" : "received"}
             >
-              <ChatBubble
-                message={m.content}
-                role={m.role as "user" | "assistant"}
+              <ChatBubbleAvatar
+                className="shadow-lg "
+                fallback={message.role === "user" ? "US" : "AI"}
               />
-            </motion.div>
+              <ChatBubbleMessage>{message.content}</ChatBubbleMessage>
+            </ChatBubble>
           ))}
-        </AnimatePresence>
+        </ChatMessageList>
       </div>
-      <form className="flex gap-2 pt-4" onSubmit={handleSubmit}>
-        <Input
-          placeholder="Ask for writing help..."
-          value={input}
-          onChange={handleInputChange}
-        />
-        <Button size="icon" type="submit">
-          <Send className="size-4" />
-        </Button>
-      </form>
+
+      <div className="border-t bg-card py-4">
+        <form
+          onSubmit={handleSubmit}
+          className="relative rounded-lg border bg-background p-1 focus-within:ring-1 focus-within:ring-ring"
+        >
+          <ChatInput
+            placeholder="Ask for writing help..."
+            value={input}
+            onChange={handleInputChange}
+            className="min-h-12 resize-none rounded-lg border-0 bg-background p-3 shadow-none focus-visible:ring-0"
+          />
+          <div className="flex items-center p-3 pt-0">
+            <Button size="sm" className="ml-auto gap-1.5" type="submit">
+              Send Message
+              <CornerDownLeft className="size-3.5" />
+            </Button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

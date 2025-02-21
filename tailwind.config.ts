@@ -173,6 +173,7 @@ const config: Config = {
         "appear-zoom": "appear-zoom 0.5s ease-out forwards",
         "fade-bottom": "fade-bottom 1s ease-in-out",
         fadeIn: "fadeIn 0.5s ease-in-out forwards",
+        "run-cycle": "run-cycle 2s linear infinite",
       },
       fontFamily: {
         heading: [

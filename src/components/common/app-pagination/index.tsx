@@ -9,7 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 
 interface AppPaginationProps {
   currentPage: number;
@@ -17,12 +17,40 @@ interface AppPaginationProps {
   onPageChange: (page: number) => void;
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    checkIsMobile();
+    window.addEventListener("resize", checkIsMobile);
+
+    return () => window.removeEventListener("resize", checkIsMobile);
+  }, []);
+
+  return isMobile;
+}
+
 function AppPagination({
   currentPage,
   totalPages,
   onPageChange,
 }: AppPaginationProps) {
+  const isMobile = useIsMobile();
+
   const generatePaginationItems = () => {
+    // Show only current page on small screens
+    if (isMobile) {
+      return (
+        <PaginationItem key={currentPage}>
+          <PaginationLink isActive={true}>{currentPage}</PaginationLink>
+        </PaginationItem>
+      );
+    }
+
     const items = [];
     const maxVisiblePages = 5;
 
@@ -102,12 +130,14 @@ function AppPagination({
         <PaginationItem>
           <PaginationPrevious
             onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-            className={
+            className={`${
               currentPage === 1
                 ? "pointer-events-none opacity-50"
                 : "cursor-pointer"
-            }
-          />
+            }`}
+          >
+            {isMobile ? "" : "Previous"}
+          </PaginationPrevious>
         </PaginationItem>
 
         {generatePaginationItems()}
@@ -115,12 +145,14 @@ function AppPagination({
         <PaginationItem>
           <PaginationNext
             onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-            className={
+            className={`${
               currentPage === totalPages
                 ? "pointer-events-none opacity-50"
                 : "cursor-pointer"
-            }
-          />
+            }`}
+          >
+            {isMobile ? "" : "Next"}
+          </PaginationNext>
         </PaginationItem>
       </PaginationContent>
     </Pagination>

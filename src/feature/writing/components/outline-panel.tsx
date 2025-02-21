@@ -59,7 +59,7 @@ export function OutlinePanel({ topic, content }: OutlinePanelProps) {
       <div
         ref={ref}
         className="flex flex-col gap-4 overflow-y-auto bg-background p-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-300"
-        style={{ height: "730px" }}
+        style={{ height: "770px" }}
       >
         {history.map((outline, index) => (
           <div key={outline.id} className="rounded-lg border p-4">

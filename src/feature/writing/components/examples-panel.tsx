@@ -44,7 +44,7 @@ export function ExamplesPanel({ topic, content }: ExamplesPanelProps) {
       <div
         ref={ref}
         className="flex flex-col gap-4 overflow-y-auto bg-background p-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-300"
-        style={{ height: "730px" }}
+        style={{ height: "770px" }}
       >
         {example && (
           <div className="rounded-lg border p-4">

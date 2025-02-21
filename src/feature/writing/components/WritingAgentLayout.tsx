@@ -19,13 +19,19 @@ import { VocabularyPanel } from "@/feature/writing/components/vocabulary-panel";
 import { OutlinePanel } from "@/feature/writing/components/outline-panel";
 import { ExamplesPanel } from "@/feature/writing/components/examples-panel";
 import { EvaluationPanel } from "@/feature/writing/components/evaluation-panel";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-export default function WritingAgentLayout() {
+interface WritingAgentLayoutProps {
+  topic: string;
+  description: string;
+}
+
+export default function WritingAgentLayout({
+  topic,
+  description,
+}: WritingAgentLayoutProps) {
   const isMobile = useIsMobile();
-  const [topic, setTopic] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [selectedTab, setSelectedTab] = useState<string>("chat");
 
@@ -57,7 +63,7 @@ export default function WritingAgentLayout() {
     },
   ];
 
-  console.log(content);
+  console.log(topic);
 
   const handleGenerateOutline = () => {
     setSelectedTab("outline");
@@ -79,13 +85,6 @@ export default function WritingAgentLayout() {
     console.log("publish");
   };
 
-  const handleRandomTopic = () => {
-    setTopic(
-      Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15),
-    );
-  };
-
   const handleChat = () => {
     setSelectedTab("chat");
   };
@@ -101,23 +100,14 @@ export default function WritingAgentLayout() {
         <Card className="h-full">
           <CardHeader>
             <CardTitle>
-              <div className="text-lg font-medium">Writing Agent</div>
+              <div className="text-lg font-medium">{topic}</div>
               <p className="text-sm font-normal text-muted-foreground">
-                Write your essay with the help of the Writing Agent.
+                {description}
               </p>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex h-full flex-col p-4">
-            <Input
-              placeholder="Enter your essay topic"
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-            />
             <div className="flex flex-wrap justify-end gap-2 py-4">
-              <Button variant="outline" onClick={handleRandomTopic}>
-                <Shuffle className="mr-2 size-4" />
-                Random topic
-              </Button>
               <Button variant="outline" onClick={handleChat}>
                 <MessageSquare className="mr-2 size-4" />
                 Chat with AI
