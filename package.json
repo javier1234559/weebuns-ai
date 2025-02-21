@@ -132,6 +132,7 @@
     "react-resizable-panels": "^2.1.7",
     "react-textarea-autosize": "^8.5.7",
     "react-tweet": "^3.2.1",
+    "reactjs-otp-input": "^2.0.10",
     "redux-persist": "^6.0.0",
     "sonner": "^1.7.3",
     "tailwind-merge": "^3.0.1",

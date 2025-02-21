@@ -116,7 +116,7 @@ export function LoginForm() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="example@gmail.com"
+                    placeholder="Enter your email"
                     {...register("email")}
                   />
                   {errors.email && (
@@ -134,7 +134,7 @@ export function LoginForm() {
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="******"
+                      placeholder="Enter your password"
                       {...register("password")}
                     />
                     <button
