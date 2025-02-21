@@ -1,7 +1,7 @@
 import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
 import { LessonView } from "@/feature/lesson/views/LessonView";
-
+import CommentSystem from "@/components/feature/CommentSystem";
 const configData = {
   title: "Bài Học",
   type: "Luyện tập",
@@ -47,6 +47,9 @@ export default function LessonPage() {
 
       <div className="mx-2 md:mx-0">
         <LessonView />
+      </div>
+      <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
+        <CommentSystem />
       </div>
     </div>
   );
