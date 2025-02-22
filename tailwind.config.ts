@@ -221,6 +221,7 @@ const config: Config = {
     require("@tailwindcss/aspect-ratio"),
     require("tailwindcss-animate"),
     require("tailwind-scrollbar"),
+    require("@tailwindcss/typography"),
   ],
 };
 

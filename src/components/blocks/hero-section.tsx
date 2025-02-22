@@ -3,6 +3,7 @@ import { Mockup } from "@/components/ui/mockup";
 import { Glow } from "@/components/ui/glow";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { RouteNames } from "@/constraints/route-name";
 
 export function HeroSection() {
   const heroData = {
@@ -11,7 +12,7 @@ export function HeroSection() {
       "Cải thiện kỹ năng tiếng Anh của bạn thông qua các công cụ AI tiên tiến: Luyện viết, Đối thoại thông minh, Phân tích giọng nói và nhiều tính năng hữu ích khác",
     primaryCta: {
       text: "Get Started",
-      href: "/signup",
+      href: RouteNames.SignIn,
     },
     mockupImage: {
       light: "/images/hero-section/hero-section-light.png",

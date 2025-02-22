@@ -6,6 +6,7 @@ import { useIsMobile } from "@/hooks/useMediaQuery";
 import { MultipleChoiceQuiz } from "@/components/feature/MultipleChoiceQuiz";
 import QuestionSheet from "@/feature/reading/provider/QuestionSheet";
 import { Timer } from "@/components/feature/Timer";
+import ReadingViewer from "@/feature/reading/components/ReadingViewer";
 
 interface ReadingTestProps {
   title: string;
@@ -97,16 +98,12 @@ export function ReadingTest({
           direction={isMobile ? "horizontal" : "vertical"}
         >
           <Pane className="p-2">
-            <div className="thin-scrollbar h-full overflow-y-auto rounded-md bg-background p-4">
-              <div className="text-lg font-medium">{title}</div>
-              <p className="text-sm font-normal text-muted-foreground">
-                {description}
-              </p>
-              <div
-                className="mt-6"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
-            </div>
+            <ReadingViewer
+              title={title}
+              description={description}
+              content={content}
+              className="thin-scrollbar h-full overflow-y-auto rounded-md bg-background p-4"
+            />
           </Pane>
           <Pane className="p-2">
             <div className="thin-scrollbar h-full overflow-y-auto rounded-md bg-background p-4">
