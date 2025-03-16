@@ -1,12 +1,12 @@
+import { handleApiError } from "@/lib/utils";
+import api from "@/services/baseApi";
 import {
   LoginDto,
   RegisterDto,
   RequestResetPasswordDto,
   ResetPasswordDto,
   VerifyResetCodeDto,
-} from "@/services/api/api-axios";
-import api from "@/services/api/axiosInstance";
-import { handleApiError } from "@/lib/utils";
+} from "@/services/swagger-types";
 
 const authApi = {
   login(form: LoginDto) {

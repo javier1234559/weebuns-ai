@@ -26,7 +26,48 @@ function CommentSystem({
     image: "/avatars/user.png",
   },
 }: CommentSystemProps) {
-  const [comments, setComments] = useState<Comment[]>(initialComments);
+  const [comments, setComments] = useState<Comment[]>([
+    {
+      id: "1",
+      content: "This is a great post! Really enjoyed reading it.",
+      author: {
+        name: "John Doe",
+        image: "/avatars/john.png",
+        isAuthor: false,
+      },
+      likes: 5,
+      specialLikes: 2,
+      createdAt: "2024-03-20T10:00:00Z",
+      replies: [
+        {
+          id: "1-1",
+          content: "Thank you for your kind words!",
+          author: {
+            name: "Post Author",
+            image: "/avatars/author.png",
+            isAuthor: true,
+          },
+          likes: 3,
+          specialLikes: 1,
+          createdAt: "2024-03-20T10:30:00Z",
+          replyTo: "1",
+        },
+      ],
+    },
+    {
+      id: "2",
+      content: "Interesting perspective on this topic.",
+      author: {
+        name: "Jane Smith",
+        image: "/avatars/jane.png",
+        isAuthor: false,
+      },
+      likes: 3,
+      specialLikes: 0,
+      createdAt: "2024-03-20T09:00:00Z",
+      replies: [],
+    },
+  ]);
   const [newComment, setNewComment] = useState("");
   const [activeReplyId, setActiveReplyId] = useState<string | null>(null);
   const [expandedComments, setExpandedComments] = useState<Set<string>>(

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Pane, SplitPane } from "@/components/feature/SplitLayout";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { MultipleChoiceQuiz } from "@/components/feature/MultipleChoiceQuiz";
-import QuestionSheet from "@/feature/reading/provider/QuestionSheet";
+import QuestionSheet from "@/components/feature/QuestionSheet";
 import { Timer } from "@/components/feature/Timer";
 import WaveAudio from "@/components/feature/WaveAudio";
 

@@ -218,7 +218,7 @@ const config: Config = {
     },
   },
   plugins: [
-    require("@tailwindcss/aspect-ratio"),
+    // require("@tailwindcss/aspect-ratio"),
     require("tailwindcss-animate"),
     require("tailwind-scrollbar"),
     require("@tailwindcss/typography"),

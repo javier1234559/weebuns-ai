@@ -1,6 +1,5 @@
 "use client";
 
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,8 +7,6 @@ import * as yup from "yup";
 import Image from "next/image";
 import Link from "next/link";
 
-import { login } from "@/store/authSlice";
-import authApi from "@/feature/auth/services/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,7 +42,6 @@ const schema = yup.object().shape({
 type FormData = yup.InferType<typeof schema>;
 
 export function RegisterForm() {
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const {
@@ -58,17 +54,21 @@ export function RegisterForm() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const userData = await authApi.register({
-        firstName: data.firstName,
-        lastName: data.lastName,
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        nativeLanguage: "en",
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          username: data.username,
+          email: data.email,
+          password: data.password,
+        }),
       });
+      const userData = await response.json();
       console.log(userData);
-      // dispatch(login(userData));
-      router.push(RouteNames.Home);
+
+      // router.push(RouteNames.Home);
     } catch (error) {
       console.error("Failed to register:", error);
     }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,9 +8,8 @@ import * as yup from "yup";
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 
-import { login } from "@/store/authSlice";
-import authApi from "@/feature/auth/services/authApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RouteNames } from "@/constraints/route-name";
@@ -33,7 +31,6 @@ type FormData = yup.InferType<typeof schema>;
 
 export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const {
@@ -49,21 +46,36 @@ export function LoginForm() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const userData = await authApi.login({
-        email: data.email,
-        password: data.password,
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+        }),
       });
-      console.log(userData);
-      // dispatch(login(userData));
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json();
+
+      console.log('Response data:', responseData);
+      //TODO : set to global state
+
       router.push(RouteNames.Home);
     } catch (error) {
-      console.error("Failed to login:", error);
-      // Handle error (show toast notification, error message, etc.)
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.");
     }
   };
 
   const handleGoogleLogin = (data: any) => {
     console.log(data);
+
+
+    //TODO : set to global state
     // dispatch(login(data));
     // router.push(RouteNames.Dashboard);
   };

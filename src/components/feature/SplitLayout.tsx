@@ -1,13 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { SquareSplitHorizontal } from "lucide-react";
 import { useState, useRef, useEffect, useCallback, ReactNode } from "react";
 
 const MIN_SIZE = 10;
 const MAX_SIZE = 90;
 const DEFAULT_SIZE = 50;
-
 
 interface ResizerProps {
   direction: "vertical" | "horizontal";
@@ -15,7 +13,6 @@ interface ResizerProps {
 }
 
 export function Resizer({ direction, onMouseDown }: ResizerProps) {
-
   const isVertical = direction === "vertical";
   return (
     <div
@@ -25,7 +22,12 @@ export function Resizer({ direction, onMouseDown }: ResizerProps) {
       style={{ [isVertical ? "width" : "height"]: "4px" }}
       onMouseDown={onMouseDown}
     >
-      <div className={cn("absolute -translate-y-1/2 bg-muted-foreground", isVertical ? "left-1/2 h-[100px] w-px" : "top-1/2 h-px w-[100px]")} />
+      <div
+        className={cn(
+          "absolute -translate-y-1/2 bg-muted-foreground",
+          isVertical ? "left-1/2 h-[100px] w-px" : "top-1/2 h-px w-[100px]",
+        )}
+      />
     </div>
   );
 }
@@ -36,7 +38,9 @@ interface PaneProps {
 }
 
 export function Pane({ children, className }: PaneProps) {
-  return <div className={`size-full overflow-auto ${className}`}>{children}</div>;
+  return (
+    <div className={`size-full overflow-auto ${className}`}>{children}</div>
+  );
 }
 
 interface SplitPaneProps {
@@ -81,11 +85,9 @@ export function SplitPane({
         ? ((e.clientX - rect.left) / rect.width) * 100
         : ((e.clientY - rect.top) / rect.height) * 100;
 
-
-
       setSize(Math.min(Math.max(newSize, minSize), maxSize));
     },
-    [isVertical, minSize, maxSize]
+    [isVertical, minSize, maxSize],
   );
 
   useEffect(() => {
@@ -100,9 +102,7 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={`flex size-full ${
-        isVertical ? "flex-row" : "flex-col"
-      } `}
+      className={`flex size-full ${isVertical ? "flex-row" : "flex-col"} `}
     >
       {/* First Pane */}
       <div

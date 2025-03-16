@@ -7,8 +7,6 @@ import {
 import { toast } from "sonner";
 
 import AppIcon from "@/components/common/app-icon";
-import authApi from "@/feature/auth/services/authApi";
-import { Button } from "@/components/ui/button";
 
 declare global {
   interface Window {
@@ -27,17 +25,37 @@ interface GoogleFormProps {
 }
 
 function GoogleForm({ onSubmit }: GoogleFormProps) {
+  async function handleLoginByApiRoute(credential: string) {
+    if (!credential) throw new Error("No credential provided");
+
+    try {
+      const response = await fetch("/api/auth/google", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credential }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  }
+
   const handleGoogleResponse = async (
     response: CredentialResponse | TokenResponse | CodeResponse,
   ) => {
     if ("access_token" in response) {
       try {
-        const result = await authApi.loginGoogle(response.access_token);
-
-        console.log(result);
+        const result = await handleLoginByApiRoute(response.access_token);
         onSubmit(result);
       } catch (error) {
-        console.error("Google One Tap login failed:", error);
+        toast.error("Login failed. Please try again.");
       }
     } else {
       console.error("Google One Tap login failed:", response);

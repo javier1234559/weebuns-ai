@@ -23,6 +23,7 @@ const nextConfig = {
   experimental: {
     runtime: 'nodejs',
   },
+  swcMinify: false,
 }
 
 // @ts-ignore
