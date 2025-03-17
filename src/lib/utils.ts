@@ -19,7 +19,7 @@ export const decodeJWT = <Payload = any>(token: string) => {
 };
 
 export const handleApiError = (error: any) => {
-  console.error(error);
+  // console.error(error);
   toast.error(error.message);
 };
 

@@ -13,10 +13,10 @@ const authApi = {
     return api
       .authControllerLogin(form)
       .then((res) => res.data)
-      .catch((err) => {
-        handleApiError(err);
-        throw err.response.data;
-      });
+      // .catch((err) => {
+      //   handleApiError(err);
+      //   throw err.response.data;
+      // });
   },
   register(form: RegisterDto) {
     return api
@@ -52,10 +52,18 @@ const authApi = {
     });
   },
   logout() {
-    return api.authControllerLogout().catch((err) => {
-      handleApiError(err);
-      return null;
-    });
+    return api.authControllerLogout()
+    // .catch((err) => {
+    //   handleApiError(err);
+    //   return null;
+    // });
+  },
+  refreshToken() {
+    return api.authControllerRefreshToken()
+    // .catch((err) => {
+    //   handleApiError(err);
+    //   return null;
+    // });
   },
   requestResetPass(data: RequestResetPasswordDto) {
     return api

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import FluidTabs from "@/components/animata/card/fluid-tabs";
 import AppLink from "@/components/common/app-link";
 import ThemeToggle from "@/components/feature/ThemeToggle";
@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { RouteNames } from "@/constraints/route-name";
 import useScroll from "@/hooks/useScroll";
 import {
-  BookOpenIcon,
   HomeIcon,
   GraduationCapIcon,
   NewspaperIcon,
@@ -20,10 +19,19 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import AvatarMenu from "@/feature/auth/components/AvatarMenu";
+import { useAuthStore } from "@/store/auth-store";
+import { useClickOutside } from "@/hooks/useClickOutside";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const isScrolled = useScroll({ threshold: 10 });
+  const token = useAuthStore((state) => state.accessToken);
+
+  useClickOutside(menuRef, () => {
+    if (isMenuOpen) setIsMenuOpen(false);
+  });
 
   const tabs = [
     {
@@ -86,14 +94,24 @@ const Header = () => {
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 lg:flex">
             <ThemeToggle />
-            <Link href={RouteNames.SignUp}>
-              <Button>Sign Up</Button>
-            </Link>
-            <Link href={RouteNames.SignIn}>
-              <Button variant="outline" className="transition-colors">
-                Sign In
-              </Button>
-            </Link>
+            {token ? (
+              <AvatarMenu
+                src="/default-avatar.png"
+                fallback="U"
+                className="h-8 w-8"
+              />
+            ) : (
+              <>
+                <Link href={RouteNames.SignUp}>
+                  <Button>Sign Up</Button>
+                </Link>
+                <Link href={RouteNames.SignIn}>
+                  <Button variant="outline" className="transition-colors">
+                    Sign In
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Hamburger Button */}
@@ -111,18 +129,18 @@ const Header = () => {
           {/* Mobile Menu */}
           <AnimatePresence>
             {isMenuOpen && (
-              <div className="fixed inset-0 z-50 lg:hidden">
+              <div className="fixed inset-0 z-[100] lg:hidden">
                 {/* Backdrop */}
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   className="absolute inset-0 bg-black/50"
-                  onClick={() => setIsMenuOpen(false)}
                 />
 
                 {/* Menu Content */}
                 <motion.div
+                  ref={menuRef}
                   initial={{ x: "-100%" }}
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
@@ -131,7 +149,7 @@ const Header = () => {
                     duration: 0.2,
                     ease: "easeOut",
                   }}
-                  className="absolute top-0 w-full bg-background p-4 shadow-lg"
+                  className="absolute left-0 top-0 h-screen w-[300px] overflow-y-auto bg-background p-4 shadow-lg"
                 >
                   <div className="flex flex-col space-y-4">
                     {/* Logo in Mobile Menu */}
@@ -169,18 +187,30 @@ const Header = () => {
                     ))}
                     <div className="flex flex-col gap-2 border-t pt-4">
                       <ThemeToggle />
-                      <Link href={RouteNames.SignUp}>
-                        <Button className="w-full">Sign Up</Button>
-                      </Link>
-                      <Link href={RouteNames.SignIn}>
-                        <Button
-                          variant="outline"
-                          className="w-full hover:bg-secondary/50"
-                          style={{ transition: "none" }}
-                        >
-                          Sign In
-                        </Button>
-                      </Link>
+                      {token ? (
+                        <div className="w-full">
+                          <AvatarMenu
+                            src="/default-avatar.png"
+                            fallback="U"
+                            className="h-8 w-8"
+                          />
+                        </div>
+                      ) : (
+                        <>
+                          <Link href={RouteNames.SignUp}>
+                            <Button className="w-full">Sign Up</Button>
+                          </Link>
+                          <Link href={RouteNames.SignIn}>
+                            <Button
+                              variant="outline"
+                              className="w-full hover:bg-secondary/50"
+                              style={{ transition: "none" }}
+                            >
+                              Sign In
+                            </Button>
+                          </Link>
+                        </>
+                      )}
                     </div>
                   </div>
                 </motion.div>

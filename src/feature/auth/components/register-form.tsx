@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RouteNames } from "@/constraints/route-name";
+import { toast } from "sonner";
+import { useAuthStore } from "@/store/auth-store";
 
 const schema = yup.object().shape({
   firstName: yup
@@ -66,9 +68,17 @@ export function RegisterForm() {
         }),
       });
       const userData = await response.json();
-      console.log(userData);
 
-      // router.push(RouteNames.Home);
+      if (!response.ok) {
+        toast.error(userData.message || 'Register failed');
+        return;
+      }
+
+      // Use the auth store to save user data
+      useAuthStore.getState().login(userData);
+      toast.success('Register successful!');
+
+      router.push(RouteNames.Home);
     } catch (error) {
       console.error("Failed to register:", error);
     }

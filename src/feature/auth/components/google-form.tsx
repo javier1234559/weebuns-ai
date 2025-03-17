@@ -35,15 +35,16 @@ function GoogleForm({ onSubmit }: GoogleFormProps) {
         body: JSON.stringify({ credential }),
       });
 
+      const data = await response.json();
       if (!response.ok) {
+        toast.error(data.message || 'Login failed');
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
       return data;
     } catch (error) {
       console.error("Login error:", error);
-      throw error;
+      toast.error("Login failed. Please try again.");
     }
   }
 

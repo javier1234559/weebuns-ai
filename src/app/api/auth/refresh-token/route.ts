@@ -1,19 +1,14 @@
 import authApi from "@/feature/auth/services/authApi";
 import { NextResponse } from "next/server";
 
+interface RefreshTokenResponse {
+  access_token: string;
+  refresh_token: string;
+}
+
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { credential } = body;
-
-    if (!credential) {
-      return NextResponse.json(
-        { error: "Missing credential" },
-        { status: 400 }
-      );
-    }
-
-    const data = await authApi.loginGoogle(credential);
+    const data = await authApi.refreshToken() as unknown as RefreshTokenResponse;
 
     const response = NextResponse.json(data);
 

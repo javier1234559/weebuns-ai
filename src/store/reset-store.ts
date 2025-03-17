@@ -7,6 +7,11 @@ interface ResetStore {
 
 const useResetStore = create<ResetStore>((set) => ({
   resetAllState: () => {
+    // Reset auth store state
+    useAuthStore.setState({
+      accessToken: null,
+    });
+    // Clear persistent storage
     useAuthStore.persist.clearStorage();
   },
 }));
