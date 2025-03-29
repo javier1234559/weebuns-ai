@@ -30,18 +30,7 @@ export const useListeningList = (
 export const useListeningDetail = (id: string, options?: unknown) => {
   return useQuery({
     queryKey: LISTENING_KEY_FACTORY.detail(id),
-    queryFn: () => ({
-      data: detailListening,
-      pagination: {
-        totalItems: 1,
-        currentPage: 1,
-        totalPages: 2,
-        itemsPerPage: 10,
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-    }),
-    retry: false,
+    queryFn: () => lessonApi.getListeningById(id),
     staleTime: 1000 * 60 * 5, // 5 minutes
     ...(typeof options === "object" ? options : {}),
   });

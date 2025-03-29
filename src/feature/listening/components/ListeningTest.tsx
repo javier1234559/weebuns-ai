@@ -1,22 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useIsMobile } from "@/hooks/useMediaQuery";
 import { MultipleChoiceQuiz } from "@/components/feature/MultipleChoiceQuiz";
 import QuestionSheet from "@/components/feature/QuestionSheet";
 import { Timer } from "@/components/feature/Timer";
 import WaveAudio from "@/components/feature/WaveAudio";
-
+import { QuestionDTO } from "@/services/swagger-types";
 interface ListeningTestProps {
   title: string;
   description: string;
   audioUrl: string;
-  questions: {
-    id: string;
-    question: string;
-    options: string[];
-    answer: string;
-  }[];
+  questions: QuestionDTO[];
 }
 
 export function ListeningTest({
@@ -25,7 +19,6 @@ export function ListeningTest({
   audioUrl,
   questions,
 }: ListeningTestProps) {
-  const isMobile = useIsMobile();
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<string, string>
   >({});

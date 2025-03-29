@@ -30,18 +30,7 @@ export const useReadingList = (
 export const useReadingDetail = (id: string, options?: unknown) => {
   return useQuery({
     queryKey: READING_KEY_FACTORY.detail(id),
-    queryFn: () => ({
-      data: detailReading,
-      pagination: {
-        totalItems: 1,
-        currentPage: 1,
-        totalPages: 2,
-        itemsPerPage: 10,
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-    }),
-    retry: false,
+    queryFn: () => lessonApi.getReadingById(id),
     staleTime: 1000 * 60 * 5, // 5 minutes
     ...(typeof options === "object" ? options : {}),
   });

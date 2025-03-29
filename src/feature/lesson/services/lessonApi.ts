@@ -7,6 +7,8 @@ import {
   ListeningResponse,
   ReadingResponse,
   SkillType,
+  SpeakingResponse,
+  WritingResponse,
 } from "@/services/swagger-types";
 import { ContentStatus } from "@/services/swagger-types";
 
@@ -95,6 +97,64 @@ const lessonApi = {
     return api
       .lessonControllerUpdateListening(id, data)
       .then((res: any) => res.data as ListeningResponse)
+      .catch((err: any) => {
+        handleApiError(err);
+        throw err.response.data;
+      });
+  },
+
+  //writing
+  getWritingById(id: string) {
+    return api
+      .lessonControllerFindOneWriting(id)
+      .then((res: any) => res.data as WritingResponse)
+      .catch((err: any) => {
+        handleApiError(err);
+        throw err.response.data;
+      });
+  },
+  createWriting(data: any) {
+    return api
+      .lessonControllerCreateWriting(data)
+      .then((res: any) => res.data as WritingResponse)
+      .catch((err: any) => {
+        handleApiError(err);
+        throw err.response.data;
+      });
+  },
+  updateWriting(id: string, data: any) {
+    return api
+      .lessonControllerUpdateWriting(id, data)
+      .then((res: any) => res.data as WritingResponse)
+      .catch((err: any) => {
+        handleApiError(err);
+        throw err.response.data;
+      });
+  },
+
+  //speaking
+  getSpeakingById(id: string) {
+    return api
+      .lessonControllerFindOneSpeaking(id)
+      .then((res: any) => res.data as SpeakingResponse)
+      .catch((err: any) => {
+        handleApiError(err);
+        throw err.response.data;
+      });
+  },
+  createSpeaking(data: any) {
+    return api
+      .lessonControllerCreateSpeaking(data)
+      .then((res: any) => res.data as SpeakingResponse)
+      .catch((err: any) => {
+        handleApiError(err);
+        throw err.response.data;
+      });
+  },
+  updateSpeaking(id: string, data: any) {
+    return api
+      .lessonControllerUpdateSpeaking(id, data)
+      .then((res: any) => res.data as SpeakingResponse)
       .catch((err: any) => {
         handleApiError(err);
         throw err.response.data;

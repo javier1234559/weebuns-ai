@@ -30,18 +30,7 @@ export const useSpeakingList = (
 export const useSpeakingDetail = (id: string, options?: unknown) => {
   return useQuery({
     queryKey: SPEAKING_KEY_FACTORY.detail(id),
-    queryFn: () => ({
-      data: detailSpeaking,
-      pagination: {
-        totalItems: 1,
-        currentPage: 1,
-        totalPages: 2,
-        itemsPerPage: 10,
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-    }),
-    retry: false,
+    queryFn: () => lessonApi.getSpeakingById(id),
     staleTime: 1000 * 60 * 5, // 5 minutes
     ...(typeof options === "object" ? options : {}),
   });

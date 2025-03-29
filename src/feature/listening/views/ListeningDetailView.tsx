@@ -25,8 +25,8 @@ export function ListeningDetailView({ id }: ListeningDetailViewProps) {
     <ListeningTest
       title={data?.data.title ?? ""}
       description={data?.data.description ?? ""}
-      audioUrl={sampleListening.audio_url ?? ""}
-      questions={sampleListening.questions ?? []}
+      audioUrl={data?.data.content?.audio_url ?? ""}
+      questions={data?.data.content?.questions ?? []}
     />
   );
 }

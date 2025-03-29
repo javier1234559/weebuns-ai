@@ -26,7 +26,7 @@ export function SpeakingDetailView({ id }: SpeakingDetailViewProps) {
         <h1 className="text-2xl font-bold">{data?.data.title}</h1>
         <p className="text-sm text-gray-500">{data?.data.description}</p>
       </div>
-      <VoiceChat context={"just talk about vietnam food"} />
+      <VoiceChat context={data?.data.content?.prompt_text} />
     </div>
   );
 }

@@ -11,7 +11,7 @@ export default function SpeakingPageDetail({
   const breadcrumb = [
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Speaking", href: RouteNames.Speaking },
-    { title: `Bài nói: ${id}`, href: RouteNames.SpeakingDetail },
+    { title: `Chi tiết bài nói`, href: RouteNames.SpeakingDetail },
   ];
 
   return (
@@ -20,7 +20,7 @@ export default function SpeakingPageDetail({
         <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
       </div>
       <div className="mb-2 w-full p-4">
-        <h1 className="text-4xl font-bold">Chi tiết Speaking</h1>
+        <h1 className="text-4xl font-bold">Chi tiết bài nói</h1>
       </div>
       <div className="w-full">
         <SpeakingDetailView id={id} />

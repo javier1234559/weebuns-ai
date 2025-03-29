@@ -65,7 +65,7 @@ export function ListeningView() {
     ...(lessonType && { lessonType: lessonType as LessonType }),
     ...(level && { level: level as LevelType }),
     ...(topic && { topic: topic }),
-    skill: "writing" as SkillType,
+    skill: "listening" as SkillType,
     status: ContentStatus.Published,
   });
 

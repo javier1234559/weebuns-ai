@@ -210,7 +210,7 @@ export interface UserResponse {
 export interface TeacherDto {
   username: string;
   email: string;
-  password: string;
+  password?: string;
   firstName: string;
   lastName: string;
   profilePicture?: string;
@@ -494,10 +494,6 @@ export interface DeleteLessonResponse {
   message: string;
 }
 
-export interface ReadingResponse {
-  data: Lesson;
-}
-
 export interface AnswerDTO {
   answer: string;
 }
@@ -514,6 +510,36 @@ export interface QuestionDTO {
 export interface ContentReadingDTO {
   text: string;
   questions: QuestionDTO[];
+}
+
+export interface ReadingLesson {
+  id: string;
+  skill: SkillType;
+  title: string;
+  description: string | null;
+  lessonType: LessonType;
+  level: string;
+  topic: string;
+  /** @format int32 */
+  timeLimit: number | null;
+  content: ContentReadingDTO | null;
+  tags: string[];
+  thumbnailUrl: string | null;
+  status: ContentStatus;
+  createdById: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format date-time */
+  deletedAt: string | null;
+  createdBy?: User;
+  submissions?: LessonSubmission[];
+  levelRef?: ReferenceData;
+}
+
+export interface ReadingResponse {
+  data: ReadingLesson;
 }
 
 export interface CreateReadingDTO {
@@ -544,13 +570,39 @@ export interface UpdateReadingDTO {
   content?: ContentReadingDTO;
 }
 
-export interface ListeningResponse {
-  data: Lesson;
-}
-
 export interface ContentListeningDTO {
   audio_url: string;
   questions: QuestionDTO[];
+}
+
+export interface ListeningLesson {
+  id: string;
+  skill: SkillType;
+  title: string;
+  description: string | null;
+  lessonType: LessonType;
+  level: string;
+  topic: string;
+  /** @format int32 */
+  timeLimit: number | null;
+  content: ContentListeningDTO | null;
+  tags: string[];
+  thumbnailUrl: string | null;
+  status: ContentStatus;
+  createdById: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format date-time */
+  deletedAt: string | null;
+  createdBy?: User;
+  submissions?: LessonSubmission[];
+  levelRef?: ReferenceData;
+}
+
+export interface ListeningResponse {
+  data: ListeningLesson;
 }
 
 export interface CreateListeningDTO {
@@ -581,14 +633,40 @@ export interface UpdateListeningDTO {
   content?: ContentListeningDTO;
 }
 
-export interface WritingResponse {
-  data: Lesson;
-}
-
 export interface ContentWritingDTO {
   content_text: string;
   instruction_text: string;
   prompt_text: string;
+}
+
+export interface WritingLesson {
+  id: string;
+  skill: SkillType;
+  title: string;
+  description: string | null;
+  lessonType: LessonType;
+  level: string;
+  topic: string;
+  /** @format int32 */
+  timeLimit: number | null;
+  content: ContentWritingDTO | null;
+  tags: string[];
+  thumbnailUrl: string | null;
+  status: ContentStatus;
+  createdById: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format date-time */
+  deletedAt: string | null;
+  createdBy?: User;
+  submissions?: LessonSubmission[];
+  levelRef?: ReferenceData;
+}
+
+export interface WritingResponse {
+  data: WritingLesson;
 }
 
 export interface CreateWritingDTO {
@@ -619,13 +697,39 @@ export interface UpdateWritingDTO {
   content?: ContentWritingDTO;
 }
 
-export interface SpeakingResponse {
-  data: Lesson;
-}
-
 export interface ContentSpeakingDTO {
   topic_text: string;
   prompt_text: string;
+}
+
+export interface SpeakingLesson {
+  id: string;
+  skill: SkillType;
+  title: string;
+  description: string | null;
+  lessonType: LessonType;
+  level: string;
+  topic: string;
+  /** @format int32 */
+  timeLimit: number | null;
+  content: ContentSpeakingDTO | null;
+  tags: string[];
+  thumbnailUrl: string | null;
+  status: ContentStatus;
+  createdById: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format date-time */
+  deletedAt: string | null;
+  createdBy?: User;
+  submissions?: LessonSubmission[];
+  levelRef?: ReferenceData;
+}
+
+export interface SpeakingResponse {
+  data: SpeakingLesson;
 }
 
 export interface CreateSpeakingDTO {
@@ -656,108 +760,38 @@ export interface UpdateSpeakingDTO {
   content?: ContentSpeakingDTO;
 }
 
-export interface CreateVocabularyDto {
-  term: string;
-  meaning: string[];
-  exampleSentence?: string | null;
-  imageUrl?: string | null;
-  referenceLink?: string | null;
-  referenceName?: string | null;
-  tags: string[];
-  /** @format date-time */
-  nextReview?: string | null;
-  /**
-   * Repetition level from 0 to 6
-   * @example 1
-   */
-  repetitionLevel?: number | null;
+export interface CreateCommentDto {
+  /** The ID of the entity being commented on */
+  entityId: string;
+  /** The content of the comment */
+  content: string;
+  /** The ID of the parent comment if this is a reply */
+  parentId?: string;
+  /** The ID of the submission being commented on */
+  submissionId: string;
 }
 
-export interface VocabularyDto {
-  id: string;
-  term: string;
-  meaning: string[];
-  exampleSentence: string | null;
-  imageUrl: string | null;
-  referenceLink: string | null;
-  referenceName: string | null;
-  tags: string[];
-  /** @format int32 */
-  repetitionLevel: number;
-  /** @format date-time */
-  nextReview: string | null;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
+export type Comment = object;
+
+export interface CreateCommentResponse {
+  comment: Comment;
 }
 
-export interface VocabularyPractice {
-  id: string;
-  userId: string;
-  vocabularyId: string;
-  /** @format float */
-  successRate: number | null;
-  /** @format date-time */
-  lastPracticed: string | null;
-  /** @format date-time */
-  nextReview: string | null;
-  /** @format date-time */
-  createdAt: string;
-  user?: User;
-  vocabulary?: Vocabulary;
-}
-
-export interface Vocabulary {
-  id: string;
-  term: string;
-  meaning: string[];
-  exampleSentence: string | null;
-  imageUrl: string | null;
-  referenceLink: string | null;
-  referenceName: string | null;
-  tags: string[];
-  /** @format int32 */
-  repetitionLevel: number;
-  /** @format date-time */
-  nextReview: string | null;
-  createdById: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  createdBy?: User;
-  practices?: VocabularyPractice[];
-}
-
-export interface VocabularyResponseDto {
-  data: Vocabulary;
+export interface CommentsResponse {
+  comments: Comment[];
   pagination: PaginationOutputDto;
 }
 
-export interface UpdateVocabularyDto {
-  term?: string;
-  meaning?: string[];
-  exampleSentence?: string | null;
-  imageUrl?: string | null;
-  referenceLink?: string | null;
-  referenceName?: string | null;
-  tags?: string[];
-  /** @format date-time */
-  nextReview?: string | null;
-  /**
-   * Repetition level from 0 to 6
-   * @example 1
-   */
-  repetitionLevel?: number | null;
+export interface CommentResponse {
+  comment: Comment;
 }
 
-export interface UpdateVocabularyReviewDto {
-  /**
-   * Repetition level from 0 to 6
-   * @example 1
-   */
-  repetitionLevel: number;
+export interface UpdateCommentResponse {
+  comment: Comment;
+}
+
+export interface DeleteCommentResponse {
+  comment: Comment;
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -1431,6 +1465,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         level?: string;
         topic?: string;
         status?: string;
+        lessonType?: string;
         tag?: string[];
       },
       params: RequestParams = {},
@@ -1684,15 +1719,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags vocabularies
-     * @name VocabularyControllerCreate
-     * @summary Create a new vocabulary
-     * @request POST:/api/vocabularies
+     * @tags comments
+     * @name CommentControllerCreate
+     * @summary Create a new comment
+     * @request POST:/api/comments
      * @secure
      */
-    vocabularyControllerCreate: (data: CreateVocabularyDto, params: RequestParams = {}) =>
-      this.request<VocabularyDto, any>({
-        path: `/api/vocabularies`,
+    commentControllerCreate: (data: CreateCommentDto, params: RequestParams = {}) =>
+      this.request<CreateCommentResponse, any>({
+        path: `/api/comments`,
         method: "POST",
         body: data,
         secure: true,
@@ -1704,27 +1739,24 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags vocabularies
-     * @name VocabularyControllerFindAll
-     * @summary Get all vocabularies with pagination
-     * @request GET:/api/vocabularies
+     * @tags comments
+     * @name CommentControllerFindAll
+     * @summary Get all comments
+     * @request GET:/api/comments
      * @secure
      */
-    vocabularyControllerFindAll: (
-      query?: {
+    commentControllerFindAll: (
+      query: {
         /** @default 1 */
         page?: number;
         /** @default 10 */
         perPage?: number;
-        /** Filter vocabularies by tags */
-        tags?: string[];
-        /** Search vocabularies by term */
-        term?: string;
+        submissionId: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<VocabularyResponseDto, any>({
-        path: `/api/vocabularies`,
+      this.request<CommentsResponse, any>({
+        path: `/api/comments`,
         method: "GET",
         query: query,
         secure: true,
@@ -1735,15 +1767,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags vocabularies
-     * @name VocabularyControllerGetDueVocabularies
-     * @summary Get all vocabularies due for review
-     * @request GET:/api/vocabularies/due
+     * @tags comments
+     * @name CommentControllerFindOne
+     * @summary Get a comment by ID
+     * @request GET:/api/comments/{id}
      * @secure
      */
-    vocabularyControllerGetDueVocabularies: (params: RequestParams = {}) =>
-      this.request<VocabularyDto[], any>({
-        path: `/api/vocabularies/due`,
+    commentControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<CommentResponse, any>({
+        path: `/api/comments/${id}`,
         method: "GET",
         secure: true,
         format: "json",
@@ -1753,16 +1785,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags vocabularies
-     * @name VocabularyControllerFindOne
-     * @summary Get a vocabulary by id
-     * @request GET:/api/vocabularies/{id}
+     * @tags comments
+     * @name CommentControllerUpdate
+     * @summary Update a comment
+     * @request PUT:/api/comments/{id}
      * @secure
      */
-    vocabularyControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<VocabularyDto, any>({
-        path: `/api/vocabularies/${id}`,
-        method: "GET",
+    commentControllerUpdate: (id: string, params: RequestParams = {}) =>
+      this.request<UpdateCommentResponse, any>({
+        path: `/api/comments/${id}`,
+        method: "PUT",
         secure: true,
         format: "json",
         ...params,
@@ -1771,35 +1803,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags vocabularies
-     * @name VocabularyControllerUpdate
-     * @summary Update a vocabulary
-     * @request PATCH:/api/vocabularies/{id}
+     * @tags comments
+     * @name CommentControllerRemove
+     * @summary Delete a comment
+     * @request DELETE:/api/comments/{id}
      * @secure
      */
-    vocabularyControllerUpdate: (id: string, data: UpdateVocabularyDto, params: RequestParams = {}) =>
-      this.request<VocabularyDto, any>({
-        path: `/api/vocabularies/${id}`,
-        method: "PATCH",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags vocabularies
-     * @name VocabularyControllerRemove
-     * @summary Delete a vocabulary
-     * @request DELETE:/api/vocabularies/{id}
-     * @secure
-     */
-    vocabularyControllerRemove: (id: string, params: RequestParams = {}) =>
-      this.request<VocabularyDto, any>({
-        path: `/api/vocabularies/${id}`,
+    commentControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteCommentResponse, any>({
+        path: `/api/comments/${id}`,
         method: "DELETE",
         secure: true,
         format: "json",
@@ -1809,19 +1821,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags vocabularies
-     * @name VocabularyControllerUpdateReviewStatus
-     * @summary Update vocabulary review status
-     * @request PATCH:/api/vocabularies/{id}/review
+     * @tags comments
+     * @name CommentControllerFindReplies
+     * @summary Get all replies for a comment
+     * @request GET:/api/comments/{id}/replies
      * @secure
      */
-    vocabularyControllerUpdateReviewStatus: (id: string, data: UpdateVocabularyReviewDto, params: RequestParams = {}) =>
-      this.request<VocabularyDto, any>({
-        path: `/api/vocabularies/${id}/review`,
-        method: "PATCH",
-        body: data,
+    commentControllerFindReplies: (id: string, params: RequestParams = {}) =>
+      this.request<CommentResponse[], any>({
+        path: `/api/comments/${id}/replies`,
+        method: "GET",
         secure: true,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),

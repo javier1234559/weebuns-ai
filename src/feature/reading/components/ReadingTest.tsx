@@ -7,17 +7,12 @@ import { MultipleChoiceQuiz } from "@/components/feature/MultipleChoiceQuiz";
 import QuestionSheet from "@/components/feature/QuestionSheet";
 import { Timer } from "@/components/feature/Timer";
 import ReadingViewer from "@/feature/reading/components/ReadingViewer";
-
+import { QuestionDTO } from "@/services/swagger-types";
 interface ReadingTestProps {
   title: string;
   description: string;
   content: string;
-  questions: {
-    id: string;
-    question: string;
-    options: string[];
-    answer: string;
-  }[];
+  questions: QuestionDTO[];
 }
 
 export function ReadingTest({

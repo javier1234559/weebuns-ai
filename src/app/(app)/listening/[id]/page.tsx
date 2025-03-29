@@ -11,7 +11,7 @@ export default function ListeningPageDetail({
   const breadcrumb = [
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Listening", href: RouteNames.Listening },
-    { title: `Bài nghe: ${id}`, href: RouteNames.ListeningDetail },
+    { title: `Chi tiết bài nghe`, href: RouteNames.ListeningDetail },
   ];
 
   return (

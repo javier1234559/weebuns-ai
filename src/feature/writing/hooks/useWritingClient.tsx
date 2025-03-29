@@ -31,18 +31,7 @@ export const useWritingList = (
 export const useWritingDetail = (id: string, options?: unknown) => {
   return useQuery({
     queryKey: WRITING_KEY_FACTORY.detail(id),
-    queryFn: () => ({
-      data: detailWriting,
-      pagination: {
-        totalItems: 1,
-        currentPage: 1,
-        totalPages: 2,
-        itemsPerPage: 10,
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-    }),
-    retry: false,
+    queryFn: () => lessonApi.getWritingById(id),
     staleTime: 1000 * 60 * 5, // 5 minutes
     ...(typeof options === "object" ? options : {}),
   });

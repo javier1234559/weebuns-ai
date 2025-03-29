@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CircleHelp } from "lucide-react";
 import { memo } from "react";
-
+import { QuestionDTO } from "@/services/swagger-types";
 interface QuestionSheetProps {
-  questions: Question[];
+  questions: QuestionDTO[];
   selectedAnswers: Record<string, string>;
   currentQuestionId?: string;
   showCorrectAnswers?: boolean;
@@ -32,10 +32,10 @@ function QuestionSheet({
   onQuestionSelect,
   onBookmarkToggle,
 }: QuestionSheetProps) {
-  const getQuestionStatus = (question: Question) => {
+  const getQuestionStatus = (question: QuestionDTO) => {
     if (!selectedAnswers[question.id]) return "unanswered";
     if (!showCorrectAnswers) return "answered";
-    return selectedAnswers[question.id] === question.answer
+    return selectedAnswers[question.id] === question.right_answer
       ? "correct"
       : "incorrect";
   };

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { BookmarkIcon } from "lucide-react";
-
+import { QuestionDTO } from "@/services/swagger-types";
 export interface Question {
   id: string;
   question: string;
@@ -11,7 +11,7 @@ export interface Question {
 }
 
 interface MultipleChoiceQuizProps {
-  questions: Question[];
+  questions: QuestionDTO[];
   selectedAnswers?: Record<string, string>;
   onAnswerSelect?: (questionId: string, answer: string) => void;
   showCorrectAnswers?: boolean;
@@ -29,47 +29,56 @@ export function MultipleChoiceQuiz({
   bookmarkedQuestions = new Set(),
   onBookmarkToggle,
 }: MultipleChoiceQuizProps) {
-  const getOptionStyle = (question: Question, option: string) => {
+  const getOptionStyle = (question: QuestionDTO, option: string) => {
     if (!showCorrectAnswers) {
       return selectedAnswers[question.id] === option
         ? "border-primary bg-primary/10"
         : "";
     }
 
-    if (option === question.answer) {
+    if (option === question.right_answer) {
       return "border-success bg-success/10 dark:bg-success/20";
     }
-    if (selectedAnswers[question.id] === option && option !== question.answer) {
+    if (
+      selectedAnswers[question.id] === option &&
+      option !== question.right_answer
+    ) {
       return "border-destructive bg-destructive/10 dark:bg-destructive/20";
     }
     return "";
   };
 
-  const getRadioStyle = (question: Question, option: string) => {
+  const getRadioStyle = (question: QuestionDTO, option: string) => {
     if (!showCorrectAnswers) {
       return selectedAnswers[question.id] === option
         ? "border-primary"
         : "border-muted-foreground/30";
     }
 
-    if (option === question.answer) {
+    if (option === question.right_answer) {
       return "border-success";
     }
-    if (selectedAnswers[question.id] === option && option !== question.answer) {
+    if (
+      selectedAnswers[question.id] === option &&
+      option !== question.right_answer
+    ) {
       return "border-destructive";
     }
     return "border-muted-foreground/30";
   };
 
-  const getDotStyle = (question: Question, option: string) => {
+  const getDotStyle = (question: QuestionDTO, option: string) => {
     if (!showCorrectAnswers) {
       return selectedAnswers[question.id] === option ? "bg-primary" : "";
     }
 
-    if (option === question.answer) {
+    if (option === question.right_answer) {
       return "bg-success";
     }
-    if (selectedAnswers[question.id] === option && option !== question.answer) {
+    if (
+      selectedAnswers[question.id] === option &&
+      option !== question.right_answer
+    ) {
       return "bg-destructive";
     }
     return "";
@@ -103,35 +112,36 @@ export function MultipleChoiceQuiz({
           </CardHeader>
           <CardContent>
             <div className="space-y-2">
-              {q.options.map((option, optIndex) => (
+              {q.answer_list.map((option, optIndex) => (
                 <button
                   key={optIndex}
-                  onClick={() => onAnswerSelect?.(q.id, option)}
+                  onClick={() => onAnswerSelect?.(q.id, option.answer)}
                   disabled={showCorrectAnswers}
                   className={cn(
                     "w-full flex items-center space-x-2 rounded-lg border p-3",
                     "hover:bg-muted/50 transition-colors",
                     "disabled:cursor-default",
-                    getOptionStyle(q, option),
+                    getOptionStyle(q, option.answer),
                   )}
                 >
                   <div
                     className={cn(
                       "h-4 w-4 rounded-full border flex items-center justify-center transition-colors",
-                      getRadioStyle(q, option),
+                      getRadioStyle(q, option.answer),
                     )}
                   >
-                    {(selectedAnswers[q.id] === option ||
-                      (showCorrectAnswers && option === q.answer)) && (
+                    {(selectedAnswers[q.id] === option.answer ||
+                      (showCorrectAnswers &&
+                        option.answer === q.right_answer)) && (
                       <div
                         className={cn(
                           "h-2 w-2 rounded-full transition-colors",
-                          getDotStyle(q, option),
+                          getDotStyle(q, option.answer),
                         )}
                       />
                     )}
                   </div>
-                  <span>{option}</span>
+                  <span>{option.answer}</span>
                 </button>
               ))}
             </div>

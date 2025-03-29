@@ -21,7 +21,7 @@ import { ChatInput } from "@/components/ui/chat/chat-input";
 import WaveAudio from "@/components/feature/WaveAudio";
 
 interface VoiceChatProps {
-  context: string;
+  context?: string;
 }
 
 const VoiceChat = ({ context }: VoiceChatProps) => {

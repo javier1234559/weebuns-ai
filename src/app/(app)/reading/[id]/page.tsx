@@ -11,7 +11,7 @@ export default function ReadingPageDetail({
   const breadcrumb = [
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Reading", href: RouteNames.Reading },
-    { title: `Bài Đọc: ${id}`, href: RouteNames.ReadingDetail },
+    { title: `Chi tiết bài đọc`, href: RouteNames.ReadingDetail },
   ];
 
   return (
