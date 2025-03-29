@@ -1,9 +1,13 @@
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { ArrowRightIcon, SearchIcon } from "lucide-react";
 import { useId } from "react";
 
-export default function SearchInput() {
+interface SearchInputProps {
+  value: string;
+  onChange: (value: string) => void;
+}
+
+export function SearchInput({ value, onChange }: SearchInputProps) {
   const id = useId();
   return (
     <div className="*:not-first:mt-2">
@@ -13,6 +17,8 @@ export default function SearchInput() {
           className="peer ps-9 pe-9"
           placeholder="Search..."
           type="search"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
         />
         <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
           <SearchIcon size={16} />

@@ -1,15 +1,18 @@
-import { Lesson } from "@/feature/lesson/types/lesson";
-import { Skeleton } from "@/components/ui/skeleton";
 import { SpeakingCard } from "./SpeakingCard";
+import { LessonsResponse } from "@/services/swagger-types";
+import AppError from "@/components/common/app-error";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface SpeakingGridViewProps {
-  lessons?: Lesson[];
+  lessons?: LessonsResponse;
   isLoading?: boolean;
+  error?: any;
 }
 
 export function SpeakingGridView({
-  lessons = [],
+  lessons,
   isLoading = false,
+  error,
 }: SpeakingGridViewProps) {
   if (isLoading) {
     return (
@@ -21,11 +24,28 @@ export function SpeakingGridView({
     );
   }
 
-  if (lessons.length === 0) {
+  if (error || !lessons) {
+    return <AppError error={error || "Failed to fetch lessons"} />;
+  }
+
+  if (lessons.data.length === 0) {
     return (
       <div className="flex min-h-[400px] items-center justify-center rounded-lg border-2 border-dashed">
         <div className="text-center">
-          <h3 className="mb-2 text-lg font-medium">No speaking tasks found</h3>
+          <h3 className="mb-2 text-lg font-medium">No reading tasks found</h3>
+          <p className="text-sm text-muted-foreground">
+            Try adjusting your filters or search terms
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (lessons?.data.length === 0) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center rounded-lg border-2 border-dashed">
+        <div className="text-center">
+          <h3 className="mb-2 text-lg font-medium">No writing tasks found</h3>
           <p className="text-sm text-muted-foreground">
             Try adjusting your filters or search terms
           </p>
@@ -36,7 +56,7 @@ export function SpeakingGridView({
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {lessons.map((lesson) => (
+      {lessons.data.map((lesson) => (
         <SpeakingCard key={lesson.id} lesson={lesson} />
       ))}
     </div>

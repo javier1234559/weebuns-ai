@@ -1,4 +1,4 @@
-import { Lesson } from "@/feature/lesson/types/lesson";
+import { Lesson } from "@/feature/lesson/lesson.type";
 
 export const detailReading: Lesson = {
   id: "1",

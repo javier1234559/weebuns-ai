@@ -20,14 +20,14 @@ import {
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import AvatarMenu from "@/feature/auth/components/AvatarMenu";
-import { useAuthStore } from "@/store/auth-store";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { useAuthStore } from "@/store/auth-store";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const isScrolled = useScroll({ threshold: 10 });
-  const token = useAuthStore((state) => state.accessToken);
+  const user = useAuthStore((state) => state.user);
 
   useClickOutside(menuRef, () => {
     if (isMenuOpen) setIsMenuOpen(false);
@@ -94,7 +94,7 @@ const Header = () => {
           {/* Desktop Actions */}
           <div className="hidden items-center gap-3 lg:flex">
             <ThemeToggle />
-            {token ? (
+            {user ? (
               <AvatarMenu
                 src="/default-avatar.png"
                 fallback="U"
@@ -187,11 +187,15 @@ const Header = () => {
                     ))}
                     <div className="flex flex-col gap-2 border-t pt-4">
                       <ThemeToggle />
-                      {token ? (
+                      {user ? (
                         <div className="w-full">
                           <AvatarMenu
-                            src="/default-avatar.png"
-                            fallback="U"
+                            src={user.profilePicture || ""}
+                            fallback={
+                              user.firstName +
+                              " " +
+                              (user.lastName ? user.lastName.charAt(0) : "")
+                            }
                             className="h-8 w-8"
                           />
                         </div>

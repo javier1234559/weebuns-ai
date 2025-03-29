@@ -1,50 +1,102 @@
 "use client";
 
 import AppPagination from "@/components/common/app-pagination";
-import SearchInput from "@/components/feature/SearchInput";
+import { SearchInput } from "@/components/feature/SearchInput";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LessonNavigation } from "@/feature/lesson/components/LessonNavigation";
 import {
   ContainerSidebar,
   LessonSidebarFilter,
 } from "@/feature/lesson/components/LessonSidebarContainer";
-import { mockIELTSLessons } from "@/feature/lesson/data";
+import { LevelType } from "@/feature/lesson/lesson.type";
 import { ListeningGridView } from "@/feature/listening/components/ListeningGridView";
+import { useListeningList } from "@/feature/listening/hooks/useListeningClient";
+import usePaginationUrl from "@/hooks/usePaginationUrl";
+import { LessonType } from "@/services/swagger-types";
+
+import { SkillType } from "@/services/swagger-types";
+import { ContentStatus } from "@/services/swagger-types";
 
 const filters: LessonSidebarFilter[] = [
   {
-    title: "Nguồn tài liệu Listening",
+    title: "Chủ đề",
+    queryParam: "topic",
     items: [
-      { label: "Forecast T1/2025", value: "forecast" },
-      { label: "Livestream thầy Khoa", value: "livestream" },
-      { label: "C10-C19", value: "c10_c19" },
-      { label: "Recent Actual Tests", value: "recent_tests" },
+      { label: "TOEIC", value: "toeic" },
+      { label: "IELTS", value: "ielts" },
     ],
   },
   {
-    title: "Dạng đề Listening",
+    title: "Loại tài liệu",
+    queryParam: "lessonType",
     items: [
-      { label: "Multiple Choice", value: "multiple_choice" },
-      { label: "Fill in the Blanks", value: "fill_blanks" },
-      { label: "Matching", value: "matching" },
-      { label: "Summary Completion", value: "summary" },
-      { label: "Sentence Completion", value: "sentence" },
-      { label: "Short Answer", value: "short_answer" },
+      { label: "Luyện tập", value: "practice" },
+      { label: "Đề thi", value: "test" },
+    ],
+  },
+  {
+    title: "Mức độ",
+    queryParam: "level",
+    items: [
+      { label: "Bắt đầu", value: "beginner" },
+      { label: "Trung bình", value: "intermediate" },
+      { label: "Nâng cao", value: "advanced" },
     ],
   },
 ];
 
 export function ListeningView() {
-  const handlePageChange = (page: number) => {
-    console.log(page);
+  const {
+    page,
+    perPage,
+    searchParam,
+    lessonType,
+    level,
+    search,
+    updateQueryParams,
+    setSearch,
+    topic,
+  } = usePaginationUrl();
+
+  const { data, isLoading, error } = useListeningList({
+    page,
+    perPage,
+    ...(searchParam && { search: searchParam }),
+    ...(lessonType && { lessonType: lessonType as LessonType }),
+    ...(level && { level: level as LevelType }),
+    ...(topic && { topic: topic }),
+    skill: "writing" as SkillType,
+    status: ContentStatus.Published,
+  });
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+  };
+
+  const handleFilterChange = (
+    value: string,
+    checked: boolean,
+    queryParam: string,
+  ) => {
+    if (checked) {
+      updateQueryParams({
+        [queryParam]: value,
+        page: 1,
+      });
+    } else {
+      updateQueryParams({
+        [queryParam]: undefined,
+        page: 1,
+      });
+    }
   };
 
   return (
-    <ContainerSidebar filters={filters}>
+    <ContainerSidebar filters={filters} onFilterChange={handleFilterChange}>
       <div className="flex gap-2">
         <SidebarTrigger className="my-2" />
         <div className="flex items-center gap-2">
-          <SearchInput />
+          <SearchInput value={search} onChange={handleSearch} />
         </div>
       </div>
       <div className="my-2 max-w-3xl">
@@ -63,14 +115,18 @@ export function ListeningView() {
           </p>
         </div>
         <div className="mt-4">
-          <ListeningGridView lessons={mockIELTSLessons} />
+          <ListeningGridView
+            lessons={data}
+            error={error}
+            isLoading={isLoading}
+          />
         </div>
 
         <div className="mt-8 flex justify-end">
           <AppPagination
-            currentPage={1}
-            totalPages={10}
-            onPageChange={handlePageChange}
+            currentPage={data?.pagination.currentPage || 1}
+            totalPages={data?.pagination.totalPages || 1}
+            onPageChange={(newPage) => updateQueryParams({ page: newPage })}
           />
         </div>
       </div>

@@ -1,6 +1,8 @@
 import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
+import { LessonListSkeleton } from "@/feature/lesson/components/LessonListSkeleton";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
 import { ReadingView } from "@/feature/reading/views/ReadingView";
+import { Suspense } from "react";
 
 const configData = {
   title: "Reading",
@@ -19,7 +21,7 @@ export const metadata = {
   author: configData.author,
 };
 
-export default function ReadingPage() {
+export default async function ReadingPage() {
   return (
     <div className="container mx-auto mt-16">
       <div className="relative mb-8 mt-10 rounded-xl bg-card p-4">
@@ -46,7 +48,9 @@ export default function ReadingPage() {
       </div>
 
       <div className="px-0">
-        <ReadingView />
+        <Suspense fallback={<LessonListSkeleton />}>
+          <ReadingView />
+        </Suspense>
       </div>
     </div>
   );

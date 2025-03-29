@@ -7,6 +7,7 @@ import {
 import { toast } from "sonner";
 
 import AppIcon from "@/components/common/app-icon";
+import { useAuthStore } from "@/store/auth-store";
 
 declare global {
   interface Window {
@@ -37,9 +38,12 @@ function GoogleForm({ onSubmit }: GoogleFormProps) {
 
       const data = await response.json();
       if (!response.ok) {
-        toast.error(data.message || 'Login failed');
+        toast.error(data.message || "Login failed");
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      useAuthStore.getState().setUser(data.user);
+      useAuthStore.getState().setToken(data.token);
 
       return data;
     } catch (error) {

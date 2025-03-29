@@ -19,10 +19,17 @@ export const decodeJWT = <Payload = any>(token: string) => {
 };
 
 export const handleApiError = (error: any) => {
-  // console.error(error);
-  toast.error(error.message);
+  console.error(error);
+  // toast.error(error.message);
 };
 
 export const handleApiSuccess = (message: string) => {
   toast.success(message);
+};
+
+export const buildQueryString = (params: any) => {
+  return Object.entries(params)
+    .filter(([_, value]) => value !== undefined)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
 };

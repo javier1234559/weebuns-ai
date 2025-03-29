@@ -2,8 +2,8 @@
 
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
 import { RouteNames } from "@/constraints/route-name";
+import { lessonPaths } from "@/feature/lesson/lesson.type";
 import { usePathname } from "next/navigation";
-import { lessonPaths } from "../constants/routes";
 
 type BreadcrumbItem = {
   title: string;

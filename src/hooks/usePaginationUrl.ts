@@ -13,7 +13,7 @@ interface PaginationParams {
   debounceDelay?: number;
 }
 
-const usePagination = ({
+const usePaginationUrl = ({
   defaultPage = DEFAULT_PAGE,
   defaultPerPage = DEFAULT_PAGE_SIZE,
   debounceDelay = 1500,
@@ -26,6 +26,9 @@ const usePagination = ({
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchParam, setSearchParam] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
+  const [lessonType, setLessonType] = useState<string>("");
+  const [level, setLevel] = useState<string>("");
+  const [topic, setTopic] = useState<string>("");
 
   const updateParams = useCallback(
     (newParams: {
@@ -33,30 +36,20 @@ const usePagination = ({
       perPage?: number;
       search?: string;
       tags?: string[];
+      lessonType?: string | undefined;
+      level?: string | undefined;
+      topic?: string | undefined;
     }) => {
       const urlParams = new URLSearchParams(searchParams.toString());
 
-      if (newParams.page) urlParams.set("page", newParams.page.toString());
-      if (newParams.perPage)
-        urlParams.set("perPage", newParams.perPage.toString());
-
-      // Handle search param
-      if (typeof newParams.search === "string") {
-        if (newParams.search.trim()) {
-          urlParams.set("search", newParams.search.trim());
-        } else {
-          urlParams.delete("search");
+      // Xử lý các param động
+      Object.entries(newParams).forEach(([key, value]) => {
+        if (value === undefined || value === "") {
+          urlParams.delete(key);
+        } else if (value !== null) {
+          urlParams.set(key, value.toString());
         }
-      }
-
-      // Handle tags param
-      if (newParams.tags) {
-        if (newParams.tags.length > 0) {
-          urlParams.set("tags", newParams.tags.join(","));
-        } else {
-          urlParams.delete("tags");
-        }
-      }
+      });
 
       router.push(`?${urlParams.toString()}`);
     },
@@ -90,22 +83,26 @@ const usePagination = ({
     const perPageParam = searchParams.get("perPage");
     const searchParam = searchParams.get("search");
     const tagsParam = searchParams.get("tags");
+    const lessonTypeParam = searchParams.get("lessonType");
+    const levelParam = searchParams.get("level");
+    const topicParam = searchParams.get("topic");
 
-    if (pageParam) setPage(Number(pageParam));
-    if (perPageParam) setPerPage(Number(perPageParam));
+    // Set page
+    setPage(pageParam ? Number(pageParam) : defaultPage);
+    setPerPage(perPageParam ? Number(perPageParam) : defaultPerPage);
 
     // Handle search params
-    if (searchParam) {
-      setSearchValue(searchParam);
-      setSearchParam(searchParam);
-    } else {
-      setSearchValue("");
-      setSearchParam("");
-    }
+    setSearchValue(searchParam || "");
+    setSearchParam(searchParam || "");
 
     // Handle tags
     setTags(parseTagsFromString(tagsParam));
-  }, [searchParams, parseTagsFromString]);
+
+    // Reset state khi param bị xóa
+    setLessonType(lessonTypeParam || "");
+    setLevel(levelParam || "");
+    setTopic(topicParam || "");
+  }, [searchParams, parseTagsFromString, defaultPage, defaultPerPage]);
 
   useEffect(() => {
     return () => {
@@ -170,6 +167,9 @@ const usePagination = ({
     search: searchValue, // For UI input
     searchParam, // For API calls - only has value when needed
     tags, // Current active tags
+    lessonType,
+    level,
+    topic,
     setSearch: handleSearch,
     updateQueryParams: updateParams,
     updateTags,
@@ -179,4 +179,4 @@ const usePagination = ({
   };
 };
 
-export default usePagination;
+export default usePaginationUrl;

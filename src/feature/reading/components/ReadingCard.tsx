@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Lesson } from "@/feature/lesson/types/lesson";
+import { Lesson } from "@/feature/lesson/lesson.type";
 
 interface ReadingCardProps {
   lesson: Lesson;
@@ -13,14 +13,14 @@ export function ReadingCard({ lesson }: ReadingCardProps) {
   const {
     id,
     title,
-    image_url,
+    thumbnailUrl,
     description,
-    skill_type,
+    skill,
     level,
     topic,
-    time_limit,
+    timeLimit,
     status,
-    lesson_type,
+    lessonType,
   } = lesson;
 
   return (
@@ -32,7 +32,7 @@ export function ReadingCard({ lesson }: ReadingCardProps) {
           <div className="flex items-start gap-3">
             <div className="relative size-16 shrink-0 overflow-hidden rounded-lg">
               <Image
-                src={image_url || "/placeholder-lesson.jpg"}
+                src={thumbnailUrl || "/placeholder-lesson.jpg"}
                 alt={title}
                 fill
                 className="object-cover"
@@ -52,10 +52,10 @@ export function ReadingCard({ lesson }: ReadingCardProps) {
 
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2">
-            <Badge>{skill_type}</Badge>
+            <Badge>{skill}</Badge>
             <Badge variant="outline">{level}</Badge>
             <Badge variant="secondary">{topic}</Badge>
-            <Badge variant="success">{lesson_type}</Badge>
+            <Badge variant="success">{lessonType}</Badge>
             <Badge variant="warning">{status}</Badge>
           </div>
         </div>
@@ -64,7 +64,7 @@ export function ReadingCard({ lesson }: ReadingCardProps) {
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <Clock className="size-4" />
-            <span>{time_limit} hours</span>
+            <span>{timeLimit} hours</span>
           </div>
           <span className="capitalize">{level}</span>
         </div>

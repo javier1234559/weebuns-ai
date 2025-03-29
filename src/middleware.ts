@@ -4,6 +4,14 @@ import type { NextRequest } from "next/server";
 const PUBLIC_ROUTES = ["/", "/sign-in", "/sign-up", "/forgot-password"];
 const LOGIN_URL = "/sign-in";
 const HOME_URL = "/home";
+const PRIVATE_ROUTES = [
+  "/home",
+  "/lesson",
+  "/listening",
+  "/speaking",
+  "/writing",
+  "/reading",
+];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

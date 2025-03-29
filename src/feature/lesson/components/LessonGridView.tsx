@@ -1,4 +1,4 @@
-import { Lesson } from "@/feature/lesson/types/lesson";
+import { Lesson } from "@/feature/lesson/lesson.type";
 import { LessonCard } from "./LessonCard";
 import { Skeleton } from "@/components/ui/skeleton";
 

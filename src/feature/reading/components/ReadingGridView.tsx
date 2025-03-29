@@ -1,15 +1,17 @@
-import { Lesson } from "@/feature/lesson/types/lesson";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ReadingCard } from "./ReadingCard";
-
+import AppError from "@/components/common/app-error";
+import { LessonsResponse } from "@/services/swagger-types";
 interface ReadingGridViewProps {
-  lessons?: Lesson[];
-  isLoading?: boolean;
+  lessons?: LessonsResponse;
+  isLoading: boolean;
+  error: any;
 }
 
 export function ReadingGridView({
-  lessons = [],
+  lessons,
   isLoading = false,
+  error,
 }: ReadingGridViewProps) {
   if (isLoading) {
     return (
@@ -21,7 +23,11 @@ export function ReadingGridView({
     );
   }
 
-  if (lessons.length === 0) {
+  if (error || !lessons) {
+    return <AppError error={error || "Failed to fetch lessons"} />;
+  }
+
+  if (lessons.data.length === 0) {
     return (
       <div className="flex min-h-[400px] items-center justify-center rounded-lg border-2 border-dashed">
         <div className="text-center">
@@ -36,7 +42,7 @@ export function ReadingGridView({
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {lessons.map((lesson) => (
+      {lessons.data.map((lesson) => (
         <ReadingCard key={lesson.id} lesson={lesson} />
       ))}
     </div>

@@ -4,7 +4,7 @@ import AppError from "@/components/common/app-error";
 import AppLoading from "@/components/common/app-loading/page";
 import { ReadingTest } from "@/feature/reading/components/ReadingTest";
 import { sampleReading } from "@/feature/reading/data";
-import { useReadingDetail } from "@/feature/reading/hooks/useReadingQueries";
+import { useReadingDetail } from "@/feature/reading/hooks/useReadingClient";
 
 interface ReadingDetailViewProps {
   id: string;

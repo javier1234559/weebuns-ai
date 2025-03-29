@@ -53,7 +53,15 @@ class TokenManager {
     if (typeof window === "undefined") {
       return null;
     }
-    return localStorage.getItem(this.tokenKey);
+    const authStr = localStorage.getItem(this.userKey);
+    if (!authStr) return null;
+    try {
+      const state = JSON.parse(authStr);
+      return state.state.token;
+    } catch (error) {
+      console.error("Error parsing auth data:", error);
+      return null;
+    }
   }
 
   public saveToken(token: string): void {

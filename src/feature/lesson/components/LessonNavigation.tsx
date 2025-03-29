@@ -1,3 +1,5 @@
+"use client";
+
 import FluidTabs from "@/components/animata/card/fluid-tabs";
 import { RouteNames } from "@/constraints/route-name";
 import {

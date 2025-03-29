@@ -1,7 +1,10 @@
 "use client";
 
+import lessonApi from "@/feature/lesson/services/lessonApi";
+import { LessonQueryParams } from "@/feature/lesson/services/lessonApi";
 import { detailListening } from "@/feature/listening/data";
-import { useQuery } from "@tanstack/react-query";
+import { LessonsResponse } from "@/services/swagger-types";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 export const LISTENING_KEY_FACTORY = {
   all: ["listening"] as const,
@@ -9,6 +12,19 @@ export const LISTENING_KEY_FACTORY = {
   list: (params: any) => [...LISTENING_KEY_FACTORY.lists(), params] as const,
   details: () => [...LISTENING_KEY_FACTORY.all, "detail"] as const,
   detail: (id: string) => [...LISTENING_KEY_FACTORY.details(), id] as const,
+};
+
+export const useListeningList = (
+  params: LessonQueryParams,
+  options?: UseQueryOptions<LessonsResponse>,
+) => {
+  return useQuery({
+    queryKey: LISTENING_KEY_FACTORY.list(params),
+    queryFn: () => lessonApi.getAllLessons(params),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: true,
+    ...(typeof options === "object" ? options : {}),
+  });
 };
 
 export const useListeningDetail = (id: string, options?: unknown) => {

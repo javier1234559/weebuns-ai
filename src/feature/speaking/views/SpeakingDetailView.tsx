@@ -3,7 +3,7 @@
 import AppError from "@/components/common/app-error";
 import AppLoading from "@/components/common/app-loading/page";
 import VoiceChat from "@/feature/speaking/components/voice-chat";
-import { useSpeakingDetail } from "@/feature/speaking/hooks/useSpeakingQueries";
+import { useSpeakingDetail } from "@/feature/speaking/hooks/useSpeakingClient";
 
 interface SpeakingDetailViewProps {
   id: string;

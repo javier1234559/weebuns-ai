@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Lesson } from "@/feature/lesson/types/lesson";
+import { Lesson } from "@/feature/lesson/lesson.type";
 
 interface LessonCardProps {
   lesson: Lesson;

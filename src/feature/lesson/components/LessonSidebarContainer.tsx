@@ -17,9 +17,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 
 export type LessonSidebarFilter = {
   title: string;
+  queryParam: string;
   items: {
     label: string;
     value: string;
@@ -29,25 +31,47 @@ export type LessonSidebarFilter = {
 interface ContainerSidebarProps {
   children: React.ReactNode;
   filters: LessonSidebarFilter[];
+  onFilterChange: (value: string, checked: boolean, queryParam: string) => void;
 }
 
-export function ContainerSidebar({ children, filters }: ContainerSidebarProps) {
-  const router = useRouter();
+export function ContainerSidebar({
+  children,
+  filters,
+  onFilterChange,
+}: ContainerSidebarProps) {
   const searchParams = useSearchParams();
+  const [filterStates, setFilterStates] = useState<Record<string, string[]>>(
+    {},
+  );
 
-  const handleCheckboxChange = (value: string, checked: boolean) => {
-    const params = new URLSearchParams(searchParams.toString());
-    const currentTypes = params.getAll("lesson_type");
+  // Khởi tạo state từ URL params
+  useEffect(() => {
+    const initialStates: Record<string, string[]> = {};
+    filters.forEach((filter) => {
+      const values = searchParams.getAll(filter.queryParam);
+      initialStates[filter.queryParam] = values;
+    });
+    setFilterStates(initialStates);
+  }, [filters, searchParams]);
 
-    if (checked) {
-      params.append("lesson_type", value);
-    } else {
-      const newTypes = currentTypes.filter((type) => type !== value);
-      params.delete("lesson_type");
-      newTypes.forEach((type) => params.append("lesson_type", type));
-    }
+  const handleCheckboxChange = (
+    value: string,
+    checked: boolean,
+    queryParam: string,
+  ) => {
+    setFilterStates((prev) => {
+      const currentValues = prev[queryParam] || [];
+      const newValues = checked
+        ? [...currentValues, value]
+        : currentValues.filter((v) => v !== value);
 
-    router.push(`?${params.toString()}`);
+      return {
+        ...prev,
+        [queryParam]: newValues,
+      };
+    });
+
+    onFilterChange(value, checked, queryParam);
   };
 
   return (
@@ -89,11 +113,15 @@ export function ContainerSidebar({ children, filters }: ContainerSidebarProps) {
                       >
                         <Checkbox
                           id={item.value}
-                          checked={searchParams
-                            .getAll("lesson_type")
-                            .includes(item.value)}
+                          checked={(
+                            filterStates[section.queryParam] || []
+                          ).includes(item.value)}
                           onCheckedChange={(checked) =>
-                            handleCheckboxChange(item.value, checked as boolean)
+                            handleCheckboxChange(
+                              item.value,
+                              checked as boolean,
+                              section.queryParam,
+                            )
                           }
                         />
                         <label

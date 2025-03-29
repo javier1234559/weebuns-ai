@@ -1,7 +1,7 @@
 "use client";
 
 import AppPagination from "@/components/common/app-pagination";
-import SearchInput from "@/components/feature/SearchInput";
+import { SearchInput } from "@/components/feature/SearchInput";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LessonGridView } from "@/feature/lesson/components/LessonGridView";
 import { LessonNavigation } from "@/feature/lesson/components/LessonNavigation";
@@ -29,11 +29,11 @@ export function LessonView() {
   };
 
   return (
-    <ContainerSidebar filters={filters}>
+    <ContainerSidebar filters={filters} onFilterChange={() => {}}>
       <div className="flex gap-2">
         <SidebarTrigger className="my-2" />
         <div className="flex items-center gap-2">
-          <SearchInput />
+          <SearchInput value={""} onChange={() => {}} />
         </div>
       </div>
       {/* Navigation with shadow and rounded corners */}

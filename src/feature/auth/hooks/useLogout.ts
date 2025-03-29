@@ -5,11 +5,9 @@ import { toast } from "sonner";
 
 export const useLogout = () => {
   const router = useRouter();
-  const logout = useAuthStore((state) => state.logout);
+  const { removeUser, removeToken } = useAuthStore();
 
   const handleLogout = async () => {
-    logout();
-
     const result = await fetch("/api/auth/logout", {
       method: "POST",
       headers: {
@@ -19,7 +17,11 @@ export const useLogout = () => {
 
     if (result.ok) {
       toast.success("Đăng xuất thành công");
+      removeUser();
+      removeToken();
+      console.log("removeUser", removeUser);
       router.push(RouteNames.SignIn);
+      window.location.reload();
     } else {
       toast.error("Đăng xuất thất bại");
     }

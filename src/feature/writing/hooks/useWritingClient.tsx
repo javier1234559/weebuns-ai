@@ -1,7 +1,11 @@
 "use client";
 
+import lessonApi, {
+  LessonQueryParams,
+} from "@/feature/lesson/services/lessonApi";
 import { detailWriting } from "@/feature/writing/data";
-import { useQuery } from "@tanstack/react-query";
+import { LessonsResponse } from "@/services/swagger-types";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 export const WRITING_KEY_FACTORY = {
   all: ["writing"] as const,
@@ -9,6 +13,19 @@ export const WRITING_KEY_FACTORY = {
   list: (params: any) => [...WRITING_KEY_FACTORY.lists(), params] as const,
   details: () => [...WRITING_KEY_FACTORY.all, "detail"] as const,
   detail: (id: string) => [...WRITING_KEY_FACTORY.details(), id] as const,
+};
+
+export const useWritingList = (
+  params: LessonQueryParams,
+  options?: UseQueryOptions<LessonsResponse>,
+) => {
+  return useQuery({
+    queryKey: WRITING_KEY_FACTORY.list(params),
+    queryFn: () => lessonApi.getAllLessons(params),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    enabled: true,
+    ...(typeof options === "object" ? options : {}),
+  });
 };
 
 export const useWritingDetail = (id: string, options?: unknown) => {

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Pane, SplitPane } from "@/components/feature/SplitLayout";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { MultipleChoiceQuiz } from "@/components/feature/MultipleChoiceQuiz";
 import QuestionSheet from "@/components/feature/QuestionSheet";

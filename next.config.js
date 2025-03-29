@@ -19,9 +19,15 @@ const nextConfig = {
   },
   images: {
     domains: ["cms.youpass.vn", "weebuns.blog", "images.pexels.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
   },
   experimental: {
-    runtime: 'nodejs',
+    runtime: "nodejs",
   },
   swcMinify: false,
 }

@@ -3,7 +3,7 @@
 import AppError from "@/components/common/app-error";
 import AppLoading from "@/components/common/app-loading/page";
 import WritingAgentLayout from "@/feature/writing/components/WritingAgentLayout";
-import { useWritingDetail } from "@/feature/writing/hooks/useWritingQueries";
+import { useWritingDetail } from "@/feature/writing/hooks/useWritingClient";
 
 interface WritingDetailViewProps {
   id: string;

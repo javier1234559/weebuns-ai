@@ -1,54 +1,101 @@
 "use client";
 
 import AppPagination from "@/components/common/app-pagination";
-import SearchInput from "@/components/feature/SearchInput";
+import { SearchInput } from "@/components/feature/SearchInput";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { LessonGridView } from "@/feature/lesson/components/LessonGridView";
 import { LessonNavigation } from "@/feature/lesson/components/LessonNavigation";
 import {
   ContainerSidebar,
   LessonSidebarFilter,
 } from "@/feature/lesson/components/LessonSidebarContainer";
-import { mockIELTSLessons } from "@/feature/lesson/data";
 import { WritingGridView } from "@/feature/writing/components/WritingGridView";
+import usePaginationUrl from "@/hooks/usePaginationUrl";
+import { ContentStatus, LessonType, SkillType } from "@/services/swagger-types";
+import { useWritingList } from "@/feature/writing/hooks/useWritingClient";
+import { LevelType } from "@/feature/lesson/lesson.type";
 
 const filters: LessonSidebarFilter[] = [
   {
-    title: "Nguồn tài liệu Writing",
+    title: "Chủ đề",
+    queryParam: "topic",
     items: [
-      { label: "Forecast T1/2025", value: "forecast" },
-      { label: "Livestream thầy Khoa", value: "livestream" },
-      { label: "C10-C19", value: "c10_c19" },
-      { label: "Recent Actual Tests", value: "recent_tests" },
+      { label: "TOEIC", value: "toeic" },
+      { label: "IELTS", value: "ielts" },
     ],
   },
   {
-    title: "Dạng đề Writing",
+    title: "Loại tài liệu",
+    queryParam: "lessonType",
     items: [
-      { label: "Task 1 - Graph", value: "task1_graph" },
-      { label: "Task 1 - Map", value: "task1_map" },
-      { label: "Task 1 - Process", value: "task1_process" },
-      { label: "Task 2 - Opinion", value: "task2_opinion" },
-      { label: "Task 2 - Discussion", value: "task2_discussion" },
-      { label: "Task 2 - Problem Solution", value: "task2_problem" },
+      { label: "Luyện tập", value: "practice" },
+      { label: "Đề thi", value: "test" },
+    ],
+  },
+  {
+    title: "Mức độ",
+    queryParam: "level",
+    items: [
+      { label: "Bắt đầu", value: "beginner" },
+      { label: "Trung bình", value: "intermediate" },
+      { label: "Nâng cao", value: "advanced" },
     ],
   },
 ];
 
 export function WritingView() {
-  const handlePageChange = (page: number) => {
-    console.log(page);
+  const {
+    page,
+    perPage,
+    searchParam,
+    lessonType,
+    level,
+    search,
+    updateQueryParams,
+    setSearch,
+    topic,
+  } = usePaginationUrl();
+
+  const { data, isLoading, error } = useWritingList({
+    page,
+    perPage,
+    ...(searchParam && { search: searchParam }),
+    ...(lessonType && { lessonType: lessonType as LessonType }),
+    ...(level && { level: level as LevelType }),
+    ...(topic && { topic: topic }),
+    skill: "writing" as SkillType,
+    status: ContentStatus.Published,
+  });
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+  };
+
+  const handleFilterChange = (
+    value: string,
+    checked: boolean,
+    queryParam: string,
+  ) => {
+    if (checked) {
+      updateQueryParams({
+        [queryParam]: value,
+        page: 1,
+      });
+    } else {
+      updateQueryParams({
+        [queryParam]: undefined,
+        page: 1,
+      });
+    }
   };
 
   return (
-    <ContainerSidebar filters={filters}>
+    <ContainerSidebar filters={filters} onFilterChange={handleFilterChange}>
       <div className="flex gap-2">
         <SidebarTrigger className="my-2" />
         <div className="flex items-center gap-2">
-          <SearchInput />
+          <SearchInput value={search} onChange={handleSearch} />
         </div>
       </div>
-      {/* Navigation with shadow and rounded corners */}
       <div className="my-2 max-w-3xl">
         <div className="rounded-2xl p-1">
           <LessonNavigation />
@@ -65,14 +112,14 @@ export function WritingView() {
           </p>
         </div>
         <div className="mt-4">
-          <WritingGridView lessons={mockIELTSLessons} />
+          <WritingGridView lessons={data} error={error} isLoading={isLoading} />
         </div>
 
         <div className="mt-8 flex justify-end">
           <AppPagination
-            currentPage={1}
-            totalPages={10}
-            onPageChange={handlePageChange}
+            currentPage={data?.pagination.currentPage || 1}
+            totalPages={data?.pagination.totalPages || 1}
+            onPageChange={(newPage) => updateQueryParams({ page: newPage })}
           />
         </div>
       </div>

@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { RouteNames } from "@/constraints/route-name";
 import GoogleForm from "@/feature/auth/components/google-form";
 import { useAuthStore } from "@/store/auth-store";
+import { UserLoginResponse } from "@/services/swagger-types";
 
 const schema = yup.object().shape({
   email: yup
@@ -59,13 +60,19 @@ export function LoginForm() {
       const result = await response.json();
 
       if (!response.ok) {
-        toast.error(result.message || 'Login failed');
+        toast.error(result.message || "Login failed");
         return;
       }
 
+      console.log(result);
+
       // Use the auth store to save user data
-      useAuthStore.getState().login(result);
-      toast.success('Login successful!');
+      useAuthStore.getState().setAuth({
+        user: result?.user,
+        token: result?.access_token,
+      });
+
+      toast.success("Login successful!");
       router.push(RouteNames.Home);
     } catch (error) {
       console.error("Login error:", error);
@@ -74,8 +81,11 @@ export function LoginForm() {
   };
 
   const handleGoogleLogin = (data: any) => {
-    useAuthStore.getState().login(data);
-    toast.success('Login successful!');
+    useAuthStore.getState().setAuth({
+      user: data.user,
+      token: data.token,
+    });
+    toast.success("Login successful!");
     router.push(RouteNames.Home);
   };
 

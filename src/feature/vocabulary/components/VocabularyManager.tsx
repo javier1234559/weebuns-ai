@@ -5,7 +5,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { useVocabularies } from "../hooks/useVocabularyQueries";
 import AppPagination from "@/components/common/app-pagination";
-import usePagination from "@/hooks/usePagination";
+import usePaginationUrl from "@/hooks/usePaginationUrl";
 import AppError from "@/components/common/app-error";
 import AppLoading from "@/components/common/app-loading/page";
 import TableVocab from "@/feature/vocabulary/components/TableVocab";
@@ -16,7 +16,7 @@ import { BookOpen, Plus } from "lucide-react";
 function VocabularyManager() {
   const [activeTab, setActiveTab] = useState("all");
 
-  const { search, page, perPage, updateQueryParams } = usePagination({
+  const { search, page, perPage, updateQueryParams } = usePaginationUrl({
     defaultPage: 1,
     defaultPerPage: 10,
   });

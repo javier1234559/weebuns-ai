@@ -1,50 +1,120 @@
 "use client";
 
 import AppPagination from "@/components/common/app-pagination";
-import SearchInput from "@/components/feature/SearchInput";
+import { SearchInput } from "@/components/feature/SearchInput";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LessonNavigation } from "@/feature/lesson/components/LessonNavigation";
 import {
   ContainerSidebar,
   LessonSidebarFilter,
 } from "@/feature/lesson/components/LessonSidebarContainer";
-import { mockIELTSLessons } from "@/feature/lesson/data";
+import { LevelType } from "@/feature/lesson/lesson.type";
 import { ReadingGridView } from "@/feature/reading/components/ReadingGridView";
+import { useReadingList } from "@/feature/reading/hooks/useReadingClient";
+import usePaginationUrl from "@/hooks/usePaginationUrl";
+import {
+  ContentStatus,
+  LessonsResponse,
+  LessonType,
+  SkillType,
+} from "@/services/swagger-types";
+import { useEffect } from "react";
 
 const filters: LessonSidebarFilter[] = [
   {
-    title: "Nguồn tài liệu Reading",
+    title: "Chủ đề",
+    queryParam: "topic",
     items: [
-      { label: "Forecast T1/2025", value: "forecast" },
-      { label: "Livestream thầy Khoa", value: "livestream" },
-      { label: "C10-C19", value: "c10_c19" },
-      { label: "Recent Actual Tests", value: "recent_tests" },
+      { label: "TOEIC", value: "toeic" },
+      { label: "IELTS", value: "ielts" },
     ],
   },
   {
-    title: "Dạng đề Reading",
+    title: "Loại tài liệu",
+    queryParam: "lessonType",
     items: [
-      { label: "Multiple Choice", value: "multiple_choice" },
-      { label: "True/False/Not Given", value: "true_false" },
-      { label: "Matching Headings", value: "matching_headings" },
-      { label: "Summary Completion", value: "summary" },
-      { label: "Sentence Completion", value: "sentence" },
-      { label: "Short Answer", value: "short_answer" },
+      { label: "Luyện tập", value: "practice" },
+      { label: "Đề thi", value: "test" },
+    ],
+  },
+  {
+    title: "Mức độ",
+    queryParam: "level",
+    items: [
+      { label: "Bắt đầu", value: "beginner" },
+      { label: "Trung bình", value: "intermediate" },
+      { label: "Nâng cao", value: "advanced" },
     ],
   },
 ];
 
 export function ReadingView() {
-  const handlePageChange = (page: number) => {
-    console.log(page);
+  const {
+    page,
+    perPage,
+    searchParam,
+    lessonType,
+    level,
+    search,
+    updateQueryParams,
+    setSearch,
+    topic,
+  } = usePaginationUrl();
+
+  const { data, isLoading, error } = useReadingList({
+    page,
+    perPage,
+    ...(searchParam && { search: searchParam }),
+    ...(lessonType && { lessonType: lessonType as LessonType }),
+    ...(level && { level: level as LevelType }),
+    ...(topic && { topic: topic }),
+    skill: "reading" as SkillType,
+    status: ContentStatus.Published,
+  });
+
+  // Debug logs
+  useEffect(() => {
+    console.log("Query Params:", {
+      page,
+      perPage,
+      search: searchParam,
+      lessonType,
+      level,
+    });
+    console.log("Query Response:", data);
+  }, [data, page, perPage, searchParam, lessonType, level]);
+
+  // console.log(JSON.stringify(data, null, 2));
+
+  const handleSearch = (value: string) => {
+    setSearch(value);
+  };
+
+  const handleFilterChange = (
+    value: string,
+    checked: boolean,
+    queryParam: string,
+  ) => {
+    console.log("handleFilterChange", value, checked, queryParam);
+    if (checked) {
+      updateQueryParams({
+        [queryParam]: value,
+        page: 1,
+      });
+    } else {
+      updateQueryParams({
+        [queryParam]: undefined,
+        page: 1,
+      });
+    }
   };
 
   return (
-    <ContainerSidebar filters={filters}>
+    <ContainerSidebar filters={filters} onFilterChange={handleFilterChange}>
       <div className="flex gap-2">
         <SidebarTrigger className="my-2" />
         <div className="flex items-center gap-2">
-          <SearchInput />
+          <SearchInput value={search} onChange={handleSearch} />
         </div>
       </div>
       <div className="my-2 max-w-3xl">
@@ -63,14 +133,14 @@ export function ReadingView() {
           </p>
         </div>
         <div className="mt-4">
-          <ReadingGridView lessons={mockIELTSLessons} />
+          <ReadingGridView lessons={data} error={error} isLoading={isLoading} />
         </div>
 
         <div className="mt-8 flex justify-end">
           <AppPagination
-            currentPage={1}
-            totalPages={10}
-            onPageChange={handlePageChange}
+            currentPage={page}
+            totalPages={data?.pagination.totalPages || 1}
+            onPageChange={(newPage) => updateQueryParams({ page: newPage })}
           />
         </div>
       </div>

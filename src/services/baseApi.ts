@@ -15,6 +15,7 @@ export const axiosInstance = axios.create({
 // Header injection for auth
 const injectHeaders = async (headers: Record<string, string | undefined>) => {
   const token = await handleToken();
+  console.log("token", token);
 
   // Safe check for Content-Type
   const contentType = headers?.["Content-Type"];

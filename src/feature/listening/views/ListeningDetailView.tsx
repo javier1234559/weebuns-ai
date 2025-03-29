@@ -4,7 +4,7 @@ import AppError from "@/components/common/app-error";
 import AppLoading from "@/components/common/app-loading/page";
 import { ListeningTest } from "@/feature/listening/components/ListeningTest";
 import { sampleListening } from "@/feature/listening/data";
-import { useListeningDetail } from "@/feature/listening/hooks/useListeningQueries";
+import { useListeningDetail } from "@/feature/listening/hooks/useListeningClient";
 
 interface ListeningDetailViewProps {
   id: string;
