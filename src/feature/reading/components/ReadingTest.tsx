@@ -8,11 +8,15 @@ import QuestionSheet from "@/components/feature/QuestionSheet";
 import { Timer } from "@/components/feature/Timer";
 import ReadingViewer from "@/feature/reading/components/ReadingViewer";
 import { QuestionDTO } from "@/services/swagger-types";
+import { Button } from "@/components/ui/button";
+import { CircleCheckBig, Eye, SendHorizontal } from "lucide-react";
 interface ReadingTestProps {
   title: string;
   description: string;
   content: string;
   questions: QuestionDTO[];
+  isPractice?: boolean;
+  onSubmit?: () => void;
 }
 
 export function ReadingTest({
@@ -20,6 +24,8 @@ export function ReadingTest({
   description,
   content,
   questions,
+  isPractice = true,
+  onSubmit,
 }: ReadingTestProps) {
   const isMobile = useIsMobile();
   const [selectedAnswers, setSelectedAnswers] = useState<
@@ -54,16 +60,44 @@ export function ReadingTest({
     }
   };
 
+  const handleShowAnswers = () => {
+    setShowCorrectAnswers(!showCorrectAnswers);
+  };
+
+  const handleBookmark = (id: string) => {
+    setBookmarkedQuestions((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const handleSubmit = () => {
+    onSubmit?.();
+  };
+
   return (
     <div>
       <div className="mb-2 flex w-full items-center justify-between p-4">
-        <h1 className="text-4xl font-bold">Chi tiết bài đọc</h1>
-        <div className="flex items-center justify-end gap-8">
+        <h1 className="text-4xl font-bold">{title}</h1>
+        <div className="flex items-center justify-end gap-4">
+          {isPractice && (
+            <Button variant="outline" size="sm" onClick={handleShowAnswers}>
+              <Eye className="mr-2 size-2" />
+              {showCorrectAnswers ? "Hide answers" : "Show answers"}
+            </Button>
+          )}
+
           <Timer
             startTime={new Date(Date.now() + 1000 * 60 * 2).toISOString()}
             onEnd={handleTimeUp}
             size="large"
           />
+
           <QuestionSheet
             questions={questions}
             selectedAnswers={selectedAnswers}
@@ -71,18 +105,12 @@ export function ReadingTest({
             showCorrectAnswers={showCorrectAnswers}
             bookmarkedQuestions={bookmarkedQuestions}
             onQuestionSelect={handleQuestionSelect}
-            onBookmarkToggle={(id) => {
-              setBookmarkedQuestions((prev) => {
-                const next = new Set(prev);
-                if (next.has(id)) {
-                  next.delete(id);
-                } else {
-                  next.add(id);
-                }
-                return next;
-              });
-            }}
+            onBookmarkToggle={handleBookmark}
           />
+          <Button variant="outline" size="sm" onClick={handleSubmit}>
+            <CircleCheckBig className="mr-2 size-2" />
+            Nộp bài
+          </Button>
         </div>
       </div>
       <div className="h-[800px] rounded-lg bg-card p-2 shadow-lg">
@@ -107,17 +135,7 @@ export function ReadingTest({
                 selectedAnswers={selectedAnswers}
                 onAnswerSelect={handleAnswerSelect}
                 bookmarkedQuestions={bookmarkedQuestions}
-                onBookmarkToggle={(id) => {
-                  setBookmarkedQuestions((prev) => {
-                    const next = new Set(prev);
-                    if (next.has(id)) {
-                      next.delete(id);
-                    } else {
-                      next.add(id);
-                    }
-                    return next;
-                  });
-                }}
+                onBookmarkToggle={handleBookmark}
               />
             </div>
           </Pane>

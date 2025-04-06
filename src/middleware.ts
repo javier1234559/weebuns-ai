@@ -1,17 +1,25 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PUBLIC_ROUTES = ["/", "/sign-in", "/sign-up", "/forgot-password"];
+const PUBLIC_ROUTES = [
+  "/",
+  "/sign-in",
+  "/sign-up",
+  "/forgot-password",
+  "/lesson/writing",
+  "/lesson/reading",
+  "/lesson/listening",
+  "/lesson/speaking",
+  "/about",
+  "/blog",
+  "/contact",
+  "/terms",
+  "/privacy",
+  "/cookies",
+  "/sitemap.xml",
+];
 const LOGIN_URL = "/sign-in";
 const HOME_URL = "/home";
-const PRIVATE_ROUTES = [
-  "/home",
-  "/lesson",
-  "/listening",
-  "/speaking",
-  "/writing",
-  "/reading",
-];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

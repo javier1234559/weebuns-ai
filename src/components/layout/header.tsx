@@ -38,31 +38,31 @@ const Header = () => {
       id: "home",
       label: "Trang chủ",
       icon: <HomeIcon className="size-4" />,
-      href: "/home",
+      href: RouteNames.Home,
     },
     {
       id: "lesson",
       label: "Bài học",
       icon: <GraduationCapIcon className="size-4" />,
-      href: "/lesson",
+      href: RouteNames.Lesson,
     },
     {
       id: "blog",
       label: "Kiến thức",
       icon: <NewspaperIcon className="size-4" />,
-      href: "/blog",
+      href: RouteNames.Blog,
     },
     {
       id: "about",
       label: "Giới thiệu",
       icon: <InfoIcon className="size-4" />,
-      href: "/about",
+      href: RouteNames.About,
     },
     {
       id: "my-vocabulary",
       label: "Sổ từ vựng",
       icon: <BookmarkIcon className="size-4" />,
-      href: "/my-vocabulary",
+      href: RouteNames.MyVocabulary,
     },
   ];
 
@@ -76,7 +76,7 @@ const Header = () => {
         <nav className="flex h-16 items-center justify-between px-4 lg:px-8">
           <div className="shrink-0">
             <AppLink
-              href="/"
+              href={RouteNames.Landing}
               className="flex items-center gap-2 transition-opacity hover:opacity-80"
             >
               <PawPrint className="size-8 text-primary" />
@@ -155,7 +155,7 @@ const Header = () => {
                     {/* Logo in Mobile Menu */}
                     <div className="mb-4">
                       <AppLink
-                        href="/"
+                        href={RouteNames.Landing}
                         className="flex items-center gap-2 transition-opacity hover:opacity-80"
                         onClick={() => setIsMenuOpen(false)}
                       >

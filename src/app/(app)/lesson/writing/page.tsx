@@ -1,3 +1,4 @@
+import CommentSystem from "@/components/feature/CommentSystem";
 import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
 import { WritingView } from "@/feature/writing/views/WritingView";
@@ -45,8 +46,12 @@ export default function WritingPage() {
         </div>
       </div>
 
-      <div className="px-0">
+      <div className="mx-2 md:mx-0">
         <WritingView />
+      </div>
+
+      <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
+        <CommentSystem />
       </div>
     </div>
   );

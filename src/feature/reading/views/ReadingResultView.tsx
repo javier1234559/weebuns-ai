@@ -5,11 +5,18 @@ import AppLoading from "@/components/common/app-loading/page";
 import { ReadingTest } from "@/feature/reading/components/ReadingTest";
 import { useReadingDetail } from "@/feature/reading/hooks/useReadingClient";
 
-interface ReadingDetailViewProps {
+interface ReadingResultViewProps {
   id: string;
+  submissionId: string;
 }
 
-export function ReadingDetailView({ id }: ReadingDetailViewProps) {
+export function ReadingResultView({
+  id,
+  submissionId,
+}: ReadingResultViewProps) {
+  console.log("id", id);
+  console.log("submissionId", submissionId);
+
   const { data, isLoading, error } = useReadingDetail(id);
 
   const handleSubmit = () => {

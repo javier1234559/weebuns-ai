@@ -13,18 +13,18 @@ export function SpeakingCard({ lesson }: SpeakingCardProps) {
   const {
     id,
     title,
-    image_url,
+    thumbnailUrl,
     description,
-    skill_type,
+    skill,
     level,
     topic,
-    time_limit,
+    timeLimit,
     status,
-    lesson_type,
+    lessonType,
   } = lesson;
 
   return (
-    <Link href={`/speaking/${id}`}>
+    <Link href={`/lesson/speaking/${id}`}>
       <Card className="group flex h-full flex-col overflow-hidden border bg-background p-4 transition-all duration-200 hover:border-muted-foreground/50 hover:bg-[var(--card-hover)]">
         {/* Top Content */}
         <div className="flex-1 space-y-4">
@@ -32,7 +32,7 @@ export function SpeakingCard({ lesson }: SpeakingCardProps) {
           <div className="flex items-start gap-3">
             <div className="relative size-16 shrink-0 overflow-hidden rounded-lg">
               <Image
-                src={image_url || "/placeholder-lesson.jpg"}
+                src={thumbnailUrl || "/placeholder-lesson.jpg"}
                 alt={title}
                 fill
                 className="object-cover"
@@ -52,10 +52,10 @@ export function SpeakingCard({ lesson }: SpeakingCardProps) {
 
           {/* Badges */}
           <div className="flex flex-wrap items-center gap-2">
-            <Badge>{skill_type}</Badge>
+            <Badge>{skill}</Badge>
             <Badge variant="outline">{level}</Badge>
             <Badge variant="secondary">{topic}</Badge>
-            <Badge variant="success">{lesson_type}</Badge>
+            <Badge variant="success">{lessonType}</Badge>
             <Badge variant="warning">{status}</Badge>
           </div>
         </div>
@@ -64,7 +64,7 @@ export function SpeakingCard({ lesson }: SpeakingCardProps) {
         <div className="mt-4 flex items-center justify-between border-t border-border pt-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <Clock className="size-4" />
-            <span>{time_limit} hours</span>
+            <span>{timeLimit} hours</span>
           </div>
           <span className="capitalize">{level}</span>
         </div>

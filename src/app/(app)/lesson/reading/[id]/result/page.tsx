@@ -1,17 +1,16 @@
 import { RouteNames } from "@/constraints/route-name";
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
-import { ReadingDetailView } from "@/feature/reading/views/ReadingDetailView";
+import { ReadingResultView } from "@/feature/reading/views/ReadingResultView";
+import { PageProps } from "@/types/global";
 
-export default function ReadingPageDetail({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function ReadingResultPage({ params, searchParams }: PageProps) {
   const { id } = params;
+  const submissionId = searchParams.submissionId as string;
+
   const breadcrumb = [
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Reading", href: RouteNames.Reading },
-    { title: `Chi tiết bài đọc`, href: RouteNames.ReadingDetail },
+    { title: `Kết quả bài đọc`, href: "" },
   ];
 
   return (
@@ -20,7 +19,7 @@ export default function ReadingPageDetail({
         <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
       </div>
       <div className="w-full p-4">
-        <ReadingDetailView id={id} />
+        <ReadingResultView id={id} submissionId={submissionId} />
       </div>
     </div>
   );

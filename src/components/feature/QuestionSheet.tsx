@@ -1,6 +1,5 @@
 "use client";
 
-import { Question } from "@/components/feature/MultipleChoiceQuiz";
 import {
   Sheet,
   SheetContent,

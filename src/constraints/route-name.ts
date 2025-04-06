@@ -14,10 +14,10 @@ export enum RouteNames {
   SettingsAccount = "/settings/account",
   SettingsNotifications = "/settings/notifications",
   SettingsPayment = "/settings/payment",
-  SettingsHistory = '/settings/history',
+  SettingsHistory = "/settings/history",
   Logout = "/logout",
   ForgotPassword = "/forgot-password",
-  Lesson = "/lesson",
+  Lesson = "/lesson/writing",
   MyVocabulary = "/my-vocabulary",
 
   Writing = "/lesson/writing",
@@ -38,7 +38,7 @@ export enum RouteNames {
   Reading = "/lesson/reading",
   ReadingCreate = "/lesson/reading/create",
   ReadingEdit = "/lesson/reading/edit/:id",
-  ReadingDetail = "/lesson/reading/detail/:id",
+  ReadingResult = "/lesson/reading/:id/result",
 
   Listening = "/lesson/listening",
   ListeningCreate = "/lesson/listening/create",

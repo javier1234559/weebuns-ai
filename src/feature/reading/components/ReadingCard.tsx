@@ -24,7 +24,7 @@ export function ReadingCard({ lesson }: ReadingCardProps) {
   } = lesson;
 
   return (
-    <Link href={`/reading/${id}`}>
+    <Link href={`/lesson/reading/${id}`}>
       <Card className="group flex h-full flex-col overflow-hidden border bg-background p-4 transition-all duration-200 hover:border-muted-foreground/50 hover:bg-[var(--card-hover)]">
         {/* Top Content */}
         <div className="flex-1 space-y-4">

@@ -3,12 +3,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { BookmarkIcon } from "lucide-react";
 import { QuestionDTO } from "@/services/swagger-types";
-export interface Question {
-  id: string;
-  question: string;
-  options: string[];
-  answer: string;
-}
 
 interface MultipleChoiceQuizProps {
   questions: QuestionDTO[];
@@ -29,7 +23,16 @@ export function MultipleChoiceQuiz({
   bookmarkedQuestions = new Set(),
   onBookmarkToggle,
 }: MultipleChoiceQuizProps) {
-  const getOptionStyle = (question: QuestionDTO, option: string) => {
+  const getOptionClassName = (question: QuestionDTO, option: string) => {
+    console.log(
+      "Question:",
+      question.id,
+      "Option:",
+      option,
+      "Selected:",
+      selectedAnswers[question.id],
+    );
+
     if (!showCorrectAnswers) {
       return selectedAnswers[question.id] === option
         ? "border-primary bg-primary/10"
@@ -37,13 +40,10 @@ export function MultipleChoiceQuiz({
     }
 
     if (option === question.right_answer) {
-      return "border-success bg-success/10 dark:bg-success/20";
+      return "border-success bg-success/10";
     }
-    if (
-      selectedAnswers[question.id] === option &&
-      option !== question.right_answer
-    ) {
-      return "border-destructive bg-destructive/10 dark:bg-destructive/20";
+    if (selectedAnswers[question.id] === option) {
+      return "border-destructive bg-destructive/10";
     }
     return "";
   };
@@ -121,7 +121,7 @@ export function MultipleChoiceQuiz({
                     "w-full flex items-center space-x-2 rounded-lg border p-3",
                     "hover:bg-muted/50 transition-colors",
                     "disabled:cursor-default",
-                    getOptionStyle(q, option.answer),
+                    getOptionClassName(q, option.answer),
                   )}
                 >
                   <div

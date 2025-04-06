@@ -24,7 +24,7 @@ export function ListeningCard({ lesson }: ListeningCardProps) {
   } = lesson;
 
   return (
-    <Link href={`/listening/${id}`}>
+    <Link href={`/lesson/listening/${id}`}>
       <Card className="group flex h-full flex-col overflow-hidden border bg-background p-4 transition-all duration-200 hover:border-muted-foreground/50 hover:bg-[var(--card-hover)]">
         {/* Top Content */}
         <div className="flex-1 space-y-4">
