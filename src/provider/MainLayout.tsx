@@ -9,6 +9,7 @@ import Header from "@/components/layout/header";
 import { AppProgressBar } from "next-nprogress-bar";
 import { Toaster as ToasterSonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
+import { ConfirmDialogProvider } from "@/components/common/app-confirm-dialog";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,19 +35,21 @@ export default function MainProviders({
           enableSystem
           themes={["light", "dark"]}
         >
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            {children}
-            <Toaster />
-            <ToasterSonner />
-            <AppProgressBar
-              height="4px"
-              color="hsl(var(--primary))"
-              options={{ showSpinner: false }}
-              shallowRouting
-            />
-            <Footer />
-          </div>
+          <ConfirmDialogProvider>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              {children}
+              <Toaster />
+              <ToasterSonner />
+              <AppProgressBar
+                height="4px"
+                color="hsl(var(--primary))"
+                options={{ showSpinner: false }}
+                shallowRouting
+              />
+              <Footer />
+            </div>
+          </ConfirmDialogProvider>
         </ThemeProvider>
       </GoogleOAuthProvider>
     </QueryClientProvider>

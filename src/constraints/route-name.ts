@@ -24,6 +24,7 @@ export enum RouteNames {
   WritingCreate = "/lesson/writing/create",
   WritingEdit = "/lesson/writing/edit/:id",
   WritingDetail = "/lesson/writing/detail/:id",
+  WritingResult = "/lesson/writing/:id/result",
 
   Vocabulary = "/lesson/vocabulary",
   VocabularyCreate = "/lesson/vocabulary/create",
@@ -44,6 +45,7 @@ export enum RouteNames {
   ListeningCreate = "/lesson/listening/create",
   ListeningEdit = "/lesson/listening/edit/:id",
   ListeningDetail = "/lesson/listening/detail/:id",
+  ListeningResult = "/lesson/listening/:id/result",
 }
 
 export function replaceRouteName(

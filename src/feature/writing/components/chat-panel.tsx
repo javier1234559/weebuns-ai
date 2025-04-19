@@ -24,7 +24,7 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
     "Hello! I'm your writing assistant. How can I help you today?";
 
   return (
-    <div className="flex flex-col bg-background" style={{ height: "790px" }}>
+    <div className="flex flex-col bg-background" style={{ height: "1000px" }}>
       <div className="flex-1 overflow-y-auto py-4">
         <ChatMessageList>
           {messages.length === 0 && (
@@ -60,7 +60,12 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
             className="min-h-12 resize-none rounded-lg border-0 bg-background p-3 shadow-none focus-visible:ring-0"
           />
           <div className="flex items-center p-3 pt-0">
-            <Button size="sm" className="ml-auto gap-1.5" type="submit">
+            <Button
+              onClick={handleSubmit}
+              size="sm"
+              className="ml-auto gap-1.5"
+              type="button"
+            >
               Send Message
               <CornerDownLeft className="size-3.5" />
             </Button>

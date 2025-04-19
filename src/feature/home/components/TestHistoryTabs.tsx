@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Pencil, BookOpen, Ear, MessageCircle } from "lucide-react";
 import {
   Card,
@@ -10,19 +10,24 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import EmptyState from "@/components/common/app-empty-state";
-import WritingTableHistory from "@/feature/writing/components/WritingTableHistory";
+import { SkillType } from "@/services/swagger-types";
+import { SubmissionStatus } from "@/services/swagger-types";
+import { SubmissionLessonHistoryView } from "@/feature/lesson/views/SubmissionLessonHistoryView";
 
 type MainTabType = "writing" | "reading" | "listening" | "speaking";
-type SubTabType = "by-name" | "by-question";
+type SubTabType = "submitted" | "completed" | "scored" | "draft";
 
 export function TestHistoryTabs() {
   const [activeMainTab, setActiveMainTab] = useState<MainTabType>("writing");
-  const [activeSubTab, setActiveSubTab] = useState<SubTabType>("by-name");
+  const [activeSubTab, setActiveSubTab] = useState<SubTabType>("submitted");
 
-  const handleStartExercise = useCallback(() => {
-    console.log("Starting exercise...");
-  }, []);
+  useEffect(() => {
+    if (activeMainTab === "writing") {
+      setActiveSubTab("submitted");
+    } else {
+      setActiveSubTab("draft");
+    }
+  }, [activeMainTab]);
 
   const contentTabs = useMemo(
     () => [
@@ -32,18 +37,35 @@ export function TestHistoryTabs() {
         icon: <Pencil className="size-4" />,
         subTabs: [
           {
-            id: "by-name",
-            label: "Theo bài luyện tập",
-            content: <WritingTableHistory />,
+            id: "writing-submitted",
+            value: "submitted",
+            label: "Đã nộp",
+            content: (
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Writing}
+                status={SubmissionStatus.Submitted}
+              />
+            ),
           },
           {
-            id: "by-question",
-            label: "Theo bài thi",
+            id: "writing-completed",
+            value: "completed",
+            label: "Đã làm",
             content: (
-              <EmptyState
-                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
-                onAction={handleStartExercise}
-                actionText="Tiến hành làm bài tập ngay"
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Writing}
+                status={SubmissionStatus.Completed}
+              />
+            ),
+          },
+          {
+            id: "writing-scored",
+            value: "scored",
+            label: "Đã chấm điểm",
+            content: (
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Writing}
+                status={SubmissionStatus.Scored}
               />
             ),
           },
@@ -55,24 +77,24 @@ export function TestHistoryTabs() {
         icon: <BookOpen className="size-4" />,
         subTabs: [
           {
-            id: "by-name",
-            label: "Theo bài luyện tập",
+            id: "reading-draft",
+            value: "draft",
+            label: "Đang làm",
             content: (
-              <EmptyState
-                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
-                onAction={handleStartExercise}
-                actionText="Tiến hành làm bài tập ngay"
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Reading}
+                status={SubmissionStatus.Draft}
               />
             ),
           },
           {
-            id: "by-question",
-            label: "Theo bài thi",
+            id: "reading-completed",
+            value: "completed",
+            label: "Đã làm",
             content: (
-              <EmptyState
-                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
-                onAction={handleStartExercise}
-                actionText="Tiến hành làm bài tập ngay"
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Reading}
+                status={SubmissionStatus.Completed}
               />
             ),
           },
@@ -84,24 +106,24 @@ export function TestHistoryTabs() {
         icon: <Ear className="size-4" />,
         subTabs: [
           {
-            id: "by-name",
-            label: "Theo bài luyện tập",
+            id: "listening-draft",
+            value: "draft",
+            label: "Đang làm",
             content: (
-              <EmptyState
-                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
-                onAction={handleStartExercise}
-                actionText="Tiến hành làm bài tập ngay"
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Listening}
+                status={SubmissionStatus.Draft}
               />
             ),
           },
           {
-            id: "by-question",
-            label: "Theo bài thi",
+            id: "listening-completed",
+            value: "completed",
+            label: "Đã làm",
             content: (
-              <EmptyState
-                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
-                onAction={handleStartExercise}
-                actionText="Tiến hành làm bài tập ngay"
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Listening}
+                status={SubmissionStatus.Completed}
               />
             ),
           },
@@ -113,31 +135,31 @@ export function TestHistoryTabs() {
         icon: <MessageCircle className="size-4" />,
         subTabs: [
           {
-            id: "by-name",
-            label: "Theo bài luyện tập",
+            id: "speaking-draft",
+            value: "draft",
+            label: "Đang làm",
             content: (
-              <EmptyState
-                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
-                onAction={handleStartExercise}
-                actionText="Tiến hành làm bài tập ngay"
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Speaking}
+                status={SubmissionStatus.Draft}
               />
             ),
           },
           {
-            id: "by-question",
-            label: "Theo bài thi",
+            id: "speaking-completed",
+            value: "completed",
+            label: "Đã làm",
             content: (
-              <EmptyState
-                description="Bạn hiện chưa làm bài tập nào! Hãy chọn dạng phù hợp và luyện tập ngay nào!"
-                onAction={handleStartExercise}
-                actionText="Tiến hành làm bài tập ngay"
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Speaking}
+                status={SubmissionStatus.Completed}
               />
             ),
           },
         ],
       },
     ],
-    [handleStartExercise]
+    [],
   );
 
   return (
@@ -175,7 +197,7 @@ export function TestHistoryTabs() {
                   {mainTab.subTabs.map((subTab) => (
                     <TabsTrigger
                       key={subTab.id}
-                      value={subTab.id}
+                      value={subTab.value}
                       className="flex flex-1 items-center gap-2 rounded-xl data-[state=active]:bg-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
                     >
                       {subTab.label}
@@ -184,7 +206,7 @@ export function TestHistoryTabs() {
                 </TabsList>
 
                 {mainTab.subTabs.map((subTab) => (
-                  <TabsContent key={subTab.id} value={subTab.id}>
+                  <TabsContent key={subTab.id} value={subTab.value}>
                     {subTab.content}
                   </TabsContent>
                 ))}

@@ -11,17 +11,7 @@ import {
 } from "@/feature/lesson/components/LessonSidebarContainer";
 import { mockIELTSLessons } from "@/feature/lesson/data";
 
-const filters: LessonSidebarFilter[] = [
-  {
-    title: "Nguồn tài liệu Lesson",
-    items: [
-      { label: "Forecast T1/2025", value: "forecast" },
-      { label: "Livestream thầy Khoa", value: "livestream" },
-      { label: "C10-C19", value: "c10_c19" },
-      { label: "Recent Actual Tests", value: "recent_tests" },
-    ],
-  },
-];
+const filters: LessonSidebarFilter[] = [];
 
 export function LessonView() {
   const handlePageChange = (page: number) => {

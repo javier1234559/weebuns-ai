@@ -11,7 +11,11 @@ interface MainEditorProps {
   onChange: (value: string) => void;
 }
 
-export default function MainEditor({ className, value, onChange }: MainEditorProps) {
+export default function MainEditor({
+  className,
+  value,
+  onChange,
+}: MainEditorProps) {
   return (
     <div className={cn("size-full", className)}>
       <SettingsProvider>

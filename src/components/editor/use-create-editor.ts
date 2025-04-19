@@ -153,10 +153,6 @@ export const useCreateEditor = () => {
     ],
     value: [
       {
-        children: [{ text: "Playground" }],
-        type: "h1",
-      },
-      {
         children: [
           { text: "A rich-text editor with AI capabilities. Try the " },
           { bold: true, text: "AI commands" },

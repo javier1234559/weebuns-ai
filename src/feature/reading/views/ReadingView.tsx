@@ -19,6 +19,8 @@ import {
   SkillType,
 } from "@/services/swagger-types";
 import { useEffect } from "react";
+import { ReadingSubmissionList } from "@/feature/reading/components/ReadingSubmissionList";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const filters: LessonSidebarFilter[] = [
   {
@@ -123,26 +125,53 @@ export function ReadingView() {
         </div>
       </div>
       <div className="rounded-xl border bg-card p-4 shadow-sm md:p-6">
-        <div className="prose max-w-none">
-          <h1 className="text-xl font-semibold text-foreground">
-            Reading Practice
-          </h1>
-          <p className="text-muted-foreground">
-            Select a reading task from the sidebar to begin your practice
-            session.
-          </p>
-        </div>
-        <div className="mt-4">
-          <ReadingGridView lessons={data} error={error} isLoading={isLoading} />
-        </div>
+        <Tabs defaultValue="lessons" className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="lessons">Danh sách bài học</TabsTrigger>
+            <TabsTrigger value="submissions">Lịch sử làm bài</TabsTrigger>
+          </TabsList>
 
-        <div className="mt-8 flex justify-end">
-          <AppPagination
-            currentPage={page}
-            totalPages={data?.pagination.totalPages || 1}
-            onPageChange={(newPage) => updateQueryParams({ page: newPage })}
-          />
-        </div>
+          <TabsContent value="lessons">
+            <div className="prose max-w-none">
+              <h1 className="text-xl font-semibold text-foreground">
+                Reading Practice
+              </h1>
+              <p className="text-muted-foreground">
+                Select a reading task from the sidebar to begin your practice
+                session.
+              </p>
+            </div>
+            <div className="mt-4">
+              <ReadingGridView
+                lessons={data}
+                error={error}
+                isLoading={isLoading}
+              />
+            </div>
+
+            <div className="mt-8 flex justify-end">
+              <AppPagination
+                currentPage={page}
+                totalPages={data?.pagination.totalPages || 1}
+                onPageChange={(newPage) => updateQueryParams({ page: newPage })}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="submissions">
+            <div className="prose max-w-none">
+              <h1 className="text-xl font-semibold text-foreground">
+                Lịch sử làm bài Reading
+              </h1>
+              <p className="text-muted-foreground">
+                Xem lại các bài tập Reading đã hoàn thành
+              </p>
+            </div>
+            <div className="mt-4">
+              <ReadingSubmissionList />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </ContainerSidebar>
   );

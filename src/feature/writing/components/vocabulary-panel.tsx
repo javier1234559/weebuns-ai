@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { VocabularyItemDTO } from "@/services/swagger-types";
 import {
   Select,
   SelectContent,
@@ -7,49 +7,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-interface Vocabulary {
-  id: number;
-  word: string;
-  definition: string;
-  example: string;
-}
-
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { ExternalLink } from "lucide-react";
+import Image from "next/image";
 interface VocabularyPanelProps {
-  topic: string;
-  content: string;
+  vocabulary_list: VocabularyItemDTO[];
 }
 
-export function VocabularyPanel({ topic, content }: VocabularyPanelProps) {
+export function VocabularyPanel({ vocabulary_list }: VocabularyPanelProps) {
   const [count, setCount] = useState(5);
-  const [recommendations, setRecommendations] = useState<Vocabulary[]>([]);
-
-  useEffect(() => {
-    // Simulated API call to get recommendations based on topic and count
-    const fetchRecommendations = async () => {
-      // In a real application, this would be an API call
-      const simulatedResponse = Array(count)
-        .fill(0)
-        .map((_, i) => ({
-          id: i,
-          word: `Word${i + 1}`,
-          definition: `Definition for Word${i + 1} related to ${topic}`,
-          example: `Example sentence using Word${
-            i + 1
-          } in the context of ${topic}.`,
-        }));
-      setRecommendations(simulatedResponse);
-    };
-
-    if (topic) {
-      fetchRecommendations();
-    }
-  }, [topic, count]);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Vocabulary Recommendations</h3>
+        <h3 className="text-lg font-semibold">Vocabulary List</h3>
         <Select
           value={count.toString()}
           onValueChange={(value) => setCount(Number.parseInt(value))}
@@ -64,21 +36,75 @@ export function VocabularyPanel({ topic, content }: VocabularyPanelProps) {
           </SelectContent>
         </Select>
       </div>
-      <Button className="w-full" onClick={() => setRecommendations([])}>
-        Refresh Recommendations
-      </Button>
       <div
         className="thin-scrollbar flex flex-col gap-2 overflow-y-auto bg-background p-4"
-        style={{ height: "710px" }}
+        style={{ height: "1000px" }}
       >
-        {recommendations.map((item, index) => (
-          <div key={index} className="rounded-lg border p-3">
-            <div className="font-medium text-primary">{item.word}</div>
-            <div className="text-sm text-muted-foreground">
-              {item.definition}
-            </div>
-            <div className="mt-1 text-sm italic">{item.example}</div>
-          </div>
+        {vocabulary_list.slice(0, count).map((item, index) => (
+          <Card key={index} className="mb-2">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg">{item.term}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div>
+                  <h4 className="text-sm font-medium">Meanings:</h4>
+                  <ul className="list-disc pl-5">
+                    {item.meaning.map((meaning, idx) => (
+                      <li key={idx} className="text-sm text-muted-foreground">
+                        {meaning}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-medium">Example:</h4>
+                  <p className="text-sm italic text-muted-foreground">
+                    {item.example_sentence}
+                  </p>
+                </div>
+
+                {item.image_url && (
+                  <div className="mt-2">
+                    <Image
+                      src={item.image_url}
+                      alt={`Image for ${item.term}`}
+                      width={100}
+                      height={100}
+                      className="max-h-40 rounded-md object-cover"
+                    />
+                  </div>
+                )}
+
+                <div className="flex flex-wrap gap-1">
+                  {item.tags.map((tag, idx) => (
+                    <Badge key={idx} variant="outline">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+
+                {item.reference_link && (
+                  <div className="mt-2">
+                    <a
+                      href={item.reference_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center text-xs text-blue-500 hover:underline"
+                    >
+                      {item.reference_name || "Reference"}{" "}
+                      <ExternalLink className="ml-1 h-3 w-3" />
+                    </a>
+                  </div>
+                )}
+
+                <div className="mt-2 text-xs text-muted-foreground">
+                  Repetition Level: {item.repetition_level}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>

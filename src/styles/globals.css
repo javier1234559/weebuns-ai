@@ -238,4 +238,15 @@
   .thin-scrollbar {
     @apply scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-300;
   }
+
+  .content-editor {
+    @apply prose prose-headings:font-semibold prose-headings:text-foreground prose-p:text-foreground max-w-none focus:outline-none prose-p:my-0 prose-headings:my-2;
+    /* Font size control */
+    font-size: var(--content-font-size, 16px);
+  }
+
+  /* Dark mode adjustments */
+  .dark .content-editor {
+    @apply prose-invert;
+  }
 }

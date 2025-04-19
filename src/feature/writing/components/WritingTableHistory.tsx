@@ -73,7 +73,6 @@ function WritingTableHistory() {
   }, []);
 
   const handleStartExercise = () => {
-    console.log("Starting exercise...");
     router.push(RouteNames.Writing);
   };
 

@@ -7,7 +7,6 @@ import {
 import { toast } from "sonner";
 
 import AppIcon from "@/components/common/app-icon";
-import { useAuthStore } from "@/store/auth-store";
 
 declare global {
   interface Window {
@@ -28,28 +27,7 @@ interface GoogleFormProps {
 function GoogleForm({ onSubmit }: GoogleFormProps) {
   async function handleLoginByApiRoute(credential: string) {
     if (!credential) throw new Error("No credential provided");
-
-    try {
-      const response = await fetch("/api/auth/google", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credential }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        toast.error(data.message || "Login failed");
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      useAuthStore.getState().setUser(data.user);
-      useAuthStore.getState().setToken(data.token);
-
-      return data;
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Login failed. Please try again.");
-    }
+    return credential;
   }
 
   const handleGoogleResponse = async (
