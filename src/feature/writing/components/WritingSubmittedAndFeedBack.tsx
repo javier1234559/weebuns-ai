@@ -1,52 +1,64 @@
 "use client";
 
-import { SplitPane, Pane } from "@/components/feature/SplitLayout";
-import { useIsMobile } from "@/hooks/useMediaQuery";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, Star, BookOpen } from "lucide-react";
+import { Clock, Star, BookOpen } from "lucide-react";
 import { OriginalTab } from "./result/OriginalTab";
 import { EvaluationTab } from "./result/EvaluationTab";
 import { SampleTab } from "./result/SampleTab";
-import { useState } from "react";
-import {
-  SampleEssayDTO,
-  EvaluateEssayResponseDto,
-} from "@/services/swagger-types";
+import { useMemo, useState } from "react";
+import { SampleEssayDTO, WritingSubmission } from "@/services/swagger-types";
 import { UserDataDTO } from "@/feature/writing/schema";
 
 interface WritingSubmittedAndFeedBackProps {
-  userData: UserDataDTO;
-  essayExample: SampleEssayDTO;
-  feedback: EvaluateEssayResponseDto;
+  data: WritingSubmission;
+  exampleEssay: SampleEssayDTO;
 }
 
 export default function WritingSubmittedAndFeedBack({
-  userData,
-  essayExample,
-  feedback,
+  data,
+  exampleEssay,
 }: WritingSubmittedAndFeedBackProps) {
-  const isMobile = useIsMobile();
   const [selectedTab, setSelectedTab] = useState<string>("original");
+
+  const mergeContent = useMemo(() => {
+    return (data: UserDataDTO | SampleEssayDTO) => {
+      const { instruction, body1, body2, conclusion } = data;
+      return [instruction, body1, body2, conclusion]
+        .filter(Boolean)
+        .join("\n\n");
+    };
+  }, []);
 
   const tabs = [
     {
       value: "original",
       label: "Original Essay",
-      icon: FileText,
-      component: <OriginalTab data={userData} />,
+      icon: Clock,
+      component: (
+        <OriginalTab
+          data={mergeContent(
+            data.content?.user_data ?? {
+              instruction: "",
+              body1: "",
+              body2: "",
+              conclusion: "",
+            },
+          )}
+        />
+      ),
     },
     {
       value: "evaluation",
       label: "Evaluation",
       icon: Star,
-      component: <EvaluationTab data={userData} evaluation={feedback} />,
+      component: <EvaluationTab data={data} />,
     },
     {
       value: "sample",
       label: "Sample Essay",
       icon: BookOpen,
-      component: <SampleTab data={essayExample} />,
+      component: <SampleTab data={mergeContent(exampleEssay)} />,
     },
   ];
 
