@@ -1,26 +1,6 @@
-export interface Vocabulary {
-  id: string;
-  spaceId: string;
-  term: string;
-  meaning: string[];
-  exampleSentence: string | null;
-  imageUrl: string | null;
-  referenceLink: string | null;
-  referenceName: string | null;
-  tags: string[];
-  /** @format int32 */
-  repetitionLevel: number;
-  /** @format date-time */
-  nextReview: string | null;
-  createdBy: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  /** @format date-time */
-  deletedAt: string;
-}
+import { Vocabulary } from "@/services/swagger-types";
 
+export type { Vocabulary };
 export interface VocabItem {
   word: string;
   meaning: string;

@@ -1,8 +1,13 @@
 "use client";
 
-import { VocabularyQueryParams } from "@/feature/vocabulary/services/vocabularyApi";
-import { vocabularies } from "@/feature/vocabulary/data";
-import { useQuery } from "@tanstack/react-query";
+import vocabularyApi, {
+  VocabularyQueryParams,
+} from "@/feature/vocabulary/services/vocabularyApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  CreateVocabularyDto,
+  UpdateVocabularyReviewDto,
+} from "@/services/swagger-types";
 
 export const VOCABULARY_KEY_FACTORY = {
   all: ["vocabulary"] as const,
@@ -13,25 +18,62 @@ export const VOCABULARY_KEY_FACTORY = {
   detail: (id: string) => [...VOCABULARY_KEY_FACTORY.details(), id] as const,
 };
 
-export const useVocabularies = (
-  params: VocabularyQueryParams,
-  options?: unknown,
-) => {
+export const useVocabularies = (params: VocabularyQueryParams) => {
   return useQuery({
     queryKey: VOCABULARY_KEY_FACTORY.list(params),
-    queryFn: () => ({
-      data: vocabularies,
-      pagination: {
-        totalItems: 1,
-        currentPage: 1,
-        totalPages: 2,
-        itemsPerPage: 10,
-        hasNextPage: false,
-        hasPreviousPage: false,
-      },
-    }),
+    queryFn: () => vocabularyApi.findAll(params),
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes
-    ...(typeof options === "object" ? options : {}),
+  });
+};
+
+export const useCreateVocabulary = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: CreateVocabularyDto) => vocabularyApi.create(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: VOCABULARY_KEY_FACTORY.all });
+    },
+  });
+};
+
+export const useUpdateVocabulary = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: CreateVocabularyDto }) =>
+      vocabularyApi.update(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: VOCABULARY_KEY_FACTORY.all });
+    },
+  });
+};
+
+export const useDeleteVocabulary = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => vocabularyApi.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: VOCABULARY_KEY_FACTORY.all });
+    },
+  });
+};
+
+export const useUpdateReviewStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: UpdateVocabularyReviewDto;
+    }) => vocabularyApi.updateReviewStatus(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: VOCABULARY_KEY_FACTORY.all });
+    },
   });
 };

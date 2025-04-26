@@ -1,35 +1,39 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { useVocabularies } from "../hooks/useVocabularyQueries";
+import {
+  useVocabularies,
+  useCreateVocabulary,
+} from "../hooks/useVocabularyQueries";
 import AppPagination from "@/components/common/app-pagination";
 import usePaginationUrl from "@/hooks/usePaginationUrl";
-import AppError from "@/components/common/app-error";
-import AppLoading from "@/components/common/app-loading/page";
-import TableVocab from "@/feature/vocabulary/components/TableVocab";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BookOpen, Plus } from "lucide-react";
+import VocabularyTableView from "./VocabularyTableView";
+import VocabularyDialog from "./VocabularyDialog";
+import { vocabularyDialogSchema } from "./VocabularyDialog/schema";
+import { z } from "zod";
+import { toast } from "sonner";
 
 function VocabularyManager() {
   const [activeTab, setActiveTab] = useState("all");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const createVocabulary = useCreateVocabulary();
 
-  const { search, page, perPage, updateQueryParams } = usePaginationUrl({
-    defaultPage: 1,
-    defaultPerPage: 10,
-  });
+  const { search, searchParam, page, perPage, updateQueryParams, setSearch } =
+    usePaginationUrl({
+      defaultPage: 1,
+      defaultPerPage: 10,
+    });
 
-  const queryParams = useMemo(
-    () => ({
-      search,
-      page,
-      perPage,
-      ...(activeTab === "review" ? { dueDate: true } : {}),
-    }),
-    [search, page, perPage, activeTab],
-  );
+  const queryParams = {
+    ...(searchParam ? { search: searchParam } : {}),
+    page,
+    perPage,
+    ...(activeTab === "review" ? { dueDate: true } : {}),
+  };
 
   const { data, isLoading, error } = useVocabularies(queryParams);
 
@@ -45,80 +49,57 @@ function VocabularyManager() {
     updateQueryParams({ page: newPage });
   };
 
-  console.log(data);
+  const handleAddNew = () => {
+    setIsDialogOpen(true);
+  };
 
-  // Memoize contentTabs to prevent unnecessary re-renders
-  const contentTabs = useMemo(
-    () => [
-      {
-        label: "All",
-        value: "all",
-        content: <TableVocab vocabularies={data?.data || []} />,
+  const handleSubmit = (data: z.infer<typeof vocabularyDialogSchema>) => {
+    createVocabulary.mutate(data, {
+      onSuccess: () => {
+        setIsDialogOpen(false);
+        toast.success("Từ vựng đã được thêm thành công");
       },
-      {
-        label: "Due for Review(SRS)",
-        value: "review",
-        content: <div>Review</div>,
+      onError: (error) => {
+        toast.error("Lỗi khi thêm từ vựng");
+        console.error(error);
       },
-    ],
-    [data?.data],
-  ); // Only re-create when data.data changes
-
-  if (isLoading) {
-    return <AppLoading />;
-  }
-
-  if (!data || error) {
-    return <AppError error={error} />;
-  }
+    });
+  };
 
   return (
     <div className="w-full space-y-6">
       <Card className="p-6">
-        <Tabs
-          defaultValue="all"
-          value={activeTab}
-          onValueChange={handleTabChange}
-          className="w-full"
-        >
-          <div className="mb-6 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-            <TabsList className="gap-1 bg-background/50">
-              {contentTabs.map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-                >
-                  {tab.label}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            <div className="flex items-center gap-3">
-              <div className="relative w-[250px]">
-                <Input
-                  placeholder="Tìm kiếm từ vựng..."
-                  className="h-auto w-full"
-                />
-              </div>
-              <Button variant="outline" size="default">
-                <Plus className="size-4" />
-                Thêm từ vựng
-              </Button>
-              <Button variant="default">
-                <BookOpen className="size-4" />
-                Review
-              </Button>
+        <div className="mb-6 flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+          <div className="flex items-center gap-3">
+            <div className="relative w-[250px]">
+              <Input
+                value={search}
+                placeholder="Tìm kiếm từ vựng..."
+                className="h-auto w-full"
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
+            <Button variant="outline" size="default" onClick={handleAddNew}>
+              <Plus className="size-4" />
+              Thêm từ vựng
+            </Button>
+            <Button variant="default">
+              <BookOpen className="size-4" />
+              Review
+            </Button>
           </div>
+        </div>
 
-          {contentTabs.map((tab) => (
-            <TabsContent key={tab.value} value={tab.value} className="mt-2">
-              {tab.content}
-            </TabsContent>
-          ))}
-        </Tabs>
+        <VocabularyTableView
+          data={data}
+          isLoading={isLoading}
+          error={error}
+          activeTab={activeTab}
+          onTabChange={handleTabChange}
+          onAddNew={handleAddNew}
+        />
 
-        {data.pagination && (
+        {data?.pagination && (
           <div className="mt-8 flex justify-center">
             <AppPagination
               currentPage={data.pagination.currentPage}
@@ -128,6 +109,12 @@ function VocabularyManager() {
           </div>
         )}
       </Card>
+
+      <VocabularyDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 }

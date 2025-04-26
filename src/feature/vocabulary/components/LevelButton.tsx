@@ -6,6 +6,10 @@ import { RepetitionLevel } from "@/feature/vocabulary/types/vocabulary";
 import ConfirmDialog from "@/components/feature/ConfirmDiaLog";
 import { useState } from "react";
 import { toast } from "sonner";
+import {
+  useDeleteVocabulary,
+  useUpdateReviewStatus,
+} from "@/feature/vocabulary/hooks/useVocabularyQueries";
 
 interface LevelButtonProps {
   level: number;
@@ -18,67 +22,37 @@ export default function LevelButton({
   level,
   isHideDelete,
 }: LevelButtonProps) {
-  // const updateMutation = useUpdateVocabulary();
-  // const deleteMutation = useDeleteVocabulary();
+  const updateMutation = useUpdateReviewStatus();
+  const deleteMutation = useDeleteVocabulary();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-  // const handleDelete = async () => {
-  //   try {
-  //     await deleteMutation.mutateAsync(id);
-  //     toast.success("Vocabulary deleted successfully");
-  //     setShowDeleteDialog(false);
-  //   } catch (error: any) {
-  //     toast.error(`Failed to delete vocabulary: ${error.message}`);
-  //   }
-  // };
-
-  // const updateLevel = (newLevel: RepetitionLevel) => {
-  //   const originalNextReview = new Date().toISOString();
-  //   const nextReview = calculateNextReview(newLevel);
-  //   const updateData = {
-  //     repetitionLevel: newLevel,
-  //     nextReview,
-  //   };
-
-  //   // Optimistic update
-  //   dispatch(
-  //     updateSelectedVocab({
-  //       id,
-  //       data: updateData,
-  //     }),
-  //   );
-
-  //   updateMutation.mutate(
-  //     {
-  //       id,
-  //       data: updateData,
-  //     },
-  //     {
-  //       onError: (error: any) => {
-  //         // Rollback on error
-  //         dispatch(
-  //           updateSelectedVocab({
-  //             id,
-  //             data: {
-  //               repetitionLevel: level,
-  //               nextReview: originalNextReview,
-  //             },
-  //           }),
-  //         );
-  //         toast.error(`Failed to update vocabulary level: ${error.message}`);
-  //       },
-  //     },
-  //   );
-  // };
-
-  const updateLevel = (newLevel: RepetitionLevel) => {
-    console.log("update", newLevel);
-    toast.success("Vocabulary updated successfully Level: " + newLevel);
+  const handleDelete = async () => {
+    try {
+      await deleteMutation.mutateAsync(id);
+      toast.success("Từ vựng đã được xóa thành công");
+      setShowDeleteDialog(false);
+    } catch (error: any) {
+      toast.error(`Lỗi khi xóa từ vựng: ${error.message}`);
+    }
   };
 
-  const handleDelete = () => {
-    console.log("delete");
-    toast.success("Vocabulary deleted successfully");
+  const updateLevel = (newLevel: RepetitionLevel) => {
+    updateMutation.mutate(
+      {
+        id,
+        data: {
+          repetitionLevel: newLevel,
+        },
+      },
+      {
+        onSuccess: () => {
+          toast.success(`Cập nhật level thành công: ${newLevel}`);
+        },
+        onError: (error: any) => {
+          toast.error(`Lỗi khi cập nhật level: ${error.message}`);
+        },
+      },
+    );
   };
 
   const levelButton = [
@@ -97,7 +71,7 @@ export default function LevelButton({
           size="icon"
           className="size-8 rounded-full"
           onClick={() => setShowDeleteDialog(true)}
-          // disabled={deleteMutation.isPending}
+          disabled={deleteMutation.isPending}
         >
           <Trash2 className="size-4" />
         </Button>
@@ -109,7 +83,7 @@ export default function LevelButton({
           variant={level === num ? "default" : "ghost"}
           size="icon"
           className="size-8 rounded-full"
-          // disabled={updateMutation.isPending}
+          disabled={updateMutation.isPending}
           onClick={() => updateLevel(num)}
         >
           {num}
@@ -120,7 +94,7 @@ export default function LevelButton({
         variant={level === RepetitionLevel.MASTERED ? "default" : "ghost"}
         size="icon"
         className="size-8 rounded-full"
-        // disabled={updateMutation.isPending}
+        disabled={updateMutation.isPending}
         onClick={() => updateLevel(RepetitionLevel.MASTERED)}
       >
         <Check className="size-4" />

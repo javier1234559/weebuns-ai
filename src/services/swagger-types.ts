@@ -147,6 +147,7 @@ export interface CorrectionDTO {
   error: string;
   suggestion: string;
   reason: string;
+  position: string;
 }
 
 export interface EvaluateEssayResponseDto {
@@ -1139,6 +1140,99 @@ export interface UpdateWritingSubmissionDTO {
   tokensUsed: number;
   content?: ContentWritingSubmissionDTO;
   feedback?: WritingFeedbackDTO;
+}
+
+export interface CreateVocabularyDto {
+  term: string;
+  meaning: string[];
+  exampleSentence?: string;
+  imageUrl?: string;
+  referenceLink?: string;
+  referenceName?: string;
+  tags: string[];
+  /**
+   * Repetition level from 0 to 6
+   * @example 1
+   */
+  repetitionLevel?: number;
+  /** @format date-time */
+  nextReview?: string;
+}
+
+export interface VocabularyPractice {
+  id: string;
+  userId: string;
+  vocabularyId: string;
+  /** @format float */
+  successRate: number | null;
+  /** @format date-time */
+  lastPracticed: string | null;
+  /** @format date-time */
+  nextReview: string | null;
+  /** @format date-time */
+  createdAt: string;
+  user?: User;
+  vocabulary?: Vocabulary;
+}
+
+export interface Vocabulary {
+  id: string;
+  term: string;
+  meaning: string[];
+  exampleSentence: string | null;
+  imageUrl: string | null;
+  referenceLink: string | null;
+  referenceName: string | null;
+  tags: string[];
+  /** @format int32 */
+  repetitionLevel: number;
+  /** @format date-time */
+  nextReview: string | null;
+  createdById: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  createdBy?: User;
+  practices?: VocabularyPractice[];
+}
+
+export interface VocabularyResponseDto {
+  data: Vocabulary;
+}
+
+export interface VocabulariesResponse {
+  data: Vocabulary[];
+  pagination: PaginationOutputDto;
+}
+
+export interface UpdateVocabularyDto {
+  term?: string;
+  meaning?: string[];
+  exampleSentence?: string;
+  imageUrl?: string;
+  referenceLink?: string;
+  referenceName?: string;
+  tags?: string[];
+  /**
+   * Repetition level from 0 to 6
+   * @example 1
+   */
+  repetitionLevel?: number;
+  /** @format date-time */
+  nextReview?: string;
+}
+
+export interface UpdateVocabularyReviewDto {
+  /**
+   * Repetition level from 0 to 6
+   * @example 1
+   */
+  repetitionLevel: number;
+}
+
+export interface DeleteVocabularyResponse {
+  message: string;
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -2454,6 +2548,150 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<WritingSubmissionResponse, any>({
         path: `/api/lesson-submissions/writing`,
         method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags vocabularies
+     * @name VocabularyControllerCreate
+     * @summary Create a new vocabulary
+     * @request POST:/api/vocabularies
+     * @secure
+     */
+    vocabularyControllerCreate: (data: CreateVocabularyDto, params: RequestParams = {}) =>
+      this.request<VocabularyResponseDto, any>({
+        path: `/api/vocabularies`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags vocabularies
+     * @name VocabularyControllerFindAll
+     * @summary Get all vocabularies with pagination
+     * @request GET:/api/vocabularies
+     * @secure
+     */
+    vocabularyControllerFindAll: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        tags?: string[];
+        repetitionLevel?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<VocabulariesResponse, any>({
+        path: `/api/vocabularies`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags vocabularies
+     * @name VocabularyControllerGetDueVocabularies
+     * @summary Get all vocabularies due for review
+     * @request GET:/api/vocabularies/due
+     * @secure
+     */
+    vocabularyControllerGetDueVocabularies: (params: RequestParams = {}) =>
+      this.request<VocabulariesResponse, any>({
+        path: `/api/vocabularies/due`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags vocabularies
+     * @name VocabularyControllerFindOne
+     * @summary Get a vocabulary by id
+     * @request GET:/api/vocabularies/{id}
+     * @secure
+     */
+    vocabularyControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<VocabularyResponseDto, any>({
+        path: `/api/vocabularies/${id}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags vocabularies
+     * @name VocabularyControllerUpdate
+     * @summary Update a vocabulary
+     * @request PATCH:/api/vocabularies/{id}
+     * @secure
+     */
+    vocabularyControllerUpdate: (id: string, data: UpdateVocabularyDto, params: RequestParams = {}) =>
+      this.request<VocabularyResponseDto, any>({
+        path: `/api/vocabularies/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags vocabularies
+     * @name VocabularyControllerRemove
+     * @summary Delete a vocabulary
+     * @request DELETE:/api/vocabularies/{id}
+     * @secure
+     */
+    vocabularyControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteVocabularyResponse, any>({
+        path: `/api/vocabularies/${id}`,
+        method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags vocabularies
+     * @name VocabularyControllerUpdateReviewStatus
+     * @summary Update vocabulary review status
+     * @request PATCH:/api/vocabularies/{id}/review
+     * @secure
+     */
+    vocabularyControllerUpdateReviewStatus: (id: string, data: UpdateVocabularyReviewDto, params: RequestParams = {}) =>
+      this.request<VocabularyResponseDto, any>({
+        path: `/api/vocabularies/${id}/review`,
+        method: "PATCH",
         body: data,
         secure: true,
         type: ContentType.Json,

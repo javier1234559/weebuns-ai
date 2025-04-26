@@ -10,7 +10,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import LevelButtons from "./LevelButton";
-import { Vocabulary } from "@/feature/vocabulary/types/vocabulary";
+import { Vocabulary } from "@/services/swagger-types";
 
 interface TableVocabProps {
   vocabularies: Vocabulary[];
@@ -19,8 +19,6 @@ interface TableVocabProps {
 export default function TableVocab({ vocabularies }: TableVocabProps) {
   const selectedVocabs = [] as Vocabulary[];
   const selected = selectedVocabs.map((vocab: Vocabulary) => vocab.id);
-
-  console.log(vocabularies);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
