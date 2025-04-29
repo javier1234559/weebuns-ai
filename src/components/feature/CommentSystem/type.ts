@@ -4,11 +4,10 @@ export interface Comment {
   author: {
     name: string;
     image?: string;
-    isAuthor?: boolean;
   };
   likes: number;
   specialLikes: number;
-  replies?: Comment[];
   createdAt: string;
-  replyTo?: string;
+  hasReplies: boolean;
+  userReaction: "like" | "teacher_heart" | null;
 }

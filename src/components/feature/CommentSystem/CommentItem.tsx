@@ -3,219 +3,162 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { ChevronDown, Heart, MessageCircle, ThumbsUp } from "lucide-react";
-import { memo, useState } from "react";
-import { Comment } from "./type";
+import {
+  Heart,
+  MessageSquare,
+  ThumbsUp,
+  Trash2,
+  ChevronDown,
+} from "lucide-react";
 
-interface CommentItemProps {
+import { useState } from "react";
+
+export interface CommentItemProps {
   comment: Comment;
-  onReply: (id: string | null) => void;
-  activeReplyId: string | null;
-  setComments: React.Dispatch<React.SetStateAction<Comment[]>>;
-  isExpanded: boolean;
-  onToggleExpand: (id: string) => void;
-  currentUser: { name: string; image?: string };
-  onAddReply?: (parentId: string, reply: Comment) => void;
+  onReaction: (commentId: string, type: "like" | "teacher_heart") => void;
+  onDelete: (commentId: string) => void;
+  onToggleReplies: (content: string, parentId: string) => void;
   level?: number;
+  currentUser?: {
+    name: string;
+    image?: string;
+  };
 }
 
-function CommentItem({
+export default function CommentItem({
   comment,
-  onReply,
-  activeReplyId,
-  setComments,
-  isExpanded,
-  onToggleExpand,
-  currentUser,
-  onAddReply,
+  onReaction,
+  onDelete,
+  onToggleReplies,
   level = 1,
+  currentUser,
 }: CommentItemProps) {
-  const [liked, setLiked] = useState(false);
-  const [specialLiked, setSpecialLiked] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState("");
-
   const INITIAL_REPLIES_DISPLAY = 2;
 
   const handleAddReply = () => {
     if (!replyContent.trim()) return;
-
-    const newReply: Comment = {
-      id: Math.random().toString(),
-      content: replyContent,
-      author: currentUser,
-      likes: 0,
-      specialLikes: 0,
-      createdAt: new Date().toISOString(),
-      replyTo: level > 1 ? comment.author.name : undefined,
-    };
-
-    setComments((prevComments) => {
-      const updateReplies = (comments: Comment[]): Comment[] => {
-        return comments.map((c) => {
-          if (c.id === comment.id) {
-            return {
-              ...c,
-              replies: [...(c.replies || []), newReply],
-            };
-          }
-          if (c.replies) {
-            return {
-              ...c,
-              replies: updateReplies(c.replies),
-            };
-          }
-          return c;
-        });
-      };
-      return updateReplies(prevComments);
-    });
-
-    onAddReply?.(comment.id, newReply);
+    onToggleReplies(comment.id, replyContent);
     setReplyContent("");
-    onReply(null);
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
+    setIsReplying(false);
   };
 
   return (
-    <div className={cn("flex gap-4", level === 2 && "-ml-1")}>
-      <Avatar className="w-10 h-10">
-        <AvatarImage src={comment.author.image} />
-        <AvatarFallback>{comment.author.name[0]}</AvatarFallback>
-      </Avatar>
-      <div className="flex-1 space-y-2">
-        <div className="flex items-center gap-2">
-          <span className="font-medium">{comment.author.name}</span>
-          {comment.author.isAuthor && (
-            <span className="px-2 py-0.5 text-xs bg-primary/10 text-primary rounded-full">
-              Author
-            </span>
-          )}
-          <span className="text-sm text-muted-foreground">
-            {formatDate(comment.createdAt)}
-          </span>
-        </div>
-
-        <p className="text-sm">
-          {comment.replyTo && (
-            <span className="text-primary font-medium">
-              @{comment.replyTo}{" "}
-            </span>
-          )}
-          {comment.content}
-        </p>
-
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn("gap-1", liked && "text-primary")}
-            onClick={() => setLiked(!liked)}
-          >
-            <ThumbsUp className="h-4 w-4" />
-            <span>{comment.likes + (liked ? 1 : 0)}</span>
-          </Button>
-
-          {/* {comment.author.isAuthor && ( */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn("gap-1", specialLiked && "text-yellow-500")}
-            onClick={() => setSpecialLiked(!specialLiked)}
-          >
-            <Heart
-              className={cn("gap-1", specialLiked && "text-yellow-500")}
-              fill={specialLiked ? "currentColor" : "none"}
-            />
-            <span>{comment.specialLikes + (specialLiked ? 1 : 0)}</span>
-          </Button>
-          {/* )} */}
-
-          {level < 2 && (
+    <div className="space-y-4">
+      <div className="flex gap-4">
+        <Avatar className="w-10 h-10">
+          <AvatarImage src={comment.author.image} />
+          <AvatarFallback>{comment.author.name[0]}</AvatarFallback>
+        </Avatar>
+        <div className="flex-1 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="font-medium">{comment.author.name}</span>
+              <span className="text-sm text-muted-foreground">
+                {comment.createdAt}
+              </span>
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onDelete(comment.id)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+          <p className="text-sm">{comment.content}</p>
+          <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="sm"
-              className="gap-1"
-              onClick={() =>
-                onReply(activeReplyId === comment.id ? null : comment.id)
-              }
+              className={`flex items-center gap-1 ${
+                comment.userReaction === "like" ? "text-primary" : ""
+              }`}
+              onClick={() => onReaction(comment.id, "like")}
             >
-              <MessageCircle className="h-4 w-4" />
-              Reply
+              <ThumbsUp className="h-4 w-4" />
+              <span>{comment.likes}</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`flex items-center gap-1 ${
+                comment.userReaction === "teacher_heart" ? "text-primary" : ""
+              }`}
+              onClick={() => onReaction(comment.id, "teacher_heart")}
+            >
+              <Heart className="h-4 w-4" />
+              <span>{comment.specialLikes}</span>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="flex items-center gap-1"
+              onClick={() => setIsReplying(true)}
+            >
+              <MessageSquare className="h-4 w-4" />
+              <span>Reply</span>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Reply Form */}
+      {isReplying && (
+        <div className="flex gap-4 ml-12">
+          <Avatar className="w-10 h-10">
+            <AvatarImage src={currentUser?.image} />
+            <AvatarFallback>{currentUser?.name[0]}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 space-y-2">
+            <Textarea
+              placeholder="Write a reply..."
+              value={replyContent}
+              onChange={(e) => setReplyContent(e.target.value)}
+              className="min-h-[80px] resize-none"
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setIsReplying(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleAddReply}>Reply</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Replies Section */}
+      {comment.replies && comment.replies.length > 0 && (
+        <div className="space-y-4 ml-12">
+          {comment.replies
+            .slice(0, isExpanded ? undefined : INITIAL_REPLIES_DISPLAY)
+            .map((reply) => (
+              <CommentItem
+                key={reply.id}
+                comment={reply}
+                onReaction={onReaction}
+                onDelete={onDelete}
+                onToggleReplies={onToggleReplies}
+                level={level + 1}
+                currentUser={currentUser}
+              />
+            ))}
+
+          {comment.replies.length > INITIAL_REPLIES_DISPLAY && !isExpanded && (
+            <Button
+              variant="link"
+              className="mt-2"
+              onClick={() => setIsExpanded(true)}
+            >
+              <ChevronDown className="h-4 w-4 mr-1" />
+              Show {comment.replies.length - INITIAL_REPLIES_DISPLAY} more
+              replies
             </Button>
           )}
         </div>
-
-        {activeReplyId === comment.id && (
-          <div className="flex gap-4 mt-4">
-            <Avatar className="w-8 h-8">
-              <AvatarImage src={currentUser.image} />
-              <AvatarFallback>{currentUser.name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-2">
-              <Textarea
-                placeholder="Write a reply..."
-                value={replyContent}
-                onChange={(e) => setReplyContent(e.target.value)}
-                className="min-h-[80px] resize-none"
-              />
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => onReply(null)}>
-                  Cancel
-                </Button>
-                <Button onClick={handleAddReply}>Reply</Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Nested Replies */}
-        {comment.replies && comment.replies.length > 0 && (
-          <div className="space-y-4 mt-4">
-            {comment.replies
-              .slice(0, isExpanded ? undefined : INITIAL_REPLIES_DISPLAY)
-              .map((reply) => (
-                <CommentItem
-                  key={reply.id}
-                  comment={reply}
-                  onReply={onReply}
-                  activeReplyId={activeReplyId}
-                  setComments={setComments}
-                  level={level + 1}
-                  isExpanded={isExpanded}
-                  onToggleExpand={onToggleExpand}
-                  currentUser={currentUser}
-                  onAddReply={onAddReply}
-                />
-              ))}
-
-            {comment.replies.length > INITIAL_REPLIES_DISPLAY &&
-              !isExpanded && (
-                <Button
-                  variant="link"
-                  className="mt-2"
-                  onClick={() => onToggleExpand(comment.id)}
-                >
-                  <ChevronDown className="h-4 w-4 mr-1" />
-                  Show {comment.replies.length - INITIAL_REPLIES_DISPLAY} more
-                  replies
-                </Button>
-              )}
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }
-
-export default memo(CommentItem);

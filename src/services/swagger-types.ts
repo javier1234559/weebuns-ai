@@ -877,37 +877,63 @@ export interface UpdateSpeakingDTO {
 }
 
 export interface CreateCommentDto {
-  /** The ID of the entity being commented on */
-  entityId: string;
-  /** The content of the comment */
+  /** Identifier to group comments (e.g. writing-all, writing-detail-123) */
+  identifierId: string;
+  /** Content of the comment */
   content: string;
-  /** The ID of the parent comment if this is a reply */
+  /** Parent comment ID if this is a reply */
   parentId?: string;
-  /** The ID of the submission being commented on */
-  submissionId: string;
 }
 
-export type Comment = object;
-
-export interface CreateCommentResponse {
-  comment: Comment;
-}
-
-export interface CommentsResponse {
-  comments: Comment[];
-  pagination: PaginationOutputDto;
+export interface CommentUserResponse {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  profilePicture: string;
 }
 
 export interface CommentResponse {
-  comment: Comment;
+  id: string;
+  identifierId: string;
+  userId: string;
+  content: string;
+  parentId: object;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  deletedAt: object;
+  lessonSubmissionId: object;
+  user: CommentUserResponse;
+  reactions: object[];
+  _count: object;
+  likesCount: number;
+  lovesCount: number;
+  hasReplies: boolean;
+  userReaction: "like" | "teacher_heart" | null;
 }
 
-export interface UpdateCommentResponse {
-  comment: Comment;
+export interface CreateCommentResponse {
+  comment: CommentResponse;
+}
+
+export interface CommentsResponse {
+  data: CommentResponse[];
+  pagination: PaginationOutputDto;
+}
+
+export interface AddReactionDto {
+  /** Type of reaction (like, teacher_heart) */
+  type: "like" | "teacher_heart";
+}
+
+export interface AddReactionResponse {
+  message: string;
 }
 
 export interface DeleteCommentResponse {
-  comment: Comment;
+  message: string;
 }
 
 export interface LessonSubmissionsResponse {
@@ -1183,7 +1209,6 @@ export interface Vocabulary {
   imageUrl: string | null;
   referenceLink: string | null;
   referenceName: string | null;
-  tags: string[];
   /** @format int32 */
   repetitionLevel: number;
   /** @format date-time */
@@ -2196,7 +2221,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags comments
      * @name CommentControllerCreate
-     * @summary Create a new comment
      * @request POST:/api/comments
      * @secure
      */
@@ -2216,7 +2240,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags comments
      * @name CommentControllerFindAll
-     * @summary Get all comments
      * @request GET:/api/comments
      * @secure
      */
@@ -2226,7 +2249,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         page?: number;
         /** @default 10 */
         perPage?: number;
-        submissionId: string;
+        /** Identifier to filter comments (e.g. writing-all, writing-detail-123) */
+        identifierId: string;
       },
       params: RequestParams = {},
     ) =>
@@ -2243,15 +2267,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags comments
-     * @name CommentControllerFindOne
-     * @summary Get a comment by ID
-     * @request GET:/api/comments/{id}
+     * @name CommentControllerFindReplies
+     * @request GET:/api/comments/replies
      * @secure
      */
-    commentControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<CommentResponse, any>({
-        path: `/api/comments/${id}`,
+    commentControllerFindReplies: (
+      query: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        /** Comment ID to get replies for */
+        commentId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<CommentsResponse, any>({
+        path: `/api/comments/replies`,
         method: "GET",
+        query: query,
         secure: true,
         format: "json",
         ...params,
@@ -2261,16 +2295,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags comments
-     * @name CommentControllerUpdate
-     * @summary Update a comment
-     * @request PUT:/api/comments/{id}
+     * @name CommentControllerAddReaction
+     * @request POST:/api/comments/{id}/reactions
      * @secure
      */
-    commentControllerUpdate: (id: string, params: RequestParams = {}) =>
-      this.request<UpdateCommentResponse, any>({
-        path: `/api/comments/${id}`,
-        method: "PUT",
+    commentControllerAddReaction: (id: string, data: AddReactionDto, params: RequestParams = {}) =>
+      this.request<AddReactionResponse, any>({
+        path: `/api/comments/${id}/reactions`,
+        method: "POST",
+        body: data,
         secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2279,33 +2314,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags comments
-     * @name CommentControllerRemove
-     * @summary Delete a comment
+     * @name CommentControllerDelete
      * @request DELETE:/api/comments/{id}
      * @secure
      */
-    commentControllerRemove: (id: string, params: RequestParams = {}) =>
+    commentControllerDelete: (id: string, params: RequestParams = {}) =>
       this.request<DeleteCommentResponse, any>({
         path: `/api/comments/${id}`,
         method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags comments
-     * @name CommentControllerFindReplies
-     * @summary Get all replies for a comment
-     * @request GET:/api/comments/{id}/replies
-     * @secure
-     */
-    commentControllerFindReplies: (id: string, params: RequestParams = {}) =>
-      this.request<CommentResponse[], any>({
-        path: `/api/comments/${id}/replies`,
-        method: "GET",
         secure: true,
         format: "json",
         ...params,
@@ -2593,6 +2609,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         tags?: string[];
         repetitionLevel?: number;
+        dueDate?: boolean;
       },
       params: RequestParams = {},
     ) =>

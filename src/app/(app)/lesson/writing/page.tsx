@@ -1,4 +1,4 @@
-import CommentSystem from "@/components/feature/CommentSystem";
+import CommentSystemView from "@/feature/comment/views/CommentSystemView";
 import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
 import { WritingView } from "@/feature/writing/views/WritingView";
@@ -51,7 +51,7 @@ export default function WritingPage() {
       </div>
 
       <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
-        <CommentSystem />
+        <CommentSystemView identifierId={"writing-all"} />
       </div>
     </div>
   );

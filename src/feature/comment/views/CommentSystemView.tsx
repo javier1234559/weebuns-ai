@@ -1,0 +1,140 @@
+"use client";
+import { CommentSystem } from "@/components/feature/CommentSystem";
+import {
+  useComments,
+  useCreateComment,
+  useAddReaction,
+  useDeleteComment,
+} from "@/feature/comment/hooks/useComment";
+import { CommentSkeleton } from "../components/CommentSkeleton";
+import { formatDistanceToNow } from "date-fns";
+import { toast } from "sonner";
+import usePaginationUrl from "@/hooks/usePaginationUrl";
+
+interface CommentSystemProps {
+  identifierId: string;
+}
+
+export default function CommentSystemView({
+  identifierId,
+}: CommentSystemProps) {
+  const { page, perPage } = usePaginationUrl();
+
+  const {
+    data: commentsData,
+    isLoading,
+    error,
+  } = useComments({
+    identifierId,
+    page,
+    perPage,
+  });
+
+  const { mutate: createComment } = useCreateComment();
+  const { mutate: addReaction } = useAddReaction();
+  const { mutate: deleteComment } = useDeleteComment();
+
+  const handleAddComment = (content: string) => {
+    createComment(
+      {
+        identifierId,
+        content,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Comment added successfully");
+        },
+        onError: (error) => {
+          toast.error("Failed to add comment");
+        },
+      },
+    );
+  };
+
+  const handleAddReply = (content: string, parentId: string) => {
+    createComment(
+      {
+        identifierId,
+        content,
+        parentId,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Comment added successfully");
+        },
+        onError: (error) => {
+          toast.error("Failed to add comment");
+        },
+      },
+    );
+  };
+
+  const handleAddReaction = (
+    commentId: string,
+    type: "like" | "teacher_heart",
+  ) => {
+    addReaction(
+      {
+        id: commentId,
+        data: { type },
+      },
+      {
+        onError: (error) => {
+          toast.error("Failed to add reaction");
+        },
+      },
+    );
+  };
+
+  const handleDeleteComment = (commentId: string) => {
+    deleteComment(commentId, {
+      onSuccess: () => {
+        toast.success("Comment deleted successfully");
+      },
+      onError: (error) => {
+        toast.error("Failed to delete comment");
+      },
+    });
+  };
+
+  if (isLoading) {
+    return <CommentSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500">
+        Failed to load comments. Please try again later.
+      </div>
+    );
+  }
+
+  const formattedComments =
+    commentsData?.data.map((comment) => ({
+      id: comment.id,
+      content: comment.content,
+      author: {
+        name: comment.user.username,
+        image: comment.user.profilePicture,
+      },
+      likes: comment.likesCount,
+      specialLikes: comment.lovesCount,
+      createdAt: formatDistanceToNow(new Date(comment.createdAt), {
+        addSuffix: true,
+      }),
+      hasReplies: comment.hasReplies,
+      userReaction: comment.userReaction,
+    })) || [];
+
+  return (
+    <div>
+      <CommentSystem
+        comments={formattedComments}
+        onAddComment={handleAddComment}
+        onAddReaction={handleAddReaction}
+        onDeleteComment={handleDeleteComment}
+        onAddReply={handleAddReply}
+      />
+    </div>
+  );
+}
