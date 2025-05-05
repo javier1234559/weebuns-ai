@@ -1,13 +1,15 @@
 "use client";
 
 import { useChat } from "ai/react";
-import { Button } from "@/components/ui/button";
 import { ChatBubble } from "@/components/ui/chat/chat-bubble";
-import { CornerDownLeft } from "lucide-react";
+import { CornerDownLeft, Loader2 } from "lucide-react";
 import { ChatBubbleMessage } from "@/components/ui/chat/chat-bubble";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { ChatBubbleAvatar } from "@/components/ui/chat/chat-bubble";
 import { ChatInput } from "@/components/ui/chat/chat-input";
+import { TOKEN_COSTS } from "@/feature/token/constants";
+import { TokenProtectedButton } from "@/feature/token/components/TokenProtectedButton";
+import { toast } from "@/hooks/use-toast";
 
 interface ChatPanelProps {
   topic: string;
@@ -22,6 +24,23 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
 
   const greeting =
     "Hello! I'm your writing assistant. How can I help you today?";
+
+  const handleChatSubmit = async () => {
+    try {
+      await handleSubmit();
+      toast({
+        title: "Message Sent",
+        description: "Your message has been sent successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Failed to Send",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
 
   return (
     <div className="flex flex-col bg-background" style={{ height: "1000px" }}>
@@ -60,15 +79,24 @@ export function ChatPanel({ topic, content }: ChatPanelProps) {
             className="min-h-12 resize-none rounded-lg border-0 bg-background p-3 shadow-none focus-visible:ring-0"
           />
           <div className="flex items-center p-3 pt-0">
-            <Button
-              onClick={handleSubmit}
-              size="sm"
+            <TokenProtectedButton
+              requiredTokens={TOKEN_COSTS.CHAT}
+              onAction={handleChatSubmit}
               className="ml-auto gap-1.5"
-              type="button"
             >
-              Send Message
-              <CornerDownLeft className="size-3.5" />
-            </Button>
+              {messages.length > 0 &&
+              messages[messages.length - 1].role === "user" ? (
+                <>
+                  <Loader2 className="mr-2 size-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  Send Message ({TOKEN_COSTS.CHAT} Tokens)
+                  <CornerDownLeft className="size-3.5" />
+                </>
+              )}
+            </TokenProtectedButton>
           </div>
         </form>
       </div>

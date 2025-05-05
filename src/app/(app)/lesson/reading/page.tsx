@@ -1,3 +1,4 @@
+import CommentSystemView from "@/feature/comment/views/CommentSystemView";
 import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
 import { LessonListSkeleton } from "@/feature/lesson/components/LessonListSkeleton";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
@@ -51,6 +52,10 @@ export default async function ReadingPage() {
         <Suspense fallback={<LessonListSkeleton />}>
           <ReadingView />
         </Suspense>
+      </div>
+
+      <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
+        <CommentSystemView identifierId={"reading-all"} />
       </div>
     </div>
   );

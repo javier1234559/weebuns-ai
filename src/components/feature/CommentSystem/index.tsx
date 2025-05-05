@@ -1,4 +1,3 @@
-// components/comments/CommentSystem.tsx
 "use client";
 
 import { useState } from "react";
@@ -6,7 +5,21 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import CommentItem from "./CommentItem";
 import { CommentForm } from "./CommentForm";
-import { CommentSystemProps } from "./types";
+import { Comment } from "./type";
+import { CommentResponse } from "@/services/swagger-types";
+
+export interface CommentSystemProps {
+  comments: Comment[];
+  onAddComment: (content: string) => void;
+  onAddReaction: (commentId: string, type: "like" | "teacher_heart") => void;
+  onDeleteComment: (commentId: string) => void;
+  onAddReply: (content: string, parentId: string) => void;
+  currentUser?: {
+    id: string;
+    name: string;
+    image?: string;
+  };
+}
 
 export function CommentSystem({
   comments = [],
@@ -15,6 +28,7 @@ export function CommentSystem({
   onDeleteComment,
   onAddReply,
   currentUser = {
+    id: "1",
     name: "Current User",
     image: "/avatars/user.png",
   },
@@ -47,9 +61,9 @@ export function CommentSystem({
             0,
             expandedComments.has("root") ? undefined : INITIAL_DISPLAY_COUNT,
           )
-          .map((comment) => (
+          .map((comment: any, index: number) => (
             <CommentItem
-              key={comment.id}
+              key={`${comment.id}-${index}`}
               comment={comment}
               onReaction={onAddReaction}
               onDelete={onDeleteComment}

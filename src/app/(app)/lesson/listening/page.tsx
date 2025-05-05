@@ -1,3 +1,4 @@
+import CommentSystemView from "@/feature/comment/views/CommentSystemView";
 import { LessonBreadcrumb } from "@/feature/lesson/components/LessonBreadcrumb";
 import { LessonTitle } from "@/feature/lesson/components/LessonTitle";
 import { ListeningView } from "@/feature/listening/views/ListeningView";
@@ -47,6 +48,10 @@ export default function ListeningPage() {
 
       <div className="px-0">
         <ListeningView />
+      </div>
+
+      <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
+        <CommentSystemView identifierId={"listening-all"} />
       </div>
     </div>
   );

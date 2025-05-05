@@ -8,6 +8,7 @@ import { toast } from "sonner";
 
 interface CommentFormProps {
   currentUser: {
+    id: string;
     name: string;
     image?: string;
   };

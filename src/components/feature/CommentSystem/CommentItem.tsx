@@ -10,8 +10,12 @@ import {
   Trash2,
   ChevronDown,
 } from "lucide-react";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Comment } from "./type";
+import usePaginationUrl from "@/hooks/usePaginationUrl";
+import { useCommentReplies } from "@/feature/comment/hooks/useComment";
+import { formatDistanceToNow } from "date-fns";
+import { CommentResponse } from "@/services/swagger-types";
 
 export interface CommentItemProps {
   comment: Comment;
@@ -20,10 +24,38 @@ export interface CommentItemProps {
   onToggleReplies: (content: string, parentId: string) => void;
   level?: number;
   currentUser?: {
+    id: string;
     name: string;
     image?: string;
   };
 }
+
+const formatComment = (comment: CommentResponse): Comment => ({
+  id: comment.id,
+  content: comment.content,
+  author: {
+    name: comment.user.username,
+    image: comment.user.profilePicture,
+  },
+  likes: comment.likesCount,
+  specialLikes: comment.lovesCount,
+  createdAt: formatDistanceToNow(new Date(comment.createdAt), {
+    addSuffix: true,
+  }),
+  hasReplies: comment.hasReplies,
+  userReaction: comment.userReaction || null,
+  reactions: comment.reactions,
+});
+
+const hasUserReacted = (
+  reactions: any[],
+  userId: string,
+  type: "like" | "teacher_heart",
+) => {
+  return reactions?.some(
+    (reaction) => reaction.userId === userId && reaction.type === type,
+  );
+};
 
 export default function CommentItem({
   comment,
@@ -36,13 +68,37 @@ export default function CommentItem({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState("");
-  const INITIAL_REPLIES_DISPLAY = 2;
+
+  const { page, perPage } = usePaginationUrl();
+  const {
+    data: replies,
+    isLoading: isLoadingReplies,
+    error: repliesError,
+  } = useCommentReplies(
+    {
+      commentId: comment.id,
+      page,
+      perPage,
+    },
+    {
+      enabled: isExpanded,
+    },
+  );
+
+  const formattedReplies =
+    replies?.data.map((reply) =>
+      formatComment(reply as unknown as CommentResponse),
+    ) || [];
 
   const handleAddReply = () => {
     if (!replyContent.trim()) return;
-    onToggleReplies(comment.id, replyContent);
+    onToggleReplies(replyContent, comment.id);
     setReplyContent("");
     setIsReplying(false);
+  };
+
+  const handleToggleReplies = () => {
+    setIsExpanded(!isExpanded);
   };
 
   return (
@@ -60,13 +116,15 @@ export default function CommentItem({
                 {comment.createdAt}
               </span>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => onDelete(comment.id)}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            {comment.author.isAuthor && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onDelete(comment.id)}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
           </div>
           <p className="text-sm">{comment.content}</p>
           <div className="flex items-center gap-4">
@@ -74,7 +132,9 @@ export default function CommentItem({
               variant="ghost"
               size="sm"
               className={`flex items-center gap-1 ${
-                comment.userReaction === "like" ? "text-primary" : ""
+                hasUserReacted(comment.reactions, currentUser?.id || "", "like")
+                  ? "text-primary"
+                  : ""
               }`}
               onClick={() => onReaction(comment.id, "like")}
             >
@@ -85,7 +145,13 @@ export default function CommentItem({
               variant="ghost"
               size="sm"
               className={`flex items-center gap-1 ${
-                comment.userReaction === "teacher_heart" ? "text-primary" : ""
+                hasUserReacted(
+                  comment.reactions,
+                  currentUser?.id || "",
+                  "teacher_heart",
+                )
+                  ? "text-primary"
+                  : ""
               }`}
               onClick={() => onReaction(comment.id, "teacher_heart")}
             >
@@ -130,33 +196,34 @@ export default function CommentItem({
       )}
 
       {/* Replies Section */}
-      {comment.replies && comment.replies.length > 0 && (
+      {comment.hasReplies && (
         <div className="space-y-4 ml-12">
-          {comment.replies
-            .slice(0, isExpanded ? undefined : INITIAL_REPLIES_DISPLAY)
-            .map((reply) => (
-              <CommentItem
-                key={reply.id}
-                comment={reply}
-                onReaction={onReaction}
-                onDelete={onDelete}
-                onToggleReplies={onToggleReplies}
-                level={level + 1}
-                currentUser={currentUser}
-              />
-            ))}
+          {isExpanded ? (
+            <>
+              {isLoadingReplies ? (
+                <div className="text-center">Loading replies...</div>
+              ) : repliesError ? (
+                <div className="text-red-500">Failed to load replies</div>
+              ) : (
+                formattedReplies.map((reply) => (
+                  <CommentItem
+                    key={reply.id}
+                    comment={reply}
+                    onReaction={onReaction}
+                    onDelete={onDelete}
+                    onToggleReplies={onToggleReplies}
+                    level={level + 1}
+                    currentUser={currentUser}
+                  />
+                ))
+              )}
+            </>
+          ) : null}
 
-          {comment.replies.length > INITIAL_REPLIES_DISPLAY && !isExpanded && (
-            <Button
-              variant="link"
-              className="mt-2"
-              onClick={() => setIsExpanded(true)}
-            >
-              <ChevronDown className="h-4 w-4 mr-1" />
-              Show {comment.replies.length - INITIAL_REPLIES_DISPLAY} more
-              replies
-            </Button>
-          )}
+          <Button variant="link" className="mt-2" onClick={handleToggleReplies}>
+            <ChevronDown className="h-4 w-4 mr-1" />
+            {isExpanded ? "Hide replies" : "Show replies"}
+          </Button>
         </div>
       )}
     </div>

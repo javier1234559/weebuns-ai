@@ -7,6 +7,5 @@ export const vocabularyDialogSchema = z.object({
   imageUrl: z.string().optional(),
   referenceLink: z.string().optional(),
   referenceName: z.string().optional(),
-  tags: z.array(z.string()).default([]),
   repetitionLevel: z.number().min(0).max(6).default(0),
 });

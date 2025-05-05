@@ -22,7 +22,6 @@ export function WritingDetailView({
 }: WritingDetailViewProps) {
   const router = useRouter();
   const { data, isLoading, error } = useWritingDetail(id);
-  const { openConfirmDialog } = useConfirmDialog();
   const submitWritingMutation = useCreateWritingSubmission();
 
   const handleSubmit = async (data: CreateWritingSubmissionDTO) => {
@@ -40,13 +39,7 @@ export function WritingDetailView({
   };
 
   const handleSubmitWithConfirmation = (data: CreateWritingSubmissionDTO) => {
-    openConfirmDialog({
-      title: "Xác nhận nộp bài",
-      description: "Bạn có chắc chắn muốn nộp bài làm của mình không?",
-      confirmText: "Nộp bài",
-      cancelText: "Hủy",
-      onConfirm: () => handleSubmit(data),
-    });
+    handleSubmit(data);
   };
 
   if (isLoading) {

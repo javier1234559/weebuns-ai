@@ -7,40 +7,25 @@ import {
 } from "@/components/ui/table";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import LevelButtons from "./LevelButton";
 import { Vocabulary } from "@/services/swagger-types";
+import { useVocabStore } from "@/feature/vocabulary/store/vocabStore";
 
 interface TableVocabProps {
   vocabularies: Vocabulary[];
 }
 
 export default function TableVocab({ vocabularies }: TableVocabProps) {
-  const selectedVocabs = [] as Vocabulary[];
-  const selected = selectedVocabs.map((vocab: Vocabulary) => vocab.id);
+  const { checkedVocabs, toggleVocab, toggleAllVocabs } = useVocabStore();
+  const selected = checkedVocabs.map((vocab) => vocab.id);
 
   const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      // dispatch(setSelectedVocabs(vocabularies));
-    } else {
-      // dispatch(setSelectedVocabs([]));
-    }
+    toggleAllVocabs(vocabularies, checked);
   };
 
   const handleSelect = (vocab: Vocabulary) => {
-    const selectedIndex = selected.indexOf(vocab.id);
-    let newSelectedVocabs: Vocabulary[] = [];
-
-    if (selectedIndex === -1) {
-      newSelectedVocabs = [...selectedVocabs, vocab];
-    } else {
-      newSelectedVocabs = selectedVocabs.filter(
-        (v: Vocabulary) => v.id !== vocab.id,
-      );
-    }
-
-    // dispatch(setSelectedVocabs(newSelectedVocabs));
+    toggleVocab(vocab);
   };
 
   return (
@@ -75,14 +60,6 @@ export default function TableVocab({ vocabularies }: TableVocabProps) {
                 <TableCell>
                   <div className="space-y-2">
                     <p className="font-medium">{vocab.term}</p>
-                    <div className="flex flex-wrap gap-1">
-                      {Array.isArray(vocab.tags) &&
-                        vocab.tags.map((tag: string) => (
-                          <Badge key={tag} variant="outline">
-                            {tag}
-                          </Badge>
-                        ))}
-                    </div>
                   </div>
                 </TableCell>
                 <TableCell>

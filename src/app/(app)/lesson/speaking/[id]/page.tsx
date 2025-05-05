@@ -1,7 +1,7 @@
 import { RouteNames } from "@/constraints/route-name";
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
 import { SpeakingDetailView } from "@/feature/speaking/views/SpeakingDetailView";
-
+import CommentSystemView from "@/feature/comment/views/CommentSystemView";
 export default function SpeakingPageDetail({
   params,
 }: {
@@ -24,6 +24,10 @@ export default function SpeakingPageDetail({
       </div>
       <div className="w-full">
         <SpeakingDetailView id={id} />
+      </div>
+
+      <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
+        <CommentSystemView identifierId={`speaking-detail-${id}`} />
       </div>
     </div>
   );

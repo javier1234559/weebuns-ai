@@ -10,15 +10,18 @@ import { CommentSkeleton } from "../components/CommentSkeleton";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import usePaginationUrl from "@/hooks/usePaginationUrl";
+import { useAuthStore } from "@/store/auth-store";
+import { CommentResponse } from "@/services/swagger-types";
 
-interface CommentSystemProps {
+interface CommentSystemViewProps {
   identifierId: string;
 }
 
 export default function CommentSystemView({
   identifierId,
-}: CommentSystemProps) {
+}: CommentSystemViewProps) {
   const { page, perPage } = usePaginationUrl();
+  const { user } = useAuthStore();
 
   const {
     data: commentsData,
@@ -109,11 +112,20 @@ export default function CommentSystemView({
     );
   }
 
+  if (!user?.id) {
+    return (
+      <div className="text-center text-muted-foreground">
+        Please login to comment
+      </div>
+    );
+  }
+
   const formattedComments =
-    commentsData?.data.map((comment) => ({
+    commentsData?.data.map((comment: CommentResponse) => ({
       id: comment.id,
       content: comment.content,
       author: {
+        id: comment.user.id,
         name: comment.user.username,
         image: comment.user.profilePicture,
       },
@@ -124,6 +136,7 @@ export default function CommentSystemView({
       }),
       hasReplies: comment.hasReplies,
       userReaction: comment.userReaction,
+      reactions: comment.reactions,
     })) || [];
 
   return (
@@ -134,6 +147,11 @@ export default function CommentSystemView({
         onAddReaction={handleAddReaction}
         onDeleteComment={handleDeleteComment}
         onAddReply={handleAddReply}
+        currentUser={{
+          id: user?.id || "",
+          name: user?.username || "",
+          image: user?.profilePicture || "",
+        }}
       />
     </div>
   );

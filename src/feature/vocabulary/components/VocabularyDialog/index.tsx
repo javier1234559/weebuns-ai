@@ -44,7 +44,6 @@ export default function VocabularyDialog({
       imageUrl: "",
       referenceLink: "",
       referenceName: "",
-      tags: [],
       repetitionLevel: 0,
     },
   });

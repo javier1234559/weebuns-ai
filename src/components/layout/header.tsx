@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import AvatarMenu from "@/feature/auth/components/AvatarMenu";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import { useAuthStore } from "@/store/auth-store";
+import UserBalance from "@/feature/token/components/UserBlance";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -95,11 +96,14 @@ const Header = () => {
           <div className="hidden items-center gap-3 lg:flex">
             <ThemeToggle />
             {user ? (
-              <AvatarMenu
-                src="/default-avatar.png"
-                fallback="U"
-                className="h-8 w-8"
-              />
+              <>
+                <UserBalance />
+                <AvatarMenu
+                  src="/default-avatar.png"
+                  fallback="U"
+                  className="h-8 w-8"
+                />
+              </>
             ) : (
               <>
                 <Link href={RouteNames.SignUp}>

@@ -1,6 +1,7 @@
 import { RouteNames } from "@/constraints/route-name";
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
 import { WritingDetailView } from "@/feature/writing/views/WritingDetailView";
+import CommentSystemView from "@/feature/comment/views/CommentSystemView";
 
 export default function WritingPageDetail({
   params,
@@ -24,6 +25,10 @@ export default function WritingPageDetail({
       </div>
       <div className="mx-2 w-full py-2 md:mx-auto">
         <WritingDetailView id={id} />
+      </div>
+
+      <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
+        <CommentSystemView identifierId={`writing-detail-${id}`} />
       </div>
     </div>
   );

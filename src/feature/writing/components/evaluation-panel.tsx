@@ -9,6 +9,8 @@ import {
   EvaluateEssayResponseDto,
   CorrectionDTO,
 } from "@/services/swagger-types";
+import { TokenProtectedButton } from "@/feature/token/components/TokenProtectedButton";
+import { TOKEN_COSTS } from "@/feature/token/constants";
 
 interface EvaluationPanelProps {
   topic: string;
@@ -19,7 +21,7 @@ const CorrectionDetail = ({ correction }: { correction: CorrectionDTO }) => (
   <Card>
     <CardContent className="p-4">
       <div className="space-y-2">
-        <p className="rounded bg-red-50 p-2 text-sm dark:bg-red-900/20 line-through">
+        <p className="rounded bg-red-50 p-2 text-sm line-through dark:bg-red-900/20">
           {correction.sentence}
         </p>
 
@@ -28,7 +30,7 @@ const CorrectionDetail = ({ correction }: { correction: CorrectionDTO }) => (
         </p>
 
         <div className="flex items-center gap-2 rounded bg-blue-50 p-2 dark:bg-blue-900/20">
-          <Lightbulb className="h-4 w-4 text-blue-500" />
+          <Lightbulb className="size-4 text-blue-500" />
           <p className="text-sm">{correction.reason}</p>
         </div>
       </div>
@@ -58,32 +60,35 @@ export function EvaluationPanel({ topic, content }: EvaluationPanelProps) {
     user_content: content,
   });
 
-  const handleEvaluate = () => {
-    mutation.mutate(undefined, {
-      onSuccess: (response) => {
-        setResult(response.data);
-        toast({
-          title: "Evaluation Complete",
-          description: "Your essay has been evaluated successfully.",
-        });
-      },
-      onError: () => {
-        toast({
-          title: "Evaluation Failed",
-          description: "Failed to evaluate essay. Please try again.",
-          variant: "destructive",
-        });
-      },
+  const handleEvaluate = async () => {
+    return new Promise<void>((resolve, reject) => {
+      mutation.mutate(undefined, {
+        onSuccess: (response) => {
+          setResult(response.data);
+          toast({
+            title: "Evaluation Complete",
+            description: "Your essay has been evaluated successfully.",
+          });
+          resolve();
+        },
+        onError: () => {
+          toast({
+            title: "Evaluation Failed",
+            description: "Failed to evaluate essay. Please try again.",
+            variant: "destructive",
+          });
+          reject();
+        },
+      });
     });
   };
 
   return (
     <div className="space-y-6">
-      <Button
-        type="button"
-        onClick={handleEvaluate}
+      <TokenProtectedButton
+        requiredTokens={TOKEN_COSTS.EVALUATE_ESSAY}
+        onAction={handleEvaluate}
         className="w-full py-2"
-        disabled={mutation.isPending}
       >
         {mutation.isPending ? (
           <>
@@ -91,9 +96,9 @@ export function EvaluationPanel({ topic, content }: EvaluationPanelProps) {
             Evaluating...
           </>
         ) : (
-          "Evaluate Essay"
+          `Evaluate Essay (${TOKEN_COSTS.EVALUATE_ESSAY} Tokens)`
         )}
-      </Button>
+      </TokenProtectedButton>
 
       {result && (
         <div className="space-y-6">

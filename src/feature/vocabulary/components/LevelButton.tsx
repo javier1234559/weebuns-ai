@@ -10,6 +10,7 @@ import {
   useDeleteVocabulary,
   useUpdateReviewStatus,
 } from "@/feature/vocabulary/hooks/useVocabularyQueries";
+import { useVocabStore } from "@/feature/vocabulary/store/vocabStore";
 
 interface LevelButtonProps {
   level: number;
@@ -25,6 +26,7 @@ export default function LevelButton({
   const updateMutation = useUpdateReviewStatus();
   const deleteMutation = useDeleteVocabulary();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { updateVocab } = useVocabStore();
 
   const handleDelete = async () => {
     try {
@@ -53,6 +55,11 @@ export default function LevelButton({
         },
       },
     );
+
+    updateVocab({
+      id,
+      repetitionLevel: newLevel,
+    });
   };
 
   const levelButton = [

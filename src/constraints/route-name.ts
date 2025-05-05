@@ -19,7 +19,7 @@ export enum RouteNames {
   ForgotPassword = "/forgot-password",
   Lesson = "/lesson/writing",
   MyVocabulary = "/my-vocabulary",
-
+  ReviewVocabulary = "/my-vocabulary/review",
   Writing = "/lesson/writing",
   WritingCreate = "/lesson/writing/create",
   WritingEdit = "/lesson/writing/edit/:id",

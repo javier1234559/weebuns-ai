@@ -26,12 +26,16 @@ export const useComments = (params: CommentQueryParams) => {
   });
 };
 
-export const useCommentReplies = (params: FindRepliesParams) => {
+export const useCommentReplies = (
+  params: FindRepliesParams,
+  options: { enabled: boolean },
+) => {
   return useQuery({
     queryKey: COMMENT_KEY_FACTORY.repliesList(params),
     queryFn: () => commentApi.findReplies(params),
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes
+    ...options,
   });
 };
 

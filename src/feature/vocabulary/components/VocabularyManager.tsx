@@ -16,8 +16,11 @@ import VocabularyDialog from "./VocabularyDialog";
 import { vocabularyDialogSchema } from "./VocabularyDialog/schema";
 import { z } from "zod";
 import { toast } from "sonner";
+import { RouteNames } from "@/constraints/route-name";
+import { useRouter } from "next/navigation";
 
 function VocabularyManager() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const createVocabulary = useCreateVocabulary();
@@ -66,6 +69,10 @@ function VocabularyManager() {
     });
   };
 
+  const handleNavigateToReview = () => {
+    router.push(RouteNames.ReviewVocabulary);
+  };
+
   return (
     <div className="w-full space-y-6">
       <Card className="p-6">
@@ -83,7 +90,7 @@ function VocabularyManager() {
               <Plus className="size-4" />
               Thêm từ vựng
             </Button>
-            <Button variant="default">
+            <Button variant="default" onClick={handleNavigateToReview}>
               <BookOpen className="size-4" />
               Review
             </Button>

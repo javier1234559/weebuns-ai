@@ -1,6 +1,7 @@
 import { RouteNames } from "@/constraints/route-name";
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
 import { ListeningDetailView } from "@/feature/listening/views/ListeningDetailView";
+import CommentSystemView from "@/feature/comment/views/CommentSystemView";
 
 export default function ListeningPageDetail({
   params,
@@ -21,6 +22,10 @@ export default function ListeningPageDetail({
       </div>
       <div className="w-full py-4">
         <ListeningDetailView id={id} />
+      </div>
+
+      <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
+        <CommentSystemView identifierId={`listening-detail-${id}`} />
       </div>
     </div>
   );
