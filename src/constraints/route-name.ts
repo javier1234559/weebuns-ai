@@ -17,7 +17,7 @@ export enum RouteNames {
   SettingsHistory = "/settings/history",
   Logout = "/logout",
   ForgotPassword = "/forgot-password",
-  Lesson = "/lesson/writing",
+  Lesson = "/lesson/writing#",
   MyVocabulary = "/my-vocabulary",
   ReviewVocabulary = "/my-vocabulary/review",
   Writing = "/lesson/writing",

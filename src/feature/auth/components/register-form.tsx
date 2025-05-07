@@ -67,17 +67,20 @@ export function RegisterForm() {
           password: data.password,
         }),
       });
-      const userData = await response.json();
+      const result = await response.json();
 
       if (!response.ok) {
-        toast.error(userData.message || 'Register failed');
+        toast.error(result.message || "Register failed");
         return;
       }
 
       // Use the auth store to save user data
-      useAuthStore.getState().login(userData);
-      toast.success('Register successful!');
+      useAuthStore.getState().setAuth({
+        user: result?.user,
+        token: result?.access_token,
+      });
 
+      toast.success("Register successful!");
       router.push(RouteNames.Home);
     } catch (error) {
       console.error("Failed to register:", error);

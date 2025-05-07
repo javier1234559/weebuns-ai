@@ -118,7 +118,7 @@ const NewsFeedSection = () => {
       </div>
 
       {/* Panel */}
-      <Card className="aspect-square sm:aspect-video relative w-full md:aspect-none md:w-1/3">
+      <Card className="md:aspect-none relative aspect-square w-full sm:aspect-video md:w-1/3">
         <div className="flex items-center justify-between border-b p-4">
           <div className="flex items-center gap-2">
             <BellRing className="size-4 text-gray-500" />

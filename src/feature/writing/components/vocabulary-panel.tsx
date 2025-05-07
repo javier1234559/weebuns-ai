@@ -95,7 +95,7 @@ export function VocabularyPanel({ vocabulary_list }: VocabularyPanelProps) {
                       className="flex items-center text-xs text-blue-500 hover:underline"
                     >
                       {item.reference_name || "Reference"}{" "}
-                      <ExternalLink className="ml-1 h-3 w-3" />
+                      <ExternalLink className="ml-1 size-3" />
                     </a>
                   </div>
                 )}

@@ -63,8 +63,6 @@ export function LoginForm() {
         return;
       }
 
-      console.log(result);
-
       // Use the auth store to save user data
       useAuthStore.getState().setAuth({
         user: result?.user,

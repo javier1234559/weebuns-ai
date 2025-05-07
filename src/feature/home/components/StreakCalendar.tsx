@@ -236,12 +236,12 @@ export const StreakCalendar: React.FC<StreakCalendarProps> = ({
               {week.days.map((day) => (
                 <div
                   key={day.dateStr}
-                  className="aspect-square relative transition-colors"
+                  className="relative aspect-square transition-colors"
                 >
                   <DayCell
                     day={day}
                     isCurrentMonth={day.isCurrentMonth}
-                    className="aspect-square relative transition-colors"
+                    className="relative aspect-square transition-colors"
                   />
                 </div>
               ))}

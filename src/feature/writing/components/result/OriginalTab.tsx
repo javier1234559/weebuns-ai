@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { UserDataDTO } from "@/feature/writing/schema";
 
 interface OriginalTabProps {
-  data?: string;
+  data?: UserDataDTO;
 }
 
 export function OriginalTab({ data }: OriginalTabProps) {
@@ -11,7 +11,7 @@ export function OriginalTab({ data }: OriginalTabProps) {
       <CardContent className="p-6">
         <div
           className="content-editor"
-          dangerouslySetInnerHTML={{ __html: data || "" }}
+          dangerouslySetInnerHTML={{ __html: data?.body1 || "" }}
         />
       </CardContent>
     </Card>
