@@ -4,27 +4,18 @@ import ReadingVocabularyView from "./ReadingVocabularyView";
 import ReadingNotesView from "./ReadingNotesView";
 
 interface ReadingViewerProps {
-  title: string;
-  description: string;
   content: string;
   defaultMode?: "vocabulary" | "notes";
   className?: string;
 }
 
 const ReadingViewer = ({
-  title,
-  description,
   content,
   defaultMode = "vocabulary",
   className,
 }: ReadingViewerProps) => {
   return (
     <div className={cn("w-full space-y-4", className)}>
-      <div className="space-y-2 rounded-md bg-card p-4">
-        <h2 className="text-2xl font-bold">{title}</h2>
-        <p className="text-muted-foreground">{description}</p>
-      </div>
-
       <Tabs defaultValue={defaultMode}>
         <TabsList className="grid w-full grid-cols-2 bg-card">
           <TabsTrigger

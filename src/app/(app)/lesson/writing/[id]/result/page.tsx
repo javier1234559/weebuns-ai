@@ -8,6 +8,7 @@ export default function WritingResultPage({ params, searchParams }: PageProps) {
   const submissionId = searchParams.submissionId as string;
 
   const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Writing", href: RouteNames.Writing },
     { title: `Kết quả bài viết`, href: "" },

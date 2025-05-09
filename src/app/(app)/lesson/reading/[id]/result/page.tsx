@@ -8,6 +8,7 @@ export default function ReadingResultPage({ params, searchParams }: PageProps) {
   const submissionId = searchParams.submissionId as string;
 
   const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Reading", href: RouteNames.Reading },
     { title: `Kết quả bài đọc`, href: "" },

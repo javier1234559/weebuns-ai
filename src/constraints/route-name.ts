@@ -10,6 +10,8 @@ export enum RouteNames {
   SignIn = "/sign-in",
   ME = "/settings/me",
   Settings = "/settings",
+  Profile = "/profile",
+
   SettingsAppearance = "/settings/appearance",
   SettingsAccount = "/settings/account",
   SettingsNotifications = "/settings/notifications",

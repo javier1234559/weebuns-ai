@@ -23,10 +23,11 @@ import {
   ContentWritingDTO,
   CreateWritingSubmissionDTO,
   SampleEssayDTO,
+  User,
 } from "@/services/swagger-types";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   UserDataDTO,
   defaultValues,
@@ -34,19 +35,17 @@ import {
 } from "@/feature/writing/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { PlateEditor } from "@/components/editor/plate-editor";
-import { useCreateEditor } from "@/components/editor/use-create-editor";
 import TipTapEditor from "@/components/feature/editor/TipTapEditor";
 import { toast } from "@/hooks/use-toast";
 import { TokenProtectedForm } from "@/feature/token/components/TokenProtectedForm";
 import { TOKEN_COSTS } from "@/feature/token/constants";
+import UserPreview from "@/feature/user/components/UserPreview";
 
 interface WritingAgentLayoutProps {
   topic: string;
@@ -54,6 +53,7 @@ interface WritingAgentLayoutProps {
   onSubmit?: (data: CreateWritingSubmissionDTO) => void;
   content?: ContentWritingDTO;
   lessonId?: string;
+  createdBy?: User;
 }
 
 export default function WritingAgentLayout({
@@ -62,6 +62,7 @@ export default function WritingAgentLayout({
   onSubmit,
   content,
   lessonId,
+  createdBy,
 }: WritingAgentLayoutProps) {
   const isMobile = useIsMobile();
   const [selectedTab, setSelectedTab] = useState<string>("chat");
@@ -186,158 +187,76 @@ export default function WritingAgentLayout({
       onError={handleFormError}
       className="h-full"
     >
+      {/* Card 1: Title, Description, UserPreview */}
+      <Card className="mb-4">
+        <CardHeader>
+          <CardTitle>
+            <h2 className="text-xl font-medium">{topic}</h2>
+            <div className="mt-4 rounded-lg border-2 border-muted">
+              <p className="text-[18px] font-light leading-relaxed">
+                {content?.task}
+              </p>
+            </div>
+            <div className="mt-4 flex items-center gap-2">
+              {createdBy && (
+                <UserPreview
+                  user={{
+                    id: createdBy.id,
+                    name: createdBy.username ?? "",
+                    avatar: createdBy.profilePicture ?? "",
+                    bio: "IELTS coach with 10 years of experience helping students achieve band 7.0+",
+                    role: createdBy.role,
+                  }}
+                />
+              )}
+            </div>
+          </CardTitle>
+        </CardHeader>
+      </Card>
+
+      <Card className="mb-4">
+        <CardContent className="flex flex-wrap items-center gap-2 py-4">
+          <Button type="button" variant="outline" onClick={handleChat}>
+            <MessageSquare className="mr-2 size-4" />
+            Chat with AI
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleGenerateVocabulary}
+          >
+            <BookOpen className="mr-2 size-4" />
+            Vocabulary
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleGenerateOutline}
+          >
+            <Check className="mr-2 size-4" />
+            Analysis Guide
+          </Button>
+          <Button type="button" variant="outline" onClick={handleEvaluateEssay}>
+            <Star className="mr-2 size-4" />
+            Evaluate Essay
+          </Button>
+          <div className="ml-auto flex items-center gap-2">
+            <Label htmlFor="show-examples">Show Example</Label>
+            <Switch
+              id="show-examples"
+              checked={isShowExamples}
+              onCheckedChange={toggleExamples}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       <SplitPane
-        minSize={60}
+        minSize={30}
         maxSize={70}
-        defaultSize={70}
+        defaultSize={50}
         direction={isMobile ? "horizontal" : "vertical"}
       >
-        <Pane className="p-2">
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle>
-                <div className="text-lg font-medium">{topic}</div>
-                <div className="mt-2 rounded-lg border-2 border-muted p-4">
-                  <p className="text-sm font-normal">{content?.task}</p>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="flex h-full flex-col overflow-y-auto p-4">
-              <div className="flex flex-wrap justify-end gap-2 py-4">
-                <Button type="button" variant="outline" onClick={handleChat}>
-                  <MessageSquare className="mr-2 size-4" />
-                  Chat with AI
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleGenerateVocabulary}
-                >
-                  <BookOpen className="mr-2 size-4" />
-                  Vocabulary
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleGenerateOutline}
-                >
-                  <Check className="mr-2 size-4" />
-                  Analysis Guide
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleEvaluateEssay}
-                >
-                  <Star className="mr-2 size-4" />
-                  Evaluate Essay
-                </Button>
-              </div>
-
-              <div className="flex-1 space-y-6 overflow-y-auto">
-                <div className="flex items-center justify-end space-x-2">
-                  <Label htmlFor="show-examples">Show Example</Label>
-                  <Switch
-                    id="show-examples"
-                    checked={isShowExamples}
-                    onCheckedChange={toggleExamples}
-                  />
-                </div>
-
-                <div className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="instruction"
-                    render={({ field }) => (
-                      <FormItem className="flex min-h-[400px] flex-col rounded-lg border-2 border-muted p-4">
-                        <FormLabel className="text-base font-medium">
-                          Introduction{" "}
-                        </FormLabel>
-                        <FormControl className="min-h-0 flex-1">
-                          <TipTapEditor
-                            value={field.value || ""}
-                            onChange={field.onChange}
-                            className="h-full bg-background"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="body1"
-                    render={({ field }) => (
-                      <FormItem className="flex min-h-[400px] flex-col rounded-lg border-2 border-muted p-4">
-                        <FormLabel className="text-base font-medium">
-                          Body Paragraph 1
-                        </FormLabel>
-                        <FormControl className="min-h-0 flex-1">
-                          <TipTapEditor
-                            value={field.value || ""}
-                            onChange={field.onChange}
-                            className="h-full bg-background"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="body2"
-                    render={({ field }) => (
-                      <FormItem className="flex min-h-[400px] flex-col rounded-lg border-2 border-muted p-4">
-                        <FormLabel className="text-base font-medium">
-                          Body Paragraph 2
-                        </FormLabel>
-                        <FormControl className="min-h-0 flex-1">
-                          <TipTapEditor
-                            value={field.value || ""}
-                            onChange={field.onChange}
-                            className="h-full bg-background"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="conclusion"
-                    render={({ field }) => (
-                      <FormItem className="flex min-h-[400px] flex-col rounded-lg border-2 border-muted p-4">
-                        <FormLabel className="text-base font-medium">
-                          Conclusion
-                        </FormLabel>
-                        <FormControl className="min-h-0 flex-1">
-                          <TipTapEditor
-                            value={field.value || ""}
-                            onChange={field.onChange}
-                            className="h-full bg-background"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end gap-2">
-                {!isReadOnly && (
-                  <Button type="submit">
-                    <Globe className="mr-2 size-4" />
-                    Submit ({TOKEN_COSTS.SUBMIT_ESSAY} Tokens)
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </Pane>
         <Pane className="p-2">
           <Card>
             <CardHeader>
@@ -372,6 +291,100 @@ export default function WritingAgentLayout({
                   </TabsContent>
                 ))}
               </Tabs>
+            </CardContent>
+          </Card>
+        </Pane>
+        <Pane className="p-2">
+          <Card className="h-full">
+            <CardContent className="flex h-full flex-col overflow-y-auto p-4">
+              <div className="flex-1 space-y-6 overflow-y-auto">
+                <div className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="instruction"
+                    render={({ field }) => (
+                      <FormItem className="flex min-h-[400px] flex-col rounded-lg border-2 border-muted p-4">
+                        <FormLabel className="text-base font-medium">
+                          Introduction{" "}
+                        </FormLabel>
+                        <FormControl className="min-h-0 flex-1">
+                          <TipTapEditor
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            className="h-full bg-background"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="body1"
+                    render={({ field }) => (
+                      <FormItem className="flex min-h-[400px] flex-col rounded-lg border-2 border-muted p-4">
+                        <FormLabel className="text-base font-medium">
+                          Body Paragraph 1
+                        </FormLabel>
+                        <FormControl className="min-h-0 flex-1">
+                          <TipTapEditor
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            className="h-full bg-background"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="body2"
+                    render={({ field }) => (
+                      <FormItem className="flex min-h-[400px] flex-col rounded-lg border-2 border-muted p-4">
+                        <FormLabel className="text-base font-medium">
+                          Body Paragraph 2
+                        </FormLabel>
+                        <FormControl className="min-h-0 flex-1">
+                          <TipTapEditor
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            className="h-full bg-background"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="conclusion"
+                    render={({ field }) => (
+                      <FormItem className="flex min-h-[400px] flex-col rounded-lg border-2 border-muted p-4">
+                        <FormLabel className="text-base font-medium">
+                          Conclusion
+                        </FormLabel>
+                        <FormControl className="min-h-0 flex-1">
+                          <TipTapEditor
+                            value={field.value || ""}
+                            onChange={field.onChange}
+                            className="h-full bg-background"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end gap-2">
+                {!isReadOnly && (
+                  <Button type="submit">
+                    <Globe className="mr-2 size-4" />
+                    Submit ({TOKEN_COSTS.SUBMIT_ESSAY} Tokens)
+                  </Button>
+                )}
+              </div>
             </CardContent>
           </Card>
         </Pane>

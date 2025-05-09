@@ -7,6 +7,7 @@ import CommentSystemView from "@/feature/comment/views/CommentSystemView";
 export default function ReadingPageDetail({ params }: PageProps) {
   const { id } = params;
   const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Reading", href: RouteNames.Reading },
     { title: `Chi tiết bài đọc`, href: "" },

@@ -176,7 +176,8 @@ const VoiceChat = ({
           </Button>
         )}
       </div>
-      <div ref={ref} className="flex-1 overflow-y-auto py-4">
+
+      <div ref={ref} className="thin-scrollbar flex-1 overflow-y-auto py-4">
         <ChatMessageList>
           {messages.length === 0 && (
             <ChatBubble variant="received">

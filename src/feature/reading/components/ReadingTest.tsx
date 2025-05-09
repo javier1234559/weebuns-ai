@@ -16,6 +16,7 @@ import { CircleCheckBig, Eye, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ReadingResultFeedback } from "@/feature/reading/components/ReadingResultFeedback";
 import { RouteNames } from "@/constraints/route-name";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 interface ReadingFeedback {
   accuracy: number;
@@ -25,8 +26,6 @@ interface ReadingFeedback {
 }
 
 interface ReadingTestProps {
-  title: string;
-  description: string;
   content: string;
   questions: QuestionDTO[];
   isPractice?: boolean;
@@ -40,8 +39,6 @@ interface ReadingTestProps {
 }
 
 export function ReadingTest({
-  title,
-  description,
   content,
   questions,
   isPractice = true,
@@ -122,9 +119,8 @@ export function ReadingTest({
 
   return (
     <div>
-      <div className="mb-2 flex w-full items-center justify-between p-4">
-        <h1 className="text-4xl font-bold">{title}</h1>
-        <div className="flex items-center justify-end gap-4">
+      <Card className="mb-4 w-full">
+        <CardContent className="flex w-full items-center justify-end gap-4 p-4">
           {isPractice && !isResultView && (
             <Button variant="outline" size="sm" onClick={handleShowAnswers}>
               <Eye className="mr-2 size-2" />
@@ -167,8 +163,8 @@ export function ReadingTest({
               Back to Home
             </Button>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       <ReadingResultFeedback
         isResultView={isResultView}
@@ -184,8 +180,6 @@ export function ReadingTest({
         >
           <Pane className="p-2">
             <ReadingViewer
-              title={title}
-              description={description}
               content={content}
               className="thin-scrollbar h-full overflow-y-auto rounded-md bg-background p-4"
             />

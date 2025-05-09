@@ -2,7 +2,10 @@ import AppBreadcrumb from "@/components/common/app-bread-crumb";
 import { RouteNames } from "@/constraints/route-name";
 
 export default function BlogPage() {
-  const breadcrumb = [{ title: "Kiến thức cần thiết", href: RouteNames.Blog }];
+  const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
+    { title: "Kiến thức cần thiết", href: RouteNames.Blog },
+  ];
 
   return (
     <div className="container mx-auto mt-20">

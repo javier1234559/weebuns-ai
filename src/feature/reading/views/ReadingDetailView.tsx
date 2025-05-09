@@ -1,7 +1,6 @@
 "use client";
 
 import AppError from "@/components/common/app-error";
-import AppLoading from "@/components/common/app-loading/page";
 import { ReadingTest } from "@/feature/reading/components/ReadingTest";
 import { useReadingDetail } from "@/feature/reading/hooks/useReadingClient";
 import { useConfirmDialog } from "@/components/common/app-confirm-dialog";
@@ -10,6 +9,9 @@ import { CreateReadingSubmissionDTO } from "@/services/swagger-types";
 import { toast } from "sonner";
 import { replaceRouteName, RouteNames } from "@/constraints/route-name";
 import { useRouter } from "next/navigation";
+import UserPreview from "@/feature/user/components/UserPreview";
+import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
+import ReadingDetailViewSkeleton from "@/feature/reading/components/ReadingDetailViewSkeleton";
 
 interface ReadingDetailViewProps {
   id: string;
@@ -46,7 +48,7 @@ export function ReadingDetailView({ id }: ReadingDetailViewProps) {
   };
 
   if (isLoading) {
-    return <AppLoading />;
+    return <ReadingDetailViewSkeleton />;
   }
 
   if (error) {
@@ -54,14 +56,41 @@ export function ReadingDetailView({ id }: ReadingDetailViewProps) {
   }
 
   return (
-    <ReadingTest
-      title={data?.data.title ?? ""}
-      description={data?.data.description ?? ""}
-      content={data?.data.content?.text ?? ""}
-      questions={data?.data.content?.questions ?? []}
-      isPractice={data?.data.lessonType === "test"}
-      lessonId={id}
-      onSubmit={handleSubmitWithConfirmation}
-    />
+    <>
+      <Card className="flex flex-col gap-4">
+        <CardHeader>
+          <CardTitle>
+            <h2 className="text-2xl font-medium">{data?.data.title}</h2>
+            <div className="mt-4 rounded-lg border-2 border-muted">
+              <p className="text-[18px] font-light leading-relaxed">
+                {data?.data.description}
+              </p>
+            </div>
+            <div className="mt-4 flex items-center gap-2">
+              {data?.data.createdBy && (
+                <UserPreview
+                  user={{
+                    id: data?.data.createdBy.id,
+                    name: data?.data.createdBy.username ?? "",
+                    avatar: data?.data.createdBy.profilePicture ?? "",
+                    bio: "IELTS coach with 10 years of experience helping students achieve band 7.0+",
+                    role: data?.data.createdBy.role,
+                  }}
+                />
+              )}
+            </div>
+          </CardTitle>
+        </CardHeader>
+      </Card>
+      <div className="mt-4">
+        <ReadingTest
+          content={data?.data.content?.text ?? ""}
+          questions={data?.data.content?.questions ?? []}
+          isPractice={data?.data.lessonType === "test"}
+          lessonId={id}
+          onSubmit={handleSubmitWithConfirmation}
+        />
+      </div>
+    </>
   );
 }

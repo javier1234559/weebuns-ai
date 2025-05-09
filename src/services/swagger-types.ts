@@ -132,6 +132,42 @@ export interface ChatResponseDto {
   history: ChatMessageDto[];
 }
 
+export interface StartSpeakingDto {
+  /**
+   * Initial prompt for the AI
+   * @example "Let's practice speaking English"
+   */
+  promptText: string;
+  /**
+   * Topic to discuss
+   * @example "Travel and Tourism"
+   */
+  topicText: string;
+  /**
+   * Example follow-up questions
+   * @example ["What places have you visited?","How was your last trip?"]
+   */
+  followupExamples: string[];
+  /**
+   * Background knowledge for the topic
+   * @example "Focus on travel experiences and cultural differences"
+   */
+  backgroundKnowledge: string;
+}
+
+export interface SpeakingDto {
+  /**
+   * Session ID for continuing the conversation
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
+  sessionId: string;
+  /**
+   * User message
+   * @example "Hi, I'm ready."
+   */
+  message: string;
+}
+
 export interface EvaluateEssayDto {
   /** The essay topic or prompt */
   topic: string;
@@ -160,42 +196,19 @@ export interface EvaluateEssayResponseDto {
   overall_feedback: string;
 }
 
-export interface PaginationOutputDto {
+export interface RecommendAnswerDto {
   /**
-   * Total number of items
-   * @example 100
+   * Session ID for continuing the conversation
+   * @example "123e4567-e89b-12d3-a456-426614174000"
    */
-  totalItems: number;
-  /**
-   * Current page number
-   * @example 1
-   */
-  currentPage: number;
-  /**
-   * Total number of pages
-   * @example 10
-   */
-  totalPages: number;
-  /**
-   * Number of items per page
-   * @example 10
-   */
-  itemsPerPage: number;
-  /**
-   * Indicates if there is a next page
-   * @example true
-   */
-  hasNextPage: boolean;
-  /**
-   * Indicates if there is a previous page
-   * @example false
-   */
-  hasPreviousPage: boolean;
+  sessionId: string;
 }
 
-export interface UsersResponse {
-  data: string[];
-  pagination: PaginationOutputDto;
+export interface RecommendAnswerResponseDto {
+  /** The recommended answers */
+  suggestedResponses: string[];
+  /** Session ID for continuing the conversation */
+  sessionId: string;
 }
 
 export enum UserRole {
@@ -246,33 +259,88 @@ export interface StudentProfileEntity {
 export interface UserDto {
   /** @example "00321d6f-2bcf-4985-9659-92a571275da6" */
   id: string;
-  /** @example "john@example.com" */
-  email: string;
   /** @example "johndoe" */
   username: string;
+  /** @example "john@example.com" */
+  email: string;
+  /**
+   * User role in the system
+   * @example "user"
+   */
+  role: UserRole;
+  /**
+   * Authentication provider used
+   * @example "local"
+   */
+  authProvider: AuthProvider;
+  authProviderId: string | null;
   /** @example "John" */
   firstName: string | null;
   /** @example "Doe" */
   lastName: string | null;
-  /** @example "user" */
-  role: UserRole;
-  /** @example "local" */
-  authProvider: AuthProvider;
-  authProviderId: string | null;
+  /** @example "https://example.com/avatar.jpg" */
+  profilePicture: string | null;
   /** @example false */
   isEmailVerified: boolean;
   /** @format date-time */
   lastLogin: string | null;
-  /** @format date-time */
+  /**
+   * @format date-time
+   * @example "2024-01-01T00:00:00.000Z"
+   */
   createdAt: string;
-  /** @format date-time */
+  /**
+   * @format date-time
+   * @example "2024-01-01T00:00:00.000Z"
+   */
   updatedAt: string;
-  /** @format date-time */
+  /**
+   * Timestamp when the user was deleted (soft delete)
+   * @format date-time
+   */
   deletedAt: string | null;
-  /** @example "https://example.com/avatar.jpg" */
-  profilePicture: string | null;
   teacherProfile: TeacherProfileEntity | null;
   studentProfile: StudentProfileEntity | null;
+}
+
+export interface PaginationOutputDto {
+  /**
+   * Total number of items
+   * @example 100
+   */
+  totalItems: number;
+  /**
+   * Current page number
+   * @example 1
+   */
+  currentPage: number;
+  /**
+   * Total number of pages
+   * @example 10
+   */
+  totalPages: number;
+  /**
+   * Number of items per page
+   * @example 10
+   */
+  itemsPerPage: number;
+  /**
+   * Indicates if there is a next page
+   * @example true
+   */
+  hasNextPage: boolean;
+  /**
+   * Indicates if there is a previous page
+   * @example false
+   */
+  hasPreviousPage: boolean;
+}
+
+export interface UsersResponse {
+  /** List of users */
+  data: UserDto[];
+  /** Pagination details */
+  pagination: PaginationOutputDto;
 }
 
 export interface UserResponse {
@@ -1627,12 +1695,62 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags ai
+     * @name AiControllerStartSpeaking
+     * @request POST:/api/ai/speaking/start
+     */
+    aiControllerStartSpeaking: (data: StartSpeakingDto, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/ai/speaking/start`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiControllerChatSpeaking
+     * @request POST:/api/ai/speaking/chat
+     */
+    aiControllerChatSpeaking: (data: SpeakingDto, params: RequestParams = {}) =>
+      this.request<ChatResponseDto, any>({
+        path: `/api/ai/speaking/chat`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
      * @name AiControllerEvaluateEssay
      * @request POST:/api/ai/evaluate-essay
      */
     aiControllerEvaluateEssay: (data: EvaluateEssayDto, params: RequestParams = {}) =>
       this.request<EvaluateEssayResponseDto, any>({
         path: `/api/ai/evaluate-essay`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiControllerRecommendAnswer
+     * @request POST:/api/ai/speaking/recommend-answer
+     */
+    aiControllerRecommendAnswer: (data: RecommendAnswerDto, params: RequestParams = {}) =>
+      this.request<RecommendAnswerResponseDto, any>({
+        path: `/api/ai/speaking/recommend-answer`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -1655,6 +1773,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @default 10 */
         perPage?: number;
         search?: string;
+        role?: string;
+        username?: string;
+        email?: string;
+        createdAt?: string;
       },
       params: RequestParams = {},
     ) =>

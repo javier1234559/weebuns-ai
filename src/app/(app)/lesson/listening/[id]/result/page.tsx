@@ -11,6 +11,7 @@ export default function ListeningResultPage({
   const submissionId = searchParams.submissionId as string;
 
   const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Listening", href: RouteNames.Listening },
     { title: `Kết quả bài nghe`, href: "" },

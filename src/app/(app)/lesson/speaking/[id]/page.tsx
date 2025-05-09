@@ -9,6 +9,7 @@ export default function SpeakingPageDetail({
 }) {
   const { id } = params;
   const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Speaking", href: RouteNames.Speaking },
     { title: `Chi tiết bài nói`, href: RouteNames.SpeakingDetail },

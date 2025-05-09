@@ -13,6 +13,7 @@ type BreadcrumbItem = {
 export function LessonBreadcrumb() {
   const pathname = usePathname();
   const breadcrumb: BreadcrumbItem[] = [
+    { title: "Home", href: RouteNames.Home },
     { title: lessonPaths[RouteNames.Lesson], href: RouteNames.Lesson },
   ];
 

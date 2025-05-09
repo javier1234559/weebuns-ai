@@ -11,6 +11,7 @@ export default function SpeakingResultPage({
   const submissionId = searchParams.submissionId as string;
 
   const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
     { title: "Bài học", href: RouteNames.Lesson },
     { title: "Speaking", href: RouteNames.Speaking },
     { title: `Lịch sử bài nói`, href: "" },

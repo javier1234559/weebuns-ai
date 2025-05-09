@@ -1,8 +1,10 @@
 import AppBreadcrumb from "@/components/common/app-bread-crumb";
 import { RouteNames } from "@/constraints/route-name";
 import VocabQuizView from "@/feature/vocabulary/components/VocabQuizView";
+
 export default function ReviewVocabularyPage() {
   const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
     { title: "Sổ từ vựng", href: RouteNames.MyVocabulary },
     { title: "Review", href: RouteNames.ReviewVocabulary },
   ];

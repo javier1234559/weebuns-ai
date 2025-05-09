@@ -13,10 +13,9 @@ import { Button } from "@/components/ui/button";
 import { CircleCheckBig, Eye, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { RouteNames } from "@/constraints/route-name";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 interface ListeningTestProps {
-  title: string;
-  description: string;
   audioUrl: string;
   questions: QuestionDTO[];
   isPractice?: boolean;
@@ -35,8 +34,6 @@ interface ListeningTestProps {
 }
 
 export function ListeningTest({
-  title,
-  description,
   audioUrl,
   questions,
   isPractice = true,
@@ -121,9 +118,8 @@ export function ListeningTest({
 
   return (
     <div>
-      <div className="mb-2 flex w-full items-center justify-between p-4">
-        <h1 className="text-4xl font-bold">{title}</h1>
-        <div className="flex items-center justify-end gap-4">
+      <Card className="mb-4 w-full">
+        <CardContent className="flex w-full items-center justify-end gap-4 p-4">
           {isPractice && !isResultView && (
             <Button variant="outline" size="sm" onClick={handleShowAnswers}>
               <Eye className="mr-2 size-2" />
@@ -166,8 +162,8 @@ export function ListeningTest({
               Back to Home
             </Button>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {isResultView && resultListeningData && (
         <div className="mx-2 mb-4 rounded-lg bg-card p-4 shadow-lg">
@@ -201,13 +197,7 @@ export function ListeningTest({
         </div>
       )}
 
-      <div className="mx-2 rounded-lg bg-card shadow-lg">
-        <div className="p-4">
-          <h3 className="text-lg font-bold">{title}</h3>
-          <p className="text-sm text-muted-foreground">{description}</p>
-        </div>
-      </div>
-      <div className="mx-2 mt-4 rounded-lg bg-card p-2 shadow-lg">
+      <div className="mt-4 rounded-lg bg-card p-2 shadow-lg">
         <div className="my-6 flex items-center justify-center">
           <WaveAudio audioUrl={audioUrl} />
         </div>

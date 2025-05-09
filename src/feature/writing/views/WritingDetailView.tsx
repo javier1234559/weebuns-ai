@@ -10,6 +10,7 @@ import { CreateWritingSubmissionDTO } from "@/services/swagger-types";
 import { toast } from "sonner";
 import { replaceRouteName, RouteNames } from "@/constraints/route-name";
 import { useRouter } from "next/navigation";
+import WritingDetailSkeleton from "@/feature/writing/components/WritingDetailSkeleton";
 
 interface WritingDetailViewProps {
   id: string;
@@ -43,7 +44,7 @@ export function WritingDetailView({
   };
 
   if (isLoading) {
-    return <AppLoading />;
+    return <WritingDetailSkeleton />;
   }
 
   if (error) {
@@ -57,6 +58,7 @@ export function WritingDetailView({
       onSubmit={handleSubmitWithConfirmation}
       content={data?.data.content ?? undefined}
       lessonId={id}
+      createdBy={data?.data.createdBy}
     />
   );
 }

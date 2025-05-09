@@ -10,7 +10,8 @@ export default function WritingPageDetail({
 }) {
   const { id } = params;
   const breadcrumb = [
-    { title: "Bài viết", href: RouteNames.Writing },
+    { title: "Home", href: RouteNames.Home },
+    { title: "Bài học", href: RouteNames.Lesson },
     { title: "Writing", href: RouteNames.Writing },
     { title: `Chi tiết bài viết`, href: RouteNames.WritingDetail },
   ];
