@@ -1,25 +1,20 @@
+import { useRecommendAnswer } from "@/feature/ai/hooks/useAi";
 import { useState } from "react";
 
-const vietnamFoodRecommendations = [
-  "What are the most popular Vietnamese dishes?",
-  "Can you tell me about the history of Vietnamese cuisine?",
-  "What makes Vietnamese food unique?",
-  "I'd like to know about street food in Vietnam",
-  "Tell me about traditional Vietnamese cooking methods",
-];
+interface SuggestChatProps {
+  sessionId: string;
+}
 
-export const useSuggestChat = () => {
+export const useSuggestChat = ({ sessionId }: SuggestChatProps) => {
   const [firstGreeting, setFirstGreeting] = useState<string>(
-    `Hello! I'm your AI assistant. Let's talk about Vietnamese food!`
+    `Hello! I'm your AI assistant. Let's talk`,
   );
-  const [suggestedResponses, setSuggestedResponses] = useState<string[]>([
-    ...vietnamFoodRecommendations,
-  ]);
+  const { data, refetch } = useRecommendAnswer(sessionId);
 
   return {
-    suggestedResponses,
-    setSuggestedResponses,
+    suggestedResponses: data?.suggestedResponses,
     firstGreeting,
     setFirstGreeting,
+    refetchRecommend: refetch,
   };
 };

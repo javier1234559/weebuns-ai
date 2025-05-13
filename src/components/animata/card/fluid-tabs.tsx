@@ -53,7 +53,7 @@ export default function FluidTabs({ tabs }: FluidTabsProps) {
         <AnimatePresence initial={false}>
           <motion.div
             key={activeTab}
-            className="absolute inset-y-0 my-0.5 rounded-full bg-accent/20 shadow-sm"
+            className="absolute inset-y-0 my-0.5 rounded-full bg-accent/10 shadow-sm"
             initial={{
               x: `${getTabIndex(tabs.find((tab) => tab.href === prevPath)?.id || tabs[0].id) * 100}%`,
             }}
@@ -73,7 +73,7 @@ export default function FluidTabs({ tabs }: FluidTabsProps) {
               ${
                 activeTab === tab.id
                   ? "text-primary"
-                  : "text-muted-foreground hover:text-foreground"
+                  : "hover:text-primary"
               }
               ${touchedTab === tab.id ? "blur-sm" : ""}
             `}

@@ -23,6 +23,7 @@ import {
   BookOpen,
   Eye,
 } from "lucide-react";
+import Image from "next/image";
 
 // Type definitions
 interface Lesson {
@@ -151,7 +152,6 @@ interface LessonCardProps {
   featured?: boolean;
 }
 
-// Lesson Card Component
 const LessonCard: React.FC<LessonCardProps> = ({
   lesson,
   featured = false,
@@ -163,9 +163,11 @@ const LessonCard: React.FC<LessonCardProps> = ({
       }`}
     >
       <div className="relative">
-        <img
+        <Image
           src={lesson.thumbnail}
           alt={lesson.title}
+          width={100}
+          height={100}
           className="h-48 w-full object-cover"
         />
         {featured && (
@@ -194,7 +196,11 @@ const LessonCard: React.FC<LessonCardProps> = ({
   );
 };
 
-export default function ProfileView() {
+interface ProfileViewProps {
+  username: string;
+}
+
+export default function ProfileView({ username }: ProfileViewProps) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [filter, setFilter] = useState("all");
 
@@ -210,16 +216,18 @@ export default function ProfileView() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="w-full">
         {/* Header Section */}
         <header className="mb-8 rounded-lg bg-card shadow-sm">
           <div className="flex flex-col items-center p-6">
             {/* Avatar and Basic Info */}
             <div className="mb-4 flex flex-col items-center">
               <Avatar className="mb-4 size-24 border-2 border-primary md:size-28">
-                <img
+                <Image
                   src={teacherData.avatar}
                   alt={teacherData.name}
+                  width={100}
+                  height={100}
                   className="size-full object-cover"
                 />
               </Avatar>

@@ -249,4 +249,19 @@
   .dark .content-editor {
     @apply prose-invert;
   }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-fade-in {
+    display: inline-block;
+    opacity: 0;
+    animation: fadeIn 0.6s forwards;
+  }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import aiApi from "@/feature/lesson/services/aiApi";
+import aiApi from "@/feature/ai/services/aiApi";
 import lessonApi, {
   LessonQueryParams,
 } from "@/feature/lesson/services/lessonApi";

@@ -3,7 +3,7 @@
 import AppError from "@/components/common/app-error";
 import AppLoading from "@/components/common/app-loading/page";
 import { useSpeakingSubmissionDetail } from "@/feature/lesson/hooks/useSubmissionLessonClient";
-import VoiceChat from "@/feature/speaking/components/voice-chat";
+import MainChat from "@/feature/speaking/components/SpeakingChat/MainChat";
 
 interface SpeakingResultViewProps {
   id: string;
@@ -35,11 +35,12 @@ export function SpeakingResultView({
         <p className="text-muted-foreground">{data?.data.lesson.description}</p>
       </div>
 
-      <VoiceChat
+      <MainChat
         lessonId={id}
         context={data?.data.content?.prompt_text || ""}
         isResultView={true}
         savedChatHistory={data?.data.content?.chat_history || []}
+        sessionId={""}
       />
     </div>
   );

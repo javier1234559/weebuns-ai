@@ -2,8 +2,16 @@ import AppBreadcrumb from "@/components/common/app-bread-crumb";
 import { RouteNames } from "@/constraints/route-name";
 import ProfileView from "@/feature/user/views/ProfileView";
 
-export default function ProfilePage() {
-  const breadcrumb = [{ title: "Hồ sơ", href: RouteNames.Profile }];
+export default function ProfilePage({
+  params,
+}: {
+  params: { username: string };
+}) {
+  const breadcrumb = [
+    { title: "Home", href: RouteNames.Home },
+    { title: "Hồ sơ", href: RouteNames.Profile },
+    { title: params.username, href: "" },
+  ];
 
   return (
     <div className="container mx-auto mt-20">
@@ -14,7 +22,7 @@ export default function ProfilePage() {
         <h1 className="text-4xl font-bold">Hồ sơ</h1>
       </div>
       <div className="w-full p-2">
-        <ProfileView />
+        <ProfileView username={params.username} />
       </div>
     </div>
   );

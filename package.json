@@ -163,6 +163,7 @@
     "@types/jsonwebtoken": "^9.0.8",
     "@types/lodash": "^4.17.15",
     "@types/mark.js": "^8.11.12",
+    "@types/marked": "^6.0.0",
     "@types/node": "^20",
     "@types/prismjs": "^1.26.5",
     "@types/react": "^18",

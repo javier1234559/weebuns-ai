@@ -1,6 +1,5 @@
 "use client";
 
-import MainEditor from "@/components/feature/MainEditor";
 import { SplitPane, Pane } from "@/components/feature/SplitLayout";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

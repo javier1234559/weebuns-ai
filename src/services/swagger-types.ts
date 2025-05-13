@@ -6,6 +6,14 @@
  * ----------------------------------------------------------------------
  */
 
+export interface CheckSessionResponseDto {
+  /**
+   * Status of the session
+   * @example true
+   */
+  status: boolean;
+}
+
 export interface TranslateDto {
   /** @example "Hello world" */
   text: string;
@@ -155,6 +163,19 @@ export interface StartSpeakingDto {
   backgroundKnowledge: string;
 }
 
+export interface StartSpeakingResponseDto {
+  /**
+   * Session ID for continuing the conversation
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
+  sessionId: string;
+  /**
+   * Topic of the conversation
+   * @example "Travel and Tourism"
+   */
+  topicText: string;
+}
+
 export interface SpeakingDto {
   /**
    * Session ID for continuing the conversation
@@ -196,14 +217,6 @@ export interface EvaluateEssayResponseDto {
   overall_feedback: string;
 }
 
-export interface RecommendAnswerDto {
-  /**
-   * Session ID for continuing the conversation
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
-  sessionId: string;
-}
-
 export interface RecommendAnswerResponseDto {
   /** The recommended answers */
   suggestedResponses: string[];
@@ -226,10 +239,11 @@ export enum AuthProvider {
 export interface TeacherProfileEntity {
   id: string;
   userId: string;
-  specialization: ("listening" | "reading" | "writing" | "speaking")[];
-  qualification: string | null;
-  teachingExperience: number | null;
-  hourlyRate: number | null;
+  longBio: string | null;
+  introVideoUrlEmbed: string | null;
+  certifications: string | null;
+  teachingExperience: string | null;
+  other: string | null;
   /** @format date-time */
   createdAt: string;
   /** @format date-time */
@@ -268,6 +282,7 @@ export interface UserDto {
    * @example "user"
    */
   role: UserRole;
+  bio: string | null;
   /**
    * Authentication provider used
    * @example "local"
@@ -355,20 +370,22 @@ export interface TeacherDto {
   firstName: string;
   lastName: string;
   profilePicture?: string;
-  specialization: ("listening" | "reading" | "writing" | "speaking")[];
-  qualification: string;
-  teachingExperience: number;
-  hourlyRate: number;
+  longBio?: string;
+  introVideoUrlEmbed?: string;
+  certifications?: string;
+  teachingExperience?: string;
+  other?: string;
 }
 
 export interface ProfileDto {
   firstName?: string;
   lastName?: string;
   profilePicture?: string;
-  specialization?: ("listening" | "reading" | "writing" | "speaking")[];
-  qualification?: string;
-  teachingExperience?: number;
-  hourlyRate?: number;
+  longBio?: string;
+  introVideoUrlEmbed?: string;
+  certifications?: string;
+  teachingExperience?: string;
+  other?: string;
   targetStudyDuration?: number;
   targetReading?: number;
   targetListening?: number;
@@ -530,6 +547,7 @@ export interface User {
   lastName: string | null;
   /** @example "https://example.com/avatar.jpg" */
   profilePicture: string | null;
+  bio: string | null;
   /** @example false */
   isEmailVerified: boolean;
   /** @format date-time */
@@ -881,8 +899,26 @@ export interface UpdateWritingDTO {
 }
 
 export interface ContentSpeakingDTO {
-  topic_text: string;
-  prompt_text: string;
+  /**
+   * The main topic text for the speaking lesson
+   * @example "Travel and Tourism"
+   */
+  topicText: string;
+  /**
+   * The prompt text to guide the speaking practice
+   * @example "Let's practice speaking English"
+   */
+  promptText: string;
+  /**
+   * Example follow-up questions for the speaking practice
+   * @example ["What places have you visited?","How was your last trip?","Do you prefer traveling alone or with friends?","What country would you like to visit next and why?"]
+   */
+  followupExamples: string[];
+  /**
+   * Background knowledge and context for the speaking topic
+   * @example "Focus on travel experiences, cultural differences, and common travel vocabulary such as 'hotel', 'sightseeing', 'itinerary', 'passport'."
+   */
+  backgroundKnowledge: string;
 }
 
 export interface SpeakingLesson {
@@ -1576,6 +1612,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags ai
+     * @name AiControllerCheckSession
+     * @request POST:/api/ai/check-session/{sessionId}
+     */
+    aiControllerCheckSession: (sessionId: string, params: RequestParams = {}) =>
+      this.request<CheckSessionResponseDto, any>({
+        path: `/api/ai/check-session/${sessionId}`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
      * @name AiControllerTranslate
      * @request POST:/api/ai/translate
      */
@@ -1695,15 +1746,34 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags ai
+     * @name AiControllerChatStreaming
+     * @summary Stream chat response
+     * @request POST:/api/ai/chat-streaming
+     */
+    aiControllerChatStreaming: (data: ChatRequestDto, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/ai/chat-streaming`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
      * @name AiControllerStartSpeaking
      * @request POST:/api/ai/speaking/start
      */
     aiControllerStartSpeaking: (data: StartSpeakingDto, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<StartSpeakingResponseDto, any>({
         path: `/api/ai/speaking/start`,
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
@@ -1746,11 +1816,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags ai
      * @name AiControllerRecommendAnswer
-     * @request POST:/api/ai/speaking/recommend-answer
+     * @request GET:/api/ai/speaking/recommend-answer/{sessionId}
      */
-    aiControllerRecommendAnswer: (data: RecommendAnswerDto, params: RequestParams = {}) =>
+    aiControllerRecommendAnswer: (sessionId: string, params: RequestParams = {}) =>
       this.request<RecommendAnswerResponseDto, any>({
-        path: `/api/ai/speaking/recommend-answer`,
+        path: `/api/ai/speaking/recommend-answer/${sessionId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiControllerChatSpeakingStreaming
+     * @summary Stream chat speaking response
+     * @request POST:/api/ai/speaking/chat-streaming
+     */
+    aiControllerChatSpeakingStreaming: (data: SpeakingDto, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/ai/speaking/chat-streaming`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -1818,6 +1904,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<DeleteUserResponse, any>({
         path: `/api/users/${id}`,
         method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags users
+     * @name UserControllerFindByUsername
+     * @request GET:/api/users/username/{username}
+     * @secure
+     */
+    userControllerFindByUsername: (username: string, params: RequestParams = {}) =>
+      this.request<UserResponse, any>({
+        path: `/api/users/username/${username}`,
+        method: "GET",
         secure: true,
         format: "json",
         ...params,

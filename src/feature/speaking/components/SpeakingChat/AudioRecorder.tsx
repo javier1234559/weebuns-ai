@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback } from "react";
-import { Mic, StopCircle, Send, Trash2 } from "lucide-react";
+import { Mic, StopCircle, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface AudioRecorderProps {
@@ -85,30 +85,16 @@ const AudioRecorder = ({ onRecordingComplete }: AudioRecorderProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      {recordedUrl && (
-        <div className="flex w-full max-w-md">
-          <audio controls src={recordedUrl} className="w-full" />
-          <div className="mt-2 flex justify-end gap-2">
-            <Button variant="destructive" size="sm" onClick={handleReset}>
-              <Trash2 className="size-4" />
-            </Button>
-          </div>
-        </div>
+    <button
+      onClick={isRecording ? stopRecording : startRecording}
+      className={`rounded-full bg-primary p-4 ${isRecording ? "animate-pulse" : ""}`}
+    >
+      {isRecording ? (
+        <StopCircle className="size-6" />
+      ) : (
+        <Mic className="size-6" />
       )}
-
-      <Button
-        variant={isRecording ? "destructive" : "default"}
-        onClick={isRecording ? stopRecording : startRecording}
-        className={`rounded-full p-4 ${isRecording ? "animate-pulse" : ""}`}
-      >
-        {isRecording ? (
-          <StopCircle className="size-6" />
-        ) : (
-          <Mic className="size-6" />
-        )}
-      </Button>
-    </div>
+    </button>
   );
 };
 

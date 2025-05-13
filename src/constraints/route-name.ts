@@ -11,6 +11,7 @@ export enum RouteNames {
   ME = "/settings/me",
   Settings = "/settings",
   Profile = "/profile",
+  ProfileDetail = "/profile/:username",
 
   SettingsAppearance = "/settings/appearance",
   SettingsAccount = "/settings/account",

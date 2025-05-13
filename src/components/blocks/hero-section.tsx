@@ -4,12 +4,13 @@ import { Glow } from "@/components/ui/glow";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { RouteNames } from "@/constraints/route-name";
+import { Description } from "@radix-ui/react-dialog";
 
 export function HeroSection() {
   const heroData = {
-    title: "Nâng Cao Tiếng Anh Cùng Trí Tuệ Nhân Tạo",
+    title: "Luyện Đề Tiếng Anh 4 Kỹ Năng Cùng AI & Giáo Viên Thật",
     description:
-      "Cải thiện kỹ năng tiếng Anh của bạn thông qua các công cụ AI tiên tiến: Luyện viết, Đối thoại thông minh, Phân tích giọng nói và nhiều tính năng hữu ích khác",
+      "Nền tảng học tiếng Anh toàn diện: Luyện Viết, Đọc, Nghe, Nói với công nghệ AI hỗ trợ & hệ thống giáo viên đồng hành. Theo dõi, đánh giá và kết nối với giáo viên yêu thích của bạn.",
     primaryCta: {
       text: "Get Started",
       href: RouteNames.SignIn,

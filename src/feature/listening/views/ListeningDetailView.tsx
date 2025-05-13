@@ -1,7 +1,6 @@
 "use client";
 
 import AppError from "@/components/common/app-error";
-import AppLoading from "@/components/common/app-loading/page";
 import { ListeningTest } from "@/feature/listening/components/ListeningTest";
 import { useListeningDetail } from "@/feature/listening/hooks/useListeningClient";
 import { useConfirmDialog } from "@/components/common/app-confirm-dialog";
@@ -12,6 +11,7 @@ import { replaceRouteName, RouteNames } from "@/constraints/route-name";
 import { useRouter } from "next/navigation";
 import UserPreview from "@/feature/user/components/UserPreview";
 import { Card, CardTitle, CardHeader } from "@/components/ui/card";
+import ListeningDetailViewSkeleton from "@/feature/listening/components/ListeningDetailViewSkeleton";
 
 interface ListeningDetailViewProps {
   id: string;
@@ -48,7 +48,7 @@ export function ListeningDetailView({ id }: ListeningDetailViewProps) {
   };
 
   if (isLoading) {
-    return <AppLoading />;
+    return <ListeningDetailViewSkeleton />;
   }
 
   if (error) {

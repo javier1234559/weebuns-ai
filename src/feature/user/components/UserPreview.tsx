@@ -2,6 +2,8 @@
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { replaceRouteName, RouteNames } from "@/constraints/route-name";
+import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -24,7 +26,6 @@ export default function UserPreview({
 }: UserPreviewProps) {
   const [isFollowing, setIsFollowing] = useState(false);
 
-  console.log(user);
   const handleFollow = () => {
     setIsFollowing(!isFollowing);
     toast.success(`User ID: ${user.id}`);
@@ -43,9 +44,14 @@ export default function UserPreview({
         />
       </Avatar>
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-2">
-        <span className="truncate text-sm font-medium text-foreground">
+        <Link
+          href={replaceRouteName(RouteNames.ProfileDetail, {
+            username: user.name,
+          })}
+          className="truncate text-sm font-medium text-foreground"
+        >
           {user.name}
-        </span>
+        </Link>
         {user.role !== "user" && user.bio && (
           <span className="truncate text-xs text-muted-foreground">
             {user.bio}

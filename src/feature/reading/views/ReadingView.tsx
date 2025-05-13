@@ -12,15 +12,8 @@ import { LevelType } from "@/feature/lesson/lesson.type";
 import { ReadingGridView } from "@/feature/reading/components/ReadingGridView";
 import { useReadingList } from "@/feature/reading/hooks/useReadingClient";
 import usePaginationUrl from "@/hooks/usePaginationUrl";
-import {
-  ContentStatus,
-  LessonsResponse,
-  LessonType,
-  SkillType,
-} from "@/services/swagger-types";
+import { ContentStatus, LessonType, SkillType } from "@/services/swagger-types";
 import { useEffect } from "react";
-import { ReadingSubmissionList } from "@/feature/reading/components/ReadingSubmissionList";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const filters: LessonSidebarFilter[] = [
   {
@@ -85,8 +78,6 @@ export function ReadingView() {
     });
     console.log("Query Response:", data);
   }, [data, page, perPage, searchParam, lessonType, level]);
-
-  // console.log(JSON.stringify(data, null, 2));
 
   const handleSearch = (value: string) => {
     setSearch(value);

@@ -1,10 +1,8 @@
 "use client";
 
 import AppError from "@/components/common/app-error";
-import AppLoading from "@/components/common/app-loading/page";
 import WritingAgentLayout from "@/feature/writing/components/WritingAgentLayout";
 import { useWritingDetail } from "@/feature/writing/hooks/useWritingClient";
-import { useConfirmDialog } from "@/components/common/app-confirm-dialog";
 import { useCreateWritingSubmission } from "@/feature/lesson/hooks/useSubmissionLessonClient";
 import { CreateWritingSubmissionDTO } from "@/services/swagger-types";
 import { toast } from "sonner";

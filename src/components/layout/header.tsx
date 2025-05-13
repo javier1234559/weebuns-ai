@@ -69,19 +69,19 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-[20] w-full bg-transparent backdrop-blur-md shadow-sm transition-all duration-500 ${
+      className={`fixed left-0 right-0 top-0 z-[20] w-full bg-transparent backdrop-blur-lg shadow-sm transition-all duration-500 ${
         isScrolled ? "bg-background/90" : "bg-transparent"
       }`}
     >
       <div className="container mx-auto">
-        <nav className="flex h-16 items-center justify-between px-4 lg:px-8">
+        <nav className="flex h-20 items-center justify-between px-4 lg:px-8">
           <div className="shrink-0">
             <AppLink
               href={RouteNames.Landing}
               className="flex items-center gap-2 transition-opacity hover:opacity-80"
             >
-              <PawPrint className="size-8 text-primary" />
-              <span className="bg-primary from-primary to-primary-foreground bg-clip-text text-2xl font-bold text-transparent">
+              <PawPrint className="size-8" />
+              <span className="text-2xl font-bold font-space-grotesk">
                 Weebuns AI
               </span>
             </AppLink>
@@ -133,38 +133,37 @@ const Header = () => {
           {/* Mobile Menu */}
           <AnimatePresence>
             {isMenuOpen && (
-              <div className="fixed inset-0 z-[100] lg:hidden">
-                {/* Backdrop */}
+              <>
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="absolute inset-0 bg-black/50"
+                  className="fixed bg-background/80 backdrop-blur-sm h-screen w-full top-0 right-0 z-[99]"
+                  onClick={() => setIsMenuOpen(false)}
                 />
 
-                {/* Menu Content */}
                 <motion.div
                   ref={menuRef}
                   initial={{ x: "-100%" }}
                   animate={{ x: 0 }}
                   exit={{ x: "-100%" }}
                   transition={{
-                    type: "tween",
-                    duration: 0.2,
-                    ease: "easeOut",
+                    type: "spring",
+                    damping: 25,
+                    stiffness: 200,
                   }}
-                  className="absolute left-0 top-0 h-screen w-[300px] overflow-y-auto bg-background p-4 shadow-lg"
+                  className="fixed left-0 top-0 h-screen w-[300px] overflow-y-auto bg-background/95 backdrop-blur-md border-r shadow-2xl z-[100]"
                 >
-                  <div className="flex flex-col space-y-4">
+                  <div className="flex flex-col space-y-4 p-6">
                     {/* Logo in Mobile Menu */}
-                    <div className="mb-4">
+                    <div className="mb-6">
                       <AppLink
                         href={RouteNames.Landing}
                         className="flex items-center gap-2 transition-opacity hover:opacity-80"
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        <PawPrint className="size-8 text-primary" />
-                        <span className="bg-primary from-primary to-primary-foreground bg-clip-text text-2xl font-bold text-transparent">
+                        <PawPrint className="size-8" />
+                        <span className="text-2xl font-bold font-space-grotesk">
                           Weebuns AI
                         </span>
                       </AppLink>
@@ -174,32 +173,29 @@ const Header = () => {
                       <Link
                         key={tab.id}
                         href={tab.href}
-                        className="group flex items-center gap-2 rounded-md p-2 transition-all duration-200 hover:bg-accent"
+                        className="group flex items-center gap-3 rounded-lg p-3 transition-all duration-200 hover:bg-accent/50"
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <motion.div
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.95 }}
-                          className="text-muted-foreground transition-colors group-hover:text-secondary"
+                          className="text-muted-foreground transition-colors group-hover:text-primary"
                         >
                           {tab.icon}
                         </motion.div>
-                        <span className="font-medium text-muted-foreground transition-colors group-hover:text-secondary">
+                        <span className="font-medium text-muted-foreground transition-colors group-hover:text-primary">
                           {tab.label}
                         </span>
                       </Link>
                     ))}
-                    <div className="flex flex-col gap-2 border-t pt-4">
+                    <div className="flex flex-col gap-3 border-t pt-6">
                       <ThemeToggle />
                       {user ? (
-                        <div className="w-full">
+                        <div className="flex items-center gap-4">
+                          <UserBalance />
                           <AvatarMenu
-                            src={user.profilePicture || ""}
-                            fallback={
-                              user.firstName +
-                              " " +
-                              (user.lastName ? user.lastName.charAt(0) : "")
-                            }
+                            src="/default-avatar.png"
+                            fallback="U"
                             className="h-8 w-8"
                           />
                         </div>
@@ -212,7 +208,6 @@ const Header = () => {
                             <Button
                               variant="outline"
                               className="w-full hover:bg-secondary/50"
-                              style={{ transition: "none" }}
                             >
                               Sign In
                             </Button>
@@ -222,7 +217,7 @@ const Header = () => {
                     </div>
                   </div>
                 </motion.div>
-              </div>
+              </>
             )}
           </AnimatePresence>
         </nav>

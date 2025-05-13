@@ -1,11 +1,11 @@
 "use client";
 
 import AppError from "@/components/common/app-error";
-import VoiceChat from "@/feature/speaking/components/voice-chat";
 import { useSpeakingDetail } from "@/feature/speaking/hooks/useSpeakingClient";
 import { SpeakingDetailSkeleton } from "@/feature/speaking/components/SpeakingDetailSkeleton";
 import UserPreview from "@/feature/user/components/UserPreview";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SpeakingSessionManager } from "@/feature/speaking/components/SpeakingSessionManager";
 
 interface SpeakingDetailViewProps {
   id: string;
@@ -49,14 +49,10 @@ export function SpeakingDetailView({ id }: SpeakingDetailViewProps) {
           </CardTitle>
         </CardHeader>
       </Card>
-      <Card>
-        <CardContent className="mt-4 flex flex-col">
-          <VoiceChat
-            context={data?.data.content?.prompt_text}
-            lessonId={data?.data.id ?? ""}
-          />
-        </CardContent>
-      </Card>
+      <SpeakingSessionManager
+        lessonId={data?.data.id ?? ""}
+        lessonData={data?.data.content ?? undefined}
+      />
     </>
   );
 }

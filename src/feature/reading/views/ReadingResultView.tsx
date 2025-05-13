@@ -38,8 +38,6 @@ export function ReadingResultView({
   return (
     <ReadingTest
       lessonId={data?.data.lesson.id ?? ""}
-      title={data?.data.lesson.title ?? ""}
-      description={data?.data.lesson.description ?? ""}
       content={(data?.data.lesson.content as any)?.text ?? ""}
       questions={(data?.data.lesson.content as any)?.questions ?? []}
       isPractice={(data?.data as any)?.lessonType === "test"}

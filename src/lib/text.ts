@@ -1,4 +1,5 @@
 import DOMPurify from "dompurify";
+import { marked } from "marked";
 
 /**
  * Sanitizes HTML content and removes potentially dangerous content
@@ -8,6 +9,18 @@ export const sanitizeHtml = (html: string): string => {
     ALLOWED_TAGS: ["p", "b", "i", "em", "strong", "span", "br", "div"],
     ALLOWED_ATTR: ["class", "id", "style"],
   });
+};
+
+/**
+ * Converts Markdown to HTML with sanitization
+ */
+
+export const simpleInlineMarkdownToHtml = (text: string): string => {
+  let html = text
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+    .replace(/\*(.*?)\*/g, "<em>$1</em>")
+    .replace(/`(.*?)`/g, "<code>$1</code>");
+  return sanitizeHtml(html);
 };
 
 /**
