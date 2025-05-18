@@ -12,7 +12,7 @@ import {
   BookOpenCheck,
   Globe,
 } from "lucide-react";
-import { ChatPanel } from "@/feature/writing/components/chat-panel";
+import ChatPanel from "@/feature/writing/components/chat-panel";
 import { VocabularyPanel } from "@/feature/writing/components/vocabulary-panel";
 import { AnalysisGuidePanel } from "@/feature/writing/components/analyst-guide-panel";
 import { EvaluationPanel } from "@/feature/writing/components/evaluation-panel";
@@ -45,6 +45,7 @@ import { toast } from "@/hooks/use-toast";
 import { TokenProtectedForm } from "@/feature/token/components/TokenProtectedForm";
 import { TOKEN_COSTS } from "@/feature/token/constants";
 import UserPreview from "@/feature/user/components/UserPreview";
+import { cn } from "@/lib/utils";
 
 interface WritingAgentLayoutProps {
   topic: string;
@@ -269,7 +270,7 @@ export default function WritingAgentLayout({
             <CardContent>
               <Tabs defaultValue="chat" value={selectedTab} className="w-full">
                 <TabsList
-                  className="grid w-full"
+                  className="grid w-full gap-2 rounded-lg bg-background p-1"
                   style={{
                     gridTemplateColumns: `repeat(${tabs.length}, 1fr)`,
                   }}
@@ -279,6 +280,11 @@ export default function WritingAgentLayout({
                       key={value}
                       value={value}
                       onClick={() => setSelectedTab(value)}
+                      className={cn(
+                        "gap-2 rounded-md px-3 py-1.5 text-sm transition-all",
+                        "data-[state=active]:bg-card  data-[state=active]:shadow-sm",
+                        "data-[state=inactive]:text-muted-foreground",
+                      )}
                     >
                       <Icon className="size-4" />
                     </TabsTrigger>

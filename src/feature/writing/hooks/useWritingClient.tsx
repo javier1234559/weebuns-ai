@@ -85,8 +85,8 @@ export const useUpdateWritingSubmission = (
   });
 };
 
-export const useEvaluateEssay = (data: EvaluateEssayDto) => {
+export const useEvaluateEssay = () => {
   return useMutation({
-    mutationFn: () => aiApi.evaluateEssay(data),
+    mutationFn: (data: EvaluateEssayDto) => aiApi.evaluateEssay(data),
   });
 };

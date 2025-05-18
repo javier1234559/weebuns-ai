@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { globalConfig } from "@/config";
 
 interface UseStreamingChatProps {
   apiUrl: string;

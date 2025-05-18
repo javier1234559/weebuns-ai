@@ -99,8 +99,8 @@ const Header = () => {
               <>
                 <UserBalance />
                 <AvatarMenu
-                  src="/default-avatar.png"
-                  fallback="U"
+                  src={user.profilePicture ?? ""}
+                  fallback={user.username?.charAt(0) ?? "U"}
                   className="h-8 w-8"
                 />
               </>

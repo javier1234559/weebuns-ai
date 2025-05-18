@@ -55,32 +55,30 @@ const ScoreCard = ({ title, score }: { title: string; score: number }) => (
 export function EvaluationPanel({ topic, content }: EvaluationPanelProps) {
   const [result, setResult] = useState<EvaluateEssayResponseDto | null>(null);
 
-  const mutation = useEvaluateEssay({
-    topic,
-    user_content: content,
-  });
+  const { mutate: evaluateEssay, isPending } = useEvaluateEssay();
 
   const handleEvaluate = async () => {
-    return new Promise<void>((resolve, reject) => {
-      mutation.mutate(undefined, {
-        onSuccess: (response) => {
-          setResult(response.data);
-          toast({
-            title: "Evaluation Complete",
-            description: "Your essay has been evaluated successfully.",
-          });
-          resolve();
-        },
-        onError: () => {
-          toast({
-            title: "Evaluation Failed",
-            description: "Failed to evaluate essay. Please try again.",
+    evaluateEssay({
+      topic,
+      user_content: content,
+    }, {
+      onSuccess: (response) => {
+        setResult(response);
+        console.log(JSON.stringify(response, null, 2));
+        toast({
+          title: "Evaluation Complete",
+          description: "Your essay has been evaluated successfully.",
+        });
+      },
+      onError: () => {
+        toast({
+          title: "Evaluation Failed",
+          description: "Failed to evaluate essay. Please try again.",
             variant: "destructive",
           });
-          reject();
         },
-      });
-    });
+      },
+    );
   };
 
   return (
@@ -90,7 +88,7 @@ export function EvaluationPanel({ topic, content }: EvaluationPanelProps) {
         onAction={handleEvaluate}
         className="w-full py-2"
       >
-        {mutation.isPending ? (
+        {isPending ? (
           <>
             <Loader2 className="mr-2 size-4 animate-spin" />
             Evaluating...

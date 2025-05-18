@@ -29,6 +29,7 @@ import AudioMessage from "@/feature/speaking/components/SpeakingChat/AudioMessag
 import SpeakingSubmit from "./SpeakingSubmit";
 import { Switch } from "@/components/ui/switch";
 import { globalConfig } from "@/config";
+import { useAuthStore } from "@/store/auth-store";
 
 interface MainChatProps {
   context?: string;
@@ -46,6 +47,7 @@ const MainChat = ({
   sessionId,
 }: MainChatProps) => {
   const router = useRouter();
+  const { user } = useAuthStore();
   const { suggestedResponses, firstGreeting, refetchRecommend } =
     useSuggestChat({
       sessionId,
@@ -173,6 +175,7 @@ const MainChat = ({
             variant={message.role === "user" ? "sent" : "received"}
           >
             <ChatBubbleAvatar
+              src={message.role === "user" ? (user?.profilePicture ?? "") : ""}
               className="shadow-lg"
               fallback={message.role === "user" ? "US" : "AI"}
             />

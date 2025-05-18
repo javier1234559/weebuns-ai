@@ -7,6 +7,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CreateVocabularyDto,
   UpdateVocabularyReviewDto,
+  Vocabulary,
 } from "@/services/swagger-types";
 
 export const VOCABULARY_KEY_FACTORY = {
@@ -72,8 +73,58 @@ export const useUpdateReviewStatus = () => {
       id: string;
       data: UpdateVocabularyReviewDto;
     }) => vocabularyApi.updateReviewStatus(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: VOCABULARY_KEY_FACTORY.all });
+
+    onMutate: async ({ id, data }) => {
+      // Get all the existing query keys for vocabulary lists
+      const queryKeys = queryClient.getQueriesData<any>({
+        queryKey: VOCABULARY_KEY_FACTORY.lists(),
+      });
+
+      // Cancel any outgoing refetches for all list queries
+      await Promise.all(
+        queryKeys.map(([queryKey]) =>
+          queryClient.cancelQueries({ queryKey })
+        )
+      );
+
+      // Store previous data for all affected queries
+      const previousDataMap = new Map(
+        queryKeys.map(([queryKey, data]) => [queryKey, data])
+      );
+
+      // Update all list queries optimistically
+      queryKeys.forEach(([queryKey]) => {
+        queryClient.setQueryData(queryKey, (old: any) => {
+          if (!old) return old;
+
+          return {
+            ...old,
+            data: old.data.map((item: Vocabulary) =>
+              item.id === id
+                ? { ...item, repetitionLevel: data.repetitionLevel }
+                : item
+            ),
+          };
+        });
+      });
+
+      return { previousDataMap };
+    },
+
+    onError: (err, { id }, context) => {
+      // Rollback all affected queries on error
+      if (context?.previousDataMap) {
+        context.previousDataMap.forEach((data, queryKey) => {
+          queryClient.setQueryData(queryKey, data);
+        });
+      }
+    },
+
+    onSettled: () => {
+      // Invalidate all list queries to ensure they're in sync
+      queryClient.invalidateQueries({
+        queryKey: VOCABULARY_KEY_FACTORY.lists(),
+      });
     },
   });
 };

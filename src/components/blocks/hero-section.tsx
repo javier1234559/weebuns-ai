@@ -2,26 +2,25 @@ import { Button } from "@/components/ui/button";
 import { Mockup } from "@/components/ui/mockup";
 import { Glow } from "@/components/ui/glow";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import { RouteNames } from "@/constraints/route-name";
-import { Description } from "@radix-ui/react-dialog";
+import ThemeSwitchImage from "./theme-switch-image";
+
+const heroData = {
+  title: "Luyện Đề Tiếng Anh 4 Kỹ Năng Cùng AI & Giáo Viên Thật",
+  description:
+    "Nền tảng học tiếng Anh toàn diện: Luyện Viết, Đọc, Nghe, Nói với công nghệ AI hỗ trợ & hệ thống giáo viên đồng hành. Theo dõi, đánh giá và kết nối với giáo viên yêu thích của bạn.",
+  primaryCta: {
+    text: "Get Started",
+    href: RouteNames.SignIn,
+  },
+  mockupImage: {
+    light: "/images/hero-section/hero-light.png",
+    dark: "/images/hero-section/hero-dark.png",
+    alt: "UI Components Preview",
+  },
+};
 
 export function HeroSection() {
-  const heroData = {
-    title: "Luyện Đề Tiếng Anh 4 Kỹ Năng Cùng AI & Giáo Viên Thật",
-    description:
-      "Nền tảng học tiếng Anh toàn diện: Luyện Viết, Đọc, Nghe, Nói với công nghệ AI hỗ trợ & hệ thống giáo viên đồng hành. Theo dõi, đánh giá và kết nối với giáo viên yêu thích của bạn.",
-    primaryCta: {
-      text: "Get Started",
-      href: RouteNames.SignIn,
-    },
-    mockupImage: {
-      light: "/images/hero-section/hero-section-light.png",
-      dark: "/images/hero-section/hero-section-light.png",
-      alt: "UI Components Preview",
-    },
-  };
-
   return (
     <section
       className={cn(
@@ -86,14 +85,10 @@ export function HeroSection() {
                 "border-brand/10 dark:border-brand/5",
               )}
             >
-              <Image
-                src={heroData.mockupImage.light}
+              <ThemeSwitchImage
+                lightSrc={heroData.mockupImage.light}
+                darkSrc={heroData.mockupImage.dark}
                 alt={heroData.mockupImage.alt}
-                className="h-auto w-full object-cover"
-                loading="lazy"
-                decoding="async"
-                width={800}
-                height={800}
               />
             </Mockup>
           </div>

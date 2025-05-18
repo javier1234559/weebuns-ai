@@ -82,7 +82,7 @@ class TokenManager {
     try {
       const payload = jwtDecode<TokenPayload>(token);
       // Check if token is expired - add 10 second buffer
-      console.log(JSON.stringify(payload, null, 2));
+      // console.log(JSON.stringify(payload, null, 2));
       return payload.exp * 1000 < Date.now() + 10000;
     } catch (error) {
       // If we can't decode the token, assume it's expired

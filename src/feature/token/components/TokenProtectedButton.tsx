@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import { useState } from "react";
 
 interface TokenProtectedButtonProps {
+  disabled?: boolean;
   requiredTokens: number;
   onAction: () => Promise<void>;
   children: React.ReactNode;
@@ -13,6 +14,7 @@ interface TokenProtectedButtonProps {
 }
 
 export const TokenProtectedButton = ({
+  disabled = false,
   requiredTokens,
   onAction,
   children,
@@ -29,7 +31,8 @@ export const TokenProtectedButton = ({
     isLoading ||
     useTokensMutation.isPending ||
     isActionPending ||
-    !hasEnoughBalance;
+    !hasEnoughBalance ||
+    disabled;
 
   const handleClick = async () => {
     if (isDisabled) {

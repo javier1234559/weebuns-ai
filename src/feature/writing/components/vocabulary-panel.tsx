@@ -9,8 +9,11 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Plus, Check } from "lucide-react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { useCreateVocabulary } from "@/feature/vocabulary/hooks/useVocabularyQueries";
+import { toast } from "sonner";
 
 interface VocabularyPanelProps {
   vocabulary_list: VocabularyItemDTO[];
@@ -18,6 +21,27 @@ interface VocabularyPanelProps {
 
 export function VocabularyPanel({ vocabulary_list }: VocabularyPanelProps) {
   const [count, setCount] = useState(5);
+  const [savedVocabs, setSavedVocabs] = useState<number[]>([]);
+  const createVocabularyMutation = useCreateVocabulary();
+
+  const handleSaveVocabulary = async (vocab: VocabularyItemDTO, index: number) => {
+    try {
+      await createVocabularyMutation.mutateAsync({
+        term: vocab.term,
+        meaning: vocab.meaning,
+        exampleSentence: vocab.example_sentence,
+        imageUrl: vocab.image_url,
+        referenceLink: vocab.reference_link,
+        referenceName: vocab.reference_name,
+        repetitionLevel: 1, // Start with level 1
+      });
+
+      setSavedVocabs(prev => [...prev, index]);
+      toast.success("Từ vựng đã được thêm vào danh sách của bạn");
+    } catch (error: any) {
+      toast.error("Không thể thêm từ vựng: " + error.message);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -43,8 +67,27 @@ export function VocabularyPanel({ vocabulary_list }: VocabularyPanelProps) {
       >
         {vocabulary_list.slice(0, count).map((item, index) => (
           <Card key={index} className="mb-2">
-            <CardHeader className="pb-2">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-lg">{item.term}</CardTitle>
+              <Button
+                type="button"
+                variant={savedVocabs.includes(index) ? "outline" : "default"}
+                size="sm"
+                onClick={() => handleSaveVocabulary(item, index)}
+                disabled={savedVocabs.includes(index) || createVocabularyMutation.isPending}
+              >
+                {savedVocabs.includes(index) ? (
+                  <>
+                    <Check className="size-4" />
+                    Đã thêm
+                  </>
+                ) : (
+                  <>
+                    <Plus className="size-4" />
+                    Thêm vào danh sách
+                  </>
+                )}
+              </Button>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
@@ -99,10 +142,6 @@ export function VocabularyPanel({ vocabulary_list }: VocabularyPanelProps) {
                     </a>
                   </div>
                 )}
-
-                <div className="mt-2 text-xs text-muted-foreground">
-                  Repetition Level: {item.repetition_level}
-                </div>
               </div>
             </CardContent>
           </Card>

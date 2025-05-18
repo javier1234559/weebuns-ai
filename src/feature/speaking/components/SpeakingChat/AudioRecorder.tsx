@@ -87,7 +87,7 @@ const AudioRecorder = ({ onRecordingComplete }: AudioRecorderProps) => {
   return (
     <button
       onClick={isRecording ? stopRecording : startRecording}
-      className={`rounded-full bg-primary p-4 ${isRecording ? "animate-pulse" : ""}`}
+      className={`rounded-full bg-primary text-white p-4 ${isRecording ? "animate-pulse" : ""}`}
     >
       {isRecording ? (
         <StopCircle className="size-6" />

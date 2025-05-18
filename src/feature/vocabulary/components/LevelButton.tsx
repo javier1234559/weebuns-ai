@@ -45,6 +45,13 @@ export default function LevelButton({
   };
 
   const updateLevel = (newLevel: RepetitionLevel) => {
+    // Update store for quiz feature
+    updateVocab({
+      id,
+      repetitionLevel: newLevel,
+    });
+
+    // Make the API call with optimistic updates handled in the hook
     updateMutation.mutate(
       {
         id,
@@ -53,19 +60,16 @@ export default function LevelButton({
         },
       },
       {
-        onSuccess: () => {
-          toast.success(`Cập nhật level thành công: ${newLevel}`);
-        },
         onError: (error: any) => {
+          // Revert store on error
+          updateVocab({
+            id,
+            repetitionLevel: level,
+          });
           toast.error(`Lỗi khi cập nhật level: ${error.message}`);
         },
-      },
+      }
     );
-
-    updateVocab({
-      id,
-      repetitionLevel: newLevel,
-    });
   };
 
   const levelButton = [
@@ -96,7 +100,6 @@ export default function LevelButton({
           variant={level === num ? "default" : "ghost"}
           size="icon"
           className="size-8 rounded-full"
-          disabled={updateMutation.isPending}
           onClick={() => updateLevel(num)}
         >
           {num}
@@ -107,7 +110,6 @@ export default function LevelButton({
         variant={level === RepetitionLevel.MASTERED ? "default" : "ghost"}
         size="icon"
         className="size-8 rounded-full"
-        disabled={updateMutation.isPending}
         onClick={() => updateLevel(RepetitionLevel.MASTERED)}
       >
         <Check className="size-4" />
