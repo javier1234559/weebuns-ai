@@ -1,7 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
-import { lessonPaths } from "@/feature/lesson/constants/routes";
-import { RouteNames } from "@/constraints/route-name";
 
 const configData = {
   title: "Weebuns",

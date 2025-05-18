@@ -1,5 +1,4 @@
 import DOMPurify from "dompurify";
-import { marked } from "marked";
 
 /**
  * Sanitizes HTML content and removes potentially dangerous content

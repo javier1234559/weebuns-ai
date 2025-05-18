@@ -9,7 +9,7 @@ const useResetStore = create<ResetStore>((set) => ({
   resetAllState: () => {
     // Reset auth store state
     useAuthStore.setState({
-      accessToken: null,
+      user: null,
     });
     // Clear persistent storage
     useAuthStore.persist.clearStorage();

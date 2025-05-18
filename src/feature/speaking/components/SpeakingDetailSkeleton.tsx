@@ -20,14 +20,14 @@ export function SpeakingDetailSkeleton() {
         <div className="space-y-4 px-4">
           {/* AI Message Skeleton */}
           <div className="flex gap-3">
-            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="size-10 rounded-full" />
             <div className="flex-1 space-y-2">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="size-4 w-3/4" />
+              <Skeleton className="size-4 w-1/2" />
               <div className="flex gap-2">
-                <Skeleton className="h-6 w-6 rounded-full" />
-                <Skeleton className="h-6 w-6 rounded-full" />
-                <Skeleton className="h-6 w-6 rounded-full" />
+                <Skeleton className="size-6 rounded-full" />
+                <Skeleton className="size-6 rounded-full" />
+                <Skeleton className="size-6 rounded-full" />
               </div>
             </div>
           </div>
@@ -35,15 +35,15 @@ export function SpeakingDetailSkeleton() {
           {/* User Message Skeleton */}
           <div className="flex gap-3 justify-end">
             <div className="flex-1 space-y-2 text-right">
-              <Skeleton className="ml-auto h-4 w-3/4" />
-              <Skeleton className="ml-auto h-4 w-1/2" />
+              <Skeleton className="ml-auto size-4 w-3/4" />
+              <Skeleton className="ml-auto size-4 w-1/2" />
               <div className="flex gap-2 justify-end">
-                <Skeleton className="h-6 w-6 rounded-full" />
-                <Skeleton className="h-6 w-6 rounded-full" />
-                <Skeleton className="h-6 w-6 rounded-full" />
+                <Skeleton className="size-6 rounded-full" />
+                <Skeleton className="size-6 rounded-full" />
+                <Skeleton className="size-6 rounded-full" />
               </div>
             </div>
-            <Skeleton className="h-10 w-10 rounded-full" />
+            <Skeleton className="size-10 rounded-full" />
           </div>
         </div>
       </div>
@@ -51,13 +51,13 @@ export function SpeakingDetailSkeleton() {
       {/* Input Area Skeleton */}
       <div className="mx-2 border-t bg-card p-4">
         <div className="flex flex-col items-center justify-center gap-2 py-2">
-          <Skeleton className="h-12 w-12 rounded-full" />
-          <Skeleton className="h-16 w-full" />
+          <Skeleton className="size-12 rounded-full" />
+          <Skeleton className="size-16 w-full" />
         </div>
         <div className="relative rounded-lg border bg-background p-1">
-          <Skeleton className="h-12 w-full rounded-lg" />
+          <Skeleton className="size-12 rounded-lg" />
           <div className="flex items-center p-3 pt-0">
-            <Skeleton className="ml-auto h-9 w-32" />
+            <Skeleton className="ml-auto size-9 w-32" />
           </div>
         </div>
       </div>
