@@ -25,7 +25,5 @@ export async function POST(req: Request) {
     messages: [systemMessage, ...messages],
   });
 
-  console.log(response);
-
   return response.toDataStreamResponse();
 }

@@ -24,15 +24,22 @@ export function ReadingDetailView({ id }: ReadingDetailViewProps) {
   const submitReadingMutation = useCreateReadingSubmission();
 
   const handleSubmit = async (data: CreateReadingSubmissionDTO) => {
-    const submission = await submitReadingMutation.mutateAsync(data);
-    const submissionId = submission.data.id;
-    if (submissionId) {
-      toast.success("Lesson submitted successfully . Navigate to result page");
-      const path = replaceRouteName(RouteNames.ReadingResult, {
-        id: id,
-      });
-      router.push(`${path}?submissionId=${submissionId}`);
-    } else {
+    try {
+      const submission = await submitReadingMutation.mutateAsync(data);
+      const submissionId = submission.data.id;
+      console.log("submission", JSON.stringify(submission, null, 2));
+      if (submissionId) {
+        toast.success(
+          "Lesson submitted successfully . Navigate to result page",
+        );
+        const path = replaceRouteName(RouteNames.ReadingResult, {
+          id: id,
+        });
+        router.push(`${path}?submissionId=${submissionId}`);
+      } else {
+        toast.error("Lesson submitted failed");
+      }
+    } catch (error) {
       toast.error("Lesson submitted failed");
     }
   };
@@ -73,7 +80,7 @@ export function ReadingDetailView({ id }: ReadingDetailViewProps) {
                     id: data?.data.createdBy.id,
                     name: data?.data.createdBy.username ?? "",
                     avatar: data?.data.createdBy.profilePicture ?? "",
-                    bio: "IELTS coach with 10 years of experience helping students achieve band 7.0+",
+                    bio: data?.data.createdBy.bio ?? "",
                     role: data?.data.createdBy.role,
                   }}
                 />
@@ -86,8 +93,9 @@ export function ReadingDetailView({ id }: ReadingDetailViewProps) {
         <ReadingTest
           content={data?.data.content?.text ?? ""}
           questions={data?.data.content?.questions ?? []}
-          isPractice={data?.data.lessonType === "test"}
+          isPractice={data?.data.lessonType != "test"}
           lessonId={id}
+          timeLimit={data?.data.timeLimit ?? 0}
           onSubmit={handleSubmitWithConfirmation}
         />
       </div>

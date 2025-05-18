@@ -24,6 +24,7 @@ export function ListeningDetailView({ id }: ListeningDetailViewProps) {
   const submitListeningMutation = useCreateListeningSubmission();
 
   const handleSubmit = async (data: CreateListeningSubmissionDTO) => {
+    console.log("data", data);
     const submission = await submitListeningMutation.mutateAsync(data);
     const submissionId = submission.data.id;
     if (submissionId) {
@@ -86,7 +87,8 @@ export function ListeningDetailView({ id }: ListeningDetailViewProps) {
         <ListeningTest
           audioUrl={data?.data.content?.audio_url ?? ""}
           questions={data?.data.content?.questions ?? []}
-          isPractice={data?.data.lessonType === "test"}
+          isPractice={data?.data.lessonType != "test"}
+          timeLimit={data?.data.timeLimit ?? 0}
           lessonId={id}
           onSubmit={handleSubmitWithConfirmation}
         />

@@ -38,13 +38,12 @@ export function ListeningResultView({
   return (
     <ListeningTest
       lessonId={data?.data.lesson.id ?? ""}
-      title={data?.data.lesson.title ?? ""}
-      description={data?.data.lesson.description ?? ""}
       audioUrl={(data?.data.lesson.content as any)?.audio_url ?? ""}
       questions={(data?.data.lesson.content as any)?.questions ?? []}
-      isPractice={(data?.data as any)?.lessonType === "test"}
+      isPractice={(data?.data as any)?.lessonType != "test"}
       onSubmit={handleSubmit}
       isResultView={true}
+      timeLimit={(data?.data as any)?.timeLimit ?? 0}
       resultListeningData={{
         feedback: {
           accuracy: (data?.data as any)?.feedback?.accuracy ?? 0,
@@ -53,9 +52,9 @@ export function ListeningResultView({
           incorrectAnswers:
             (data?.data as any)?.feedback?.incorrectAnswers ?? 0,
         },
-        selectedAnswers: (data?.data as any)?.content?.answers?.reduce(
+        selectedAnswers: data?.data?.content?.question_list.reduce(
           (acc: Record<string, string>, curr: any) => {
-            acc[curr.questionId] = curr.answerId;
+            acc[curr.id] = curr.selected_answer;
             return acc;
           },
           {},

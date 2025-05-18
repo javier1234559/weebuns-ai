@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import CommentItem from "./CommentItem";
 import { CommentForm } from "./CommentForm";
 import { Comment } from "./type";
-import { CommentResponse } from "@/services/swagger-types";
+import { defaultComments } from "@/feature/comment/data";
 
 export interface CommentSystemProps {
   comments: Comment[];
@@ -18,6 +18,7 @@ export interface CommentSystemProps {
     id: string;
     name: string;
     image?: string;
+    role: string;
   };
 }
 
@@ -31,8 +32,13 @@ export function CommentSystem({
     id: "1",
     name: "Current User",
     image: "/avatars/user.png",
+    role: "user",
   },
 }: CommentSystemProps) {
+  if (comments.length === 0) {
+    comments = defaultComments;
+  }
+
   const [expandedComments, setExpandedComments] = useState<Set<string>>(
     new Set(),
   );

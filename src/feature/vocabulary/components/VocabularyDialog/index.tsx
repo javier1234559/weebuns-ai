@@ -19,15 +19,17 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { vocabularyDialogSchema } from "./schema";
+import { vocabularyDefaultValues, vocabularyDialogSchema } from "./schema";
 import { usePexelsImage } from "@/feature/vocabulary/hooks/usePexelsImage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface VocabularyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (data: z.infer<typeof vocabularyDialogSchema>) => void;
+  onSubmit: (data: z.infer<typeof vocabularyDialogSchema>) => Promise<void>;
 }
 
 export default function VocabularyDialog({
@@ -35,17 +37,10 @@ export default function VocabularyDialog({
   onOpenChange,
   onSubmit,
 }: VocabularyDialogProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof vocabularyDialogSchema>>({
     resolver: zodResolver(vocabularyDialogSchema),
-    defaultValues: {
-      term: "",
-      meaning: [""],
-      exampleSentence: "",
-      imageUrl: "",
-      referenceLink: "",
-      referenceName: "",
-      repetitionLevel: 0,
-    },
+    defaultValues: vocabularyDefaultValues,
   });
 
   const { searchImage, isLoading: isImageLoading, imageUrl } = usePexelsImage();
@@ -67,9 +62,19 @@ export default function VocabularyDialog({
     }
   }, [imageUrl, form]);
 
-  const handleSubmit = (data: z.infer<typeof vocabularyDialogSchema>) => {
-    onSubmit(data);
-    onOpenChange(false);
+  const handleSubmit = async (data: z.infer<typeof vocabularyDialogSchema>) => {
+    setIsLoading(true);
+    try {
+      await onSubmit(data);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add vocabulary", {
+        description: "Please try again",
+      });
+    } finally {
+      setIsLoading(false);
+      onOpenChange(false);
+    }
   };
 
   return (
@@ -193,7 +198,13 @@ export default function VocabularyDialog({
               <Button variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit">Submit</Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  "Submit"
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

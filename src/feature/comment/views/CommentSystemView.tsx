@@ -128,6 +128,7 @@ export default function CommentSystemView({
         id: comment.user.id,
         name: comment.user.username,
         image: comment.user.profilePicture,
+        role: comment.user.role,
       },
       likes: comment.likesCount,
       specialLikes: comment.lovesCount,
@@ -140,7 +141,7 @@ export default function CommentSystemView({
     })) || [];
 
   return (
-    <div>
+    <div className="mt-10">
       <CommentSystem
         comments={formattedComments}
         onAddComment={handleAddComment}
@@ -151,6 +152,7 @@ export default function CommentSystemView({
           id: user?.id || "",
           name: user?.username || "",
           image: user?.profilePicture || "",
+          role: user?.role || "",
         }}
       />
     </div>

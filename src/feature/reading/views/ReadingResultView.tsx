@@ -4,6 +4,7 @@ import AppError from "@/components/common/app-error";
 import AppLoading from "@/components/common/app-loading/page";
 import { useReadingSubmissionDetail } from "@/feature/lesson/hooks/useSubmissionLessonClient";
 import { ReadingTest } from "@/feature/reading/components/ReadingTest";
+import { QuestionDTO } from "@/services/swagger-types";
 
 interface ReadingResultViewProps {
   id: string;
@@ -41,8 +42,9 @@ export function ReadingResultView({
       content={(data?.data.lesson.content as any)?.text ?? ""}
       questions={(data?.data.lesson.content as any)?.questions ?? []}
       isPractice={(data?.data as any)?.lessonType === "test"}
+      timeLimit={(data?.data as any)?.timeLimit ?? 0}
       onSubmit={handleSubmit}
-      isResultView={true}
+      isResultView
       resultReadingData={{
         feedback: {
           accuracy: (data?.data as any)?.feedback?.accuracy ?? 0,
@@ -51,9 +53,9 @@ export function ReadingResultView({
           incorrectAnswers:
             (data?.data as any)?.feedback?.incorrectAnswers ?? 0,
         },
-        selectedAnswers: (data?.data as any)?.content?.answers?.reduce(
+        selectedAnswers: data?.data?.content?.questions.reduce(
           (acc: Record<string, string>, curr: any) => {
-            acc[curr.questionId] = curr.answerId;
+            acc[curr.id] = curr.selected_answer;
             return acc;
           },
           {},

@@ -55,7 +55,6 @@ export function replaceRouteName(
   routeName: RouteNames,
   params: Record<string, string>,
 ) {
-  console.log(routeName, params);
   return routeName.replace(/:id/g, params.id);
 }
 

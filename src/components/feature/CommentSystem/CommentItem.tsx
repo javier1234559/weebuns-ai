@@ -16,6 +16,7 @@ import usePaginationUrl from "@/hooks/usePaginationUrl";
 import { useCommentReplies } from "@/feature/comment/hooks/useComment";
 import { formatDistanceToNow } from "date-fns";
 import { CommentResponse } from "@/services/swagger-types";
+import { Badge } from "@/components/ui/badge";
 
 export interface CommentItemProps {
   comment: Comment;
@@ -27,6 +28,7 @@ export interface CommentItemProps {
     id: string;
     name: string;
     image?: string;
+    role: string;
   };
 }
 
@@ -36,6 +38,7 @@ const formatComment = (comment: CommentResponse): Comment => ({
   author: {
     name: comment.user.username,
     image: comment.user.profilePicture,
+    role: comment.user.role,
   },
   likes: comment.likesCount,
   specialLikes: comment.lovesCount,
@@ -112,6 +115,9 @@ export default function CommentItem({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="font-medium">{comment.author.name}</span>
+              {comment.author.role === "teacher" && (
+                <Badge variant="success">Teacher</Badge>
+              )}
               <span className="text-sm text-muted-foreground">
                 {comment.createdAt}
               </span>

@@ -14,10 +14,13 @@ interface TokenPurchaseSectionProps {
 const TokenPurchaseSection = ({ packages }: TokenPurchaseSectionProps) => {
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const { mutate: createTransaction } = useCreateTransaction();
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const handleCheckout = () => {
     if (selectedPlan) {
       console.log(selectedPlan);
+      setIsRedirecting(true);
+      toast.success("Đang chuyển hướng đến trang thanh toán...");
       createTransaction(
         {
           packageCode: selectedPlan,
@@ -125,7 +128,7 @@ const TokenPurchaseSection = ({ packages }: TokenPurchaseSectionProps) => {
           <div className="mt-4 flex justify-start">
             <Button
               className="w-fit min-w-[180px] text-base"
-              disabled={!selectedPlan}
+              disabled={!selectedPlan || isRedirecting}
               onClick={handleCheckout}
             >
               <CreditCard className="mr-2 size-5" />

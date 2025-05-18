@@ -5,6 +5,7 @@ interface SampleTabProps {
 }
 
 export function SampleTab({ data }: SampleTabProps) {
+  console.log(data);
   return (
     <Card>
       <CardContent className="p-6">

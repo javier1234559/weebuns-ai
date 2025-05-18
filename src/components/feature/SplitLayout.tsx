@@ -102,11 +102,11 @@ export function SplitPane({
   return (
     <div
       ref={containerRef}
-      className={`flex size-full ${isVertical ? "flex-row" : "flex-col"} `}
+      className={`flex size-full ${isVertical ? "flex-row" : "flex-col"} gap-2`}
     >
       {/* First Pane */}
       <div
-        className="size-full"
+        className="size-full md:sticky md:top-[100px]"
         style={{ [isVertical ? "width" : "height"]: `${size}%` }}
       >
         {children[0]}

@@ -22,6 +22,7 @@ export interface Comment {
     name: string;
     image?: string;
     isAuthor?: boolean;
+    role: string;
   };
   likes: number;
   specialLikes: number;

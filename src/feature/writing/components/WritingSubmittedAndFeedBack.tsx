@@ -6,9 +6,10 @@ import { Clock, Star, BookOpen } from "lucide-react";
 import { OriginalTab } from "./result/OriginalTab";
 import { EvaluationTab } from "./result/EvaluationTab";
 import { SampleTab } from "./result/SampleTab";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { SampleEssayDTO, WritingSubmission } from "@/services/swagger-types";
-import { UserDataDTO } from "@/feature/writing/schema";
+import { cn } from "@/lib/utils";
+import { mergeContentHtml } from "@/feature/writing/utils";
 
 interface WritingSubmittedAndFeedBackProps {
   data: WritingSubmission;
@@ -21,15 +22,6 @@ export default function WritingSubmittedAndFeedBack({
 }: WritingSubmittedAndFeedBackProps) {
   const [selectedTab, setSelectedTab] = useState<string>("original");
 
-  const mergeContent = useMemo(() => {
-    return (data: UserDataDTO | SampleEssayDTO) => {
-      const { instruction, body1, body2, conclusion } = data;
-      return [instruction, body1, body2, conclusion]
-        .filter(Boolean)
-        .join("\n\n");
-    };
-  }, []);
-
   const tabs = [
     {
       value: "original",
@@ -37,7 +29,7 @@ export default function WritingSubmittedAndFeedBack({
       icon: Clock,
       component: (
         <OriginalTab
-          data={mergeContent(
+          data={mergeContentHtml(
             data.content?.user_data ?? {
               instruction: "",
               body1: "",
@@ -58,34 +50,36 @@ export default function WritingSubmittedAndFeedBack({
       value: "sample",
       label: "Sample Essay",
       icon: BookOpen,
-      component: <SampleTab data={mergeContent(exampleEssay)} />,
+      component: <SampleTab data={mergeContentHtml(exampleEssay)} />,
     },
   ];
 
   return (
     <div className="container mx-auto p-4">
-      <Card className="min-h-[800px]">
+      <Card className="h-full">
         <CardHeader>
           <CardTitle>Writing Result</CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="original" value={selectedTab} className="w-full">
-            <TabsList
-              className="grid w-full"
-              style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }}
-            >
+          <Tabs defaultValue="original" value={selectedTab}>
+            <TabsList className="gap-2 rounded-lg bg-background p-1">
               {tabs.map(({ value, label, icon: Icon }) => (
                 <TabsTrigger
                   key={value}
                   value={value}
-                  className="gap-2"
                   onClick={() => setSelectedTab(value)}
+                  className={cn(
+                    "gap-2 rounded-md px-3 py-1.5 text-sm transition-all",
+                    "data-[state=active]:bg-card  data-[state=active]:shadow-sm",
+                    "data-[state=inactive]:text-muted-foreground",
+                  )}
                 >
                   <Icon className="size-4" />
                   <span>{label}</span>
                 </TabsTrigger>
               ))}
             </TabsList>
+
             {tabs.map(({ value, component }) => (
               <TabsContent key={value} value={value}>
                 {component}

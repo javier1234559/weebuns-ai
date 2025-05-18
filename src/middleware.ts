@@ -16,6 +16,7 @@ const PUBLIC_ROUTES = [
   "/terms",
   "/privacy",
   "/cookies",
+  'thanks',
   "/sitemap.xml",
 ];
 const LOGIN_URL = "/sign-in";
@@ -23,10 +24,14 @@ const HOME_URL = "/home";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isAuthenticated = !!request.cookies.get("accessToken")?.value;
+  let isAuthenticated = !!request.cookies.get("accessToken")?.value;
 
   console.log(pathname);
   console.log(isAuthenticated);
+
+  if (pathname == "/thanks") {
+    isAuthenticated = true;
+  }
 
   // Check if the current path is a public route
   const isPublicRoute = PUBLIC_ROUTES.some(

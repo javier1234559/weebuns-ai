@@ -24,15 +24,6 @@ export function MultipleChoiceQuiz({
   onBookmarkToggle,
 }: MultipleChoiceQuizProps) {
   const getOptionClassName = (question: QuestionDTO, option: string) => {
-    console.log(
-      "Question:",
-      question.id,
-      "Option:",
-      option,
-      "Selected:",
-      selectedAnswers[question.id],
-    );
-
     if (!showCorrectAnswers) {
       return selectedAnswers[question.id] === option
         ? "border-primary bg-primary/10"

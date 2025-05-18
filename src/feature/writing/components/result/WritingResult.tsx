@@ -10,6 +10,7 @@ import { OriginalTab } from "./OriginalTab";
 import { EvaluationTab } from "./EvaluationTab";
 import { SampleTab } from "./SampleTab";
 import { Button } from "@/components/ui/button";
+import { mergeHtml } from "@/lib/utils";
 
 interface WritingResultProps {
   userData: UserDataDTO;
@@ -46,12 +47,12 @@ export function WritingResult({
       value: "sample",
       label: "Sample Essay",
       icon: BookOpen,
-      component: <SampleTab data={sampleEssay} />,
+      component: <SampleTab data={mergeHtml(sampleEssay)} />,
     },
   ];
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto md:p-0">
       <Card className="min-h-[800px]">
         <CardHeader>
           <CardTitle>Writing Result</CardTitle>

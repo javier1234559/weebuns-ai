@@ -1,5 +1,6 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import VocabularyTabContent from "@/feature/vocabulary/components/VocabularyTabContent";
+import { cn } from "@/lib/utils";
 import { VocabulariesResponse } from "@/services/swagger-types";
 
 interface VocabularyTableViewProps {
@@ -19,6 +20,17 @@ export default function VocabularyTableView({
   onTabChange,
   onAddNew,
 }: VocabularyTableViewProps) {
+  const TABS = [
+    {
+      label: "All",
+      value: "all",
+    },
+    {
+      label: "Due for Review(SRS)",
+      value: "review",
+    },
+  ];
+
   return (
     <Tabs
       defaultValue="all"
@@ -26,19 +38,20 @@ export default function VocabularyTableView({
       onValueChange={onTabChange}
       className="w-full"
     >
-      <TabsList className="gap-1 bg-background/50">
-        <TabsTrigger
-          value="all"
-          className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-        >
-          All
-        </TabsTrigger>
-        <TabsTrigger
-          value="review"
-          className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-        >
-          Due for Review(SRS)
-        </TabsTrigger>
+      <TabsList className="gap-1 bg-background">
+        {TABS.map((tab) => (
+          <TabsTrigger
+            key={tab.value}
+            value={tab.value}
+            className={cn(
+              "gap-2 rounded-md px-3 py-1.5 text-sm transition-all",
+              "data-[state=active]:bg-card  data-[state=active]:shadow-sm",
+              "data-[state=inactive]:text-muted-foreground",
+            )}
+          >
+            {tab.label}
+          </TabsTrigger>
+        ))}
       </TabsList>
 
       <TabsContent value="all" className="mt-2">

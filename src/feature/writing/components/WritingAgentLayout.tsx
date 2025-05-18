@@ -256,7 +256,7 @@ export default function WritingAgentLayout({
         defaultSize={50}
         direction={isMobile ? "horizontal" : "vertical"}
       >
-        <Pane className="p-2">
+        <Pane>
           <Card>
             <CardHeader>
               <CardTitle>
@@ -293,7 +293,7 @@ export default function WritingAgentLayout({
             </CardContent>
           </Card>
         </Pane>
-        <Pane className="p-2">
+        <Pane>
           <Card className="h-full">
             <CardContent className="flex h-full flex-col overflow-y-auto p-4">
               <div className="flex-1 space-y-6 overflow-y-auto">

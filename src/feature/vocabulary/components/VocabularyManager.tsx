@@ -23,7 +23,7 @@ function VocabularyManager() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const createVocabulary = useCreateVocabulary();
+  const { mutateAsync: createVocabulary, isPending } = useCreateVocabulary();
 
   const { search, searchParam, page, perPage, updateQueryParams, setSearch } =
     usePaginationUrl({
@@ -56,8 +56,8 @@ function VocabularyManager() {
     setIsDialogOpen(true);
   };
 
-  const handleSubmit = (data: z.infer<typeof vocabularyDialogSchema>) => {
-    createVocabulary.mutate(data, {
+  const handleSubmit = async (data: z.infer<typeof vocabularyDialogSchema>) => {
+    await createVocabulary(data, {
       onSuccess: () => {
         setIsDialogOpen(false);
         toast.success("Từ vựng đã được thêm thành công");

@@ -2,7 +2,7 @@
 
 import AppPagination from "@/components/common/app-pagination";
 import { SearchInput } from "@/components/feature/SearchInput";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LessonNavigation } from "@/feature/lesson/components/LessonNavigation";
 import {
   ContainerSidebar,

@@ -13,7 +13,8 @@ import { Button } from "@/components/ui/button";
 import { CircleCheckBig, Eye, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { RouteNames } from "@/constraints/route-name";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { ListeningResultFeedback } from "@/feature/listening/components/ListeningResultFeedback";
 
 interface ListeningTestProps {
   audioUrl: string;
@@ -22,6 +23,7 @@ interface ListeningTestProps {
   lessonId: string;
   onSubmit?: (data: CreateListeningSubmissionDTO) => void;
   isResultView?: boolean;
+  timeLimit?: number;
   resultListeningData?: {
     feedback: {
       accuracy: number;
@@ -40,6 +42,7 @@ export function ListeningTest({
   lessonId,
   onSubmit,
   isResultView = false,
+  timeLimit = 0,
   resultListeningData,
 }: ListeningTestProps) {
   const router = useRouter();
@@ -98,17 +101,16 @@ export function ListeningTest({
       tokensUsed: 0,
       content: {
         audio_url: audioUrl,
-        question_list: Object.entries(selectedAnswers).map(
-          ([questionId, answer]) => ({
-            id: questionId,
-            question: "",
-            right_answer: "",
-            answer_list: [],
-          }),
-        ),
+        question_list: questions.map((q) => ({
+          id: q.id,
+          question: q.question,
+          right_answer: q.right_answer,
+          answer_list: q.answer_list,
+          selected_answer: selectedAnswers[q.id],
+          bookmarked: bookmarkedQuestions.has(q.id),
+        })),
       },
     };
-
     onSubmit?.(submissionData);
   };
 
@@ -121,15 +123,17 @@ export function ListeningTest({
       <Card className="mb-4 w-full">
         <CardContent className="flex w-full items-center justify-end gap-4 p-4">
           {isPractice && !isResultView && (
-            <Button variant="outline" size="sm" onClick={handleShowAnswers}>
-              <Eye className="mr-2 size-2" />
+            <Button variant="outline" onClick={handleShowAnswers}>
+              <Eye className="size-2" />
               {showCorrectAnswers ? "Hide answers" : "Show answers"}
             </Button>
           )}
 
-          {!isResultView && (
+          {!isResultView && timeLimit && !isPractice && (
             <Timer
-              startTime={new Date(Date.now() + 1000 * 60 * 2).toISOString()}
+              startTime={new Date(
+                Date.now() + 1000 * 60 * timeLimit,
+              ).toISOString()}
               onEnd={handleTimeUp}
               size="large"
             />
@@ -150,14 +154,14 @@ export function ListeningTest({
           />
 
           {!isResultView && (
-            <Button variant="outline" size="sm" onClick={handleSubmit}>
-              <CircleCheckBig className="mr-2 size-2" />
+            <Button variant="outline" onClick={handleSubmit}>
+              <CircleCheckBig className="size-2" />
               Nộp bài
             </Button>
           )}
 
           {isResultView && (
-            <Button variant="outline" size="sm" onClick={handleBackToHome}>
+            <Button variant="outline" onClick={handleBackToHome}>
               <Home className="mr-2 size-2" />
               Back to Home
             </Button>
@@ -165,45 +169,19 @@ export function ListeningTest({
         </CardContent>
       </Card>
 
-      {isResultView && resultListeningData && (
-        <div className="mx-2 mb-4 rounded-lg bg-card p-4 shadow-lg">
-          <h3 className="mb-2 text-lg font-bold">Kết quả bài làm</h3>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-            <div className="rounded-lg bg-primary/10 p-3 text-center">
-              <p className="text-sm text-muted-foreground">Độ chính xác</p>
-              <p className="text-2xl font-bold text-primary">
-                {resultListeningData.feedback.accuracy}%
-              </p>
-            </div>
-            <div className="rounded-lg bg-green-500/10 p-3 text-center">
-              <p className="text-sm text-muted-foreground">Câu đúng</p>
-              <p className="text-2xl font-bold text-green-500">
-                {resultListeningData.feedback.correctAnswers}
-              </p>
-            </div>
-            <div className="rounded-lg bg-red-500/10 p-3 text-center">
-              <p className="text-sm text-muted-foreground">Câu sai</p>
-              <p className="text-2xl font-bold text-red-500">
-                {resultListeningData.feedback.incorrectAnswers}
-              </p>
-            </div>
-            <div className="rounded-lg bg-amber-500/10 p-3 text-center">
-              <p className="text-sm text-muted-foreground">Tổng số câu</p>
-              <p className="text-2xl font-bold text-amber-500">
-                {resultListeningData.feedback.totalQuestions}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      <ListeningResultFeedback
+        isResultView={isResultView}
+        resultListeningData={resultListeningData || null}
+      />
 
-      <div className="mt-4 rounded-lg bg-card p-2 shadow-lg">
+      <div className="mt-4 rounded-lg bg-card p-2 shadow-xl">
         <div className="my-6 flex items-center justify-center">
           <WaveAudio audioUrl={audioUrl} />
         </div>
         <div className="thin-scrollbar h-full overflow-y-auto rounded-md bg-background p-4">
           <MultipleChoiceQuiz
             questions={questions}
+            showCorrectAnswers={isResultView || showCorrectAnswers}
             selectedAnswers={
               isResultView && resultListeningData?.selectedAnswers
                 ? resultListeningData.selectedAnswers

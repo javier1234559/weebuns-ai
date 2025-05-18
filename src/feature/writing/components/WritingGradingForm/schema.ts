@@ -49,3 +49,30 @@ export type ContentWritingSubmission = z.infer<
 export type Correction = z.infer<typeof correctionSchema>;
 export type GradingCriteria = z.infer<typeof gradingCriteriaSchema>;
 export type WritingGradingFormValues = z.infer<typeof writingGradingFormSchema>;
+
+export const defaultValues: WritingGradingFormValues = {
+  content: {
+    user_data: {
+      instruction:
+        "Relocating for work is common and offers more benefits than challenges.",
+      body1:
+        "There are some drawbacks when people move for better job opportunities.",
+      body2:
+        "However, the benefits, especially in career prospects and personal growth, outweigh the negatives.",
+      conclusion:
+        "Although relocating may cause issues, the personal and professional gains are far more significant.",
+    },
+    lesson_id: "1",
+    chat_history: [],
+  },
+  gradingCriteria: {
+    overall_score: 7,
+    task_response: 6,
+    coherence_cohesion: 8,
+    lexical_resource: 7,
+    grammar: 6,
+  },
+  corrections: [],
+  overallFeedback:
+    "Bài viết có cấu trúc rõ ràng, có điểm mạnh và điểm yếu. Tuy nhiên, cần cải thiện độ trong sáng và cấu trúc của bài viết.",
+};

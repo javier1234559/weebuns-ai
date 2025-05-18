@@ -2,46 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RouteNames } from "@/constraints/route-name";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth-store";
-
-const schema = yup.object().shape({
-  firstName: yup
-    .string()
-    .required("First name is required")
-    .min(2, "First name must be at least 2 characters"),
-  lastName: yup
-    .string()
-    .required("Last name is required")
-    .min(2, "Last name must be at least 2 characters"),
-  username: yup
-    .string()
-    .required("Username is required")
-    .min(3, "Username must be at least 3 characters"),
-  email: yup
-    .string()
-    .email("Invalid email address")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .required("Password is required")
-    .min(6, "Password must be at least 6 characters"),
-  confirmPassword: yup
-    .string()
-    .required("Confirm Password is required")
-    .oneOf([yup.ref("password")], "Passwords must match"),
-});
-
-type FormData = yup.InferType<typeof schema>;
+import { defaultValues, schema, FormData } from "@/feature/auth/components/register-form/schema";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -51,7 +21,8 @@ export function RegisterForm() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: zodResolver(schema),
+    defaultValues: defaultValues,
   });
 
   const onSubmit = async (data: FormData) => {

@@ -3,14 +3,13 @@
 import { Check, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RepetitionLevel } from "@/feature/vocabulary/types/vocabulary";
-import ConfirmDialog from "@/components/feature/ConfirmDiaLog";
-import { useState } from "react";
 import { toast } from "sonner";
 import {
   useDeleteVocabulary,
   useUpdateReviewStatus,
 } from "@/feature/vocabulary/hooks/useVocabularyQueries";
 import { useVocabStore } from "@/feature/vocabulary/store/vocabStore";
+import { useConfirmDialog } from "@/components/common/app-confirm-dialog";
 
 interface LevelButtonProps {
   level: number;
@@ -25,17 +24,24 @@ export default function LevelButton({
 }: LevelButtonProps) {
   const updateMutation = useUpdateReviewStatus();
   const deleteMutation = useDeleteVocabulary();
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const { updateVocab } = useVocabStore();
+  const { openConfirmDialog } = useConfirmDialog();
 
   const handleDelete = async () => {
     try {
       await deleteMutation.mutateAsync(id);
       toast.success("Từ vựng đã được xóa thành công");
-      setShowDeleteDialog(false);
     } catch (error: any) {
       toast.error(`Lỗi khi xóa từ vựng: ${error.message}`);
     }
+  };
+
+  const handleOpenDeleteDialog = () => {
+    openConfirmDialog({
+      title: "Xác nhận xóa",
+      description: "Bạn có chắc chắn muốn xóa từ vựng này không?",
+      onConfirm: handleDelete,
+    });
   };
 
   const updateLevel = (newLevel: RepetitionLevel) => {
@@ -77,7 +83,7 @@ export default function LevelButton({
           variant="ghost"
           size="icon"
           className="size-8 rounded-full"
-          onClick={() => setShowDeleteDialog(true)}
+          onClick={handleOpenDeleteDialog}
           disabled={deleteMutation.isPending}
         >
           <Trash2 className="size-4" />
@@ -106,14 +112,6 @@ export default function LevelButton({
       >
         <Check className="size-4" />
       </Button>
-
-      <ConfirmDialog
-        isOpen={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
-        onSubmit={handleDelete}
-        title="Xác nhận xóa"
-        description="Bạn có chắc chắn muốn xóa từ vựng này không?"
-      />
     </div>
   );
 }

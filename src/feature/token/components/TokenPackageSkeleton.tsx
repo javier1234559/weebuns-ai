@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export default function TokenPackageSkeleton() {
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8">
+    <div className="mx-auto w-full space-y-8 bg-card p-4">
       <div className="space-y-2">
         <Skeleton className="h-8 w-48" />
         <Skeleton className="h-5 w-72" />

@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function CommentSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="mx-auto mt-10 w-full max-w-3xl space-y-6">
       {Array.from({ length: 3 }).map((_, index) => (
         <div key={index} className="flex gap-4">
           <Avatar className="size-10">

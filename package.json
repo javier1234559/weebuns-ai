@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --port 3001",
+    "dev": "next dev --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint ./src",
@@ -140,6 +140,7 @@
     "react-textarea-autosize": "^8.5.7",
     "react-tweet": "^3.2.1",
     "reactjs-otp-input": "^2.0.10",
+    "recharts": "^2.15.3",
     "redux-persist": "^6.0.0",
     "sonner": "^1.7.3",
     "tailwind-merge": "^3.0.1",

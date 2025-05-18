@@ -9,16 +9,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Loader2 } from "lucide-react";
 import { useState, createContext, useContext, ReactNode } from "react";
 
 interface ConfirmDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: () => Promise<void>;
   title: string;
   description: string;
   confirmText?: string;
   cancelText?: string;
+  isLoading?: boolean;
 }
 
 export default function AppConfirmDialog({
@@ -29,9 +31,10 @@ export default function AppConfirmDialog({
   description,
   confirmText = "Xác nhận",
   cancelText = "Hủy",
+  isLoading = false,
 }: ConfirmDialogProps) {
-  const handleSubmit = () => {
-    onSubmit();
+  const handleSubmit = async () => {
+    await onSubmit();
     onClose();
   };
 
@@ -43,10 +46,16 @@ export default function AppConfirmDialog({
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={isLoading}>
             {cancelText}
           </Button>
-          <Button onClick={handleSubmit}>{confirmText}</Button>
+          <Button onClick={handleSubmit} disabled={isLoading}>
+            {isLoading ? (
+              <Loader2 className="size-2 animate-spin" />
+            ) : (
+              confirmText
+            )}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -73,6 +82,7 @@ const ConfirmDialogContext = createContext<
 export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [options, setOptions] = useState<ConfirmDialogOptions | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const openConfirmDialog = (newOptions: ConfirmDialogOptions) => {
     setOptions(newOptions);
@@ -80,14 +90,21 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
   };
 
   const handleClose = () => {
+    if (isLoading) return;
     setIsOpen(false);
+    setIsLoading(false);
   };
 
-  const handleConfirm = () => {
-    if (options?.onConfirm) {
-      options.onConfirm();
+  const handleConfirm = async () => {
+    if (!options?.onConfirm) return;
+    try {
+      setIsLoading(true);
+      await options.onConfirm();
+      console.log("isLoading", isLoading);
+      setIsOpen(false);
+    } finally {
+      setIsLoading(false);
     }
-    setIsOpen(false);
   };
 
   return (
@@ -102,6 +119,7 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
           description={options.description}
           confirmText={options.confirmText}
           cancelText={options.cancelText}
+          isLoading={isLoading}
         />
       )}
     </ConfirmDialogContext.Provider>

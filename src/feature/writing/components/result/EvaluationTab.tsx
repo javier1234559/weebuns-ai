@@ -6,5 +6,11 @@ interface EvaluationTabProps {
 }
 
 export function EvaluationTab({ data }: EvaluationTabProps) {
-  return <WritingGradingForm initialData={data} />;
+  return (
+    <WritingGradingForm
+      initialData={data}
+      onSubmit={() => {}}
+      isLoading={false}
+    />
+  );
 }

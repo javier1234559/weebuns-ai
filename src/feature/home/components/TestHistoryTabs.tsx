@@ -13,6 +13,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { SkillType } from "@/services/swagger-types";
 import { SubmissionStatus } from "@/services/swagger-types";
 import { SubmissionLessonHistoryView } from "@/feature/lesson/views/SubmissionLessonHistoryView";
+import { cn } from "@/lib/utils";
 
 type MainTabType = "writing" | "reading" | "listening" | "speaking";
 type SubTabType = "submitted" | "completed" | "scored" | "draft";
@@ -173,12 +174,12 @@ export function TestHistoryTabs() {
           value={activeMainTab}
           onValueChange={(value) => setActiveMainTab(value as MainTabType)}
         >
-          <TabsList className="mb-4 grid grid-cols-4 gap-1 bg-background/50">
+          <TabsList className="mb-4 grid grid-cols-4 gap-1 bg-background">
             {contentTabs.map((tab) => (
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="flex items-center gap-2 rounded-xl data-[state=active]:bg-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+                className="flex items-center gap-2 rounded-md data-[state=active]:bg-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
               >
                 {tab.icon}
                 {tab.label}
@@ -193,12 +194,16 @@ export function TestHistoryTabs() {
                 onValueChange={(value) => setActiveSubTab(value as SubTabType)}
                 className="w-full"
               >
-                <TabsList className="mb-6 w-full">
+                <TabsList className="mb-6 gap-2 rounded-lg bg-background p-1">
                   {mainTab.subTabs.map((subTab) => (
                     <TabsTrigger
                       key={subTab.id}
                       value={subTab.value}
-                      className="flex flex-1 items-center gap-2 rounded-xl data-[state=active]:bg-primary/80 data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
+                      className={cn(
+                        "gap-2 rounded-md px-3 py-1.5 text-sm transition-all",
+                        "data-[state=active]:bg-card  data-[state=active]:shadow-sm",
+                        "data-[state=inactive]:text-muted-foreground",
+                      )}
                     >
                       {subTab.label}
                     </TabsTrigger>

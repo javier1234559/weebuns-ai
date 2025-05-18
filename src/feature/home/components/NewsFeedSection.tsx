@@ -84,9 +84,9 @@ const NewsFeedSection = () => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-6 md:!flex-row">
+    <div className="sha flex w-full flex-col gap-6 md:!flex-row">
       {/* Carousel */}
-      <div className="w-full md:w-2/3">
+      <div className="w-full shadow-2xl md:w-2/3">
         <Splide
           className="relative overflow-hidden rounded-lg"
           options={{

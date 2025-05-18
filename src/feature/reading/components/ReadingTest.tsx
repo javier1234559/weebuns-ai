@@ -30,6 +30,7 @@ interface ReadingTestProps {
   questions: QuestionDTO[];
   isPractice?: boolean;
   lessonId: string;
+  timeLimit: number;
   onSubmit?: (data: CreateReadingSubmissionDTO) => void;
   isResultView?: boolean;
   resultReadingData?: {
@@ -46,6 +47,7 @@ export function ReadingTest({
   onSubmit,
   isResultView = false,
   resultReadingData,
+  timeLimit,
 }: ReadingTestProps) {
   const isMobile = useIsMobile();
   const router = useRouter();
@@ -105,11 +107,15 @@ export function ReadingTest({
       content: {
         text: content,
         questions: questions.map((q) => ({
-          ...q,
+          id: q.id,
+          question: q.question,
+          right_answer: q.right_answer,
+          answer_list: q.answer_list,
+          selected_answer: selectedAnswers[q.id],
+          bookmarked: bookmarkedQuestions.has(q.id),
         })),
       },
     };
-
     onSubmit?.(submissionData);
   };
 
@@ -122,15 +128,17 @@ export function ReadingTest({
       <Card className="mb-4 w-full">
         <CardContent className="flex w-full items-center justify-end gap-4 p-4">
           {isPractice && !isResultView && (
-            <Button variant="outline" size="sm" onClick={handleShowAnswers}>
+            <Button variant="outline" onClick={handleShowAnswers}>
               <Eye className="mr-2 size-2" />
               {showCorrectAnswers ? "Hide answers" : "Show answers"}
             </Button>
           )}
 
-          {!isResultView && (
+          {!isResultView && timeLimit && !isPractice && (
             <Timer
-              startTime={new Date(Date.now() + 1000 * 60 * 2).toISOString()}
+              startTime={new Date(
+                Date.now() + 1000 * 60 * timeLimit,
+              ).toISOString()}
               onEnd={handleTimeUp}
               size="large"
             />
@@ -158,7 +166,7 @@ export function ReadingTest({
           )}
 
           {isResultView && (
-            <Button variant="outline" size="sm" onClick={handleBackToHome}>
+            <Button variant="outline" onClick={handleBackToHome}>
               <Home className="mr-2 size-2" />
               Back to Home
             </Button>
@@ -188,6 +196,7 @@ export function ReadingTest({
             <div className="thin-scrollbar h-full overflow-y-auto rounded-md bg-background p-4">
               <MultipleChoiceQuiz
                 questions={questions}
+                showCorrectAnswers={isResultView || showCorrectAnswers}
                 selectedAnswers={
                   isResultView && resultReadingData?.selectedAnswers
                     ? resultReadingData.selectedAnswers
@@ -204,3 +213,5 @@ export function ReadingTest({
     </div>
   );
 }
+
+ReadingTest.displayName = "ReadingTest";

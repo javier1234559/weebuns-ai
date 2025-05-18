@@ -40,7 +40,7 @@ export default function MainProviders({
               <Header />
               {children}
               <Toaster />
-              <ToasterSonner />
+              <ToasterSonner position="top-right"/>
               <AppProgressBar
                 height="4px"
                 color="hsl(var(--primary))"

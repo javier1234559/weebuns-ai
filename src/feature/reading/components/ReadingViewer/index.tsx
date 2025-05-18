@@ -5,49 +5,13 @@ import ReadingNotesView from "./ReadingNotesView";
 
 interface ReadingViewerProps {
   content: string;
-  defaultMode?: "vocabulary" | "notes";
   className?: string;
 }
 
-const ReadingViewer = ({
-  content,
-  defaultMode = "vocabulary",
-  className,
-}: ReadingViewerProps) => {
+const ReadingViewer = ({ content, className }: ReadingViewerProps) => {
   return (
     <div className={cn("w-full space-y-4", className)}>
-      <Tabs defaultValue={defaultMode}>
-        <TabsList className="grid w-full grid-cols-2 bg-card">
-          <TabsTrigger
-            className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-            value="vocabulary"
-          >
-            Chế độ từ vựng
-          </TabsTrigger>
-          <TabsTrigger
-            className="rounded-xl data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-none"
-            value="notes"
-          >
-            Chế độ ghi chú
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="vocabulary" className="mt-4">
-          <ReadingVocabularyView
-            content={content}
-            wordStatuses={{
-              the: {
-                level: 0,
-                isKnown: false,
-              },
-            }}
-          />
-        </TabsContent>
-
-        <TabsContent value="notes" className="mt-4">
-          <ReadingNotesView content={content} />
-        </TabsContent>
-      </Tabs>
+      <ReadingNotesView content={content} />
     </div>
   );
 };
