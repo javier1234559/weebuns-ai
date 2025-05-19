@@ -1456,19 +1456,44 @@ export interface TransactionResponse {
   transaction: Transaction;
 }
 
-import type {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  HeadersDefaults,
-  ResponseType,
-} from "axios";
+export interface CreateNotificationDto {
+  userId: string;
+  type: "system" | "advertisement" | "submission" | "comment_reply" | "comment_mention";
+  title: string;
+  content: string;
+  thumbnailUrl?: string;
+  actionUrl?: string;
+  /** @default false */
+  isGlobal: boolean;
+}
+
+export interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  content: string;
+  thumbnailUrl: string | null;
+  actionUrl: string | null;
+  isGlobal: boolean;
+  userId: object;
+  isRead: boolean;
+  createdById: string;
+  /** @format date-time */
+  createdAt: string;
+  expiresAt: object;
+}
+
+export interface NotificationResponse {
+  data: Notification[];
+  pagination: PaginationOutputDto;
+}
+
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams
-  extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -1483,13 +1508,9 @@ export interface FullRequestParams
   body?: unknown;
 }
 
-export type RequestParams = Omit<
-  FullRequestParams,
-  "body" | "method" | "query" | "path"
->;
+export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
 
-export interface ApiConfig<SecurityDataType = unknown>
-  extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
+export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
     securityData: SecurityDataType | null,
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
@@ -1523,9 +1544,7 @@ export class HttpClient<SecurityDataType = unknown> {
     injectHeaders,
     ...axiosConfig
   }: ApiConfig<SecurityDataType> = {}) {
-    this.instance =
-      instance ??
-      axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
+    this.instance = instance ?? axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -1536,10 +1555,7 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(
-    params1: AxiosRequestConfig,
-    params2?: AxiosRequestConfig,
-  ): AxiosRequestConfig {
+  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
     return {
@@ -1547,11 +1563,7 @@ export class HttpClient<SecurityDataType = unknown> {
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method &&
-          this.instance.defaults.headers[
-            method.toLowerCase() as keyof HeadersDefaults
-          ]) ||
-          {}),
+        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
@@ -1569,15 +1581,11 @@ export class HttpClient<SecurityDataType = unknown> {
   protected createFormData(input: Record<string, unknown>): FormData {
     return Object.keys(input || {}).reduce((formData, key) => {
       const property = input[key];
-      const propertyContent: any[] =
-        property instanceof Array ? property : [property];
+      const propertyContent: any[] = property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(
-          key,
-          isFileType ? formItem : this.stringifyFormItem(formItem),
-        );
+        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
       }
 
       return formData;
@@ -1601,29 +1609,17 @@ export class HttpClient<SecurityDataType = unknown> {
     const requestParams = this.mergeRequestParams(params, secureParams);
     const responseFormat = format || this.format || undefined;
 
-    if (
-      type === ContentType.FormData &&
-      body &&
-      body !== null &&
-      typeof body === "object"
-    ) {
+    if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
       body = this.createFormData(body as Record<string, unknown>);
     }
 
-    if (
-      type === ContentType.Text &&
-      body &&
-      body !== null &&
-      typeof body !== "string"
-    ) {
+    if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
       body = JSON.stringify(body);
     }
 
     let headers = {
       ...(requestParams.headers || {}),
-      ...(type && type !== ContentType.FormData
-        ? { "Content-Type": type }
-        : {}),
+      ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
     };
 
     if (this.injectHeaders) {
@@ -1648,9 +1644,7 @@ export class HttpClient<SecurityDataType = unknown> {
  *
  * This docs includes all the endpoints of the weebuns lms api
  */
-export class Api<
-  SecurityDataType extends unknown,
-> extends HttpClient<SecurityDataType> {
+export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
     /**
      * No description
@@ -1691,10 +1685,7 @@ export class Api<
      * @name AiControllerCheckGrammar
      * @request POST:/api/ai/check-grammar
      */
-    aiControllerCheckGrammar: (
-      data: CheckGrammarDto,
-      params: RequestParams = {},
-    ) =>
+    aiControllerCheckGrammar: (data: CheckGrammarDto, params: RequestParams = {}) =>
       this.request<CheckGrammarResponseDto, any>({
         path: `/api/ai/check-grammar`,
         method: "POST",
@@ -1748,10 +1739,7 @@ export class Api<
      * @name AiControllerTextToSpeech
      * @request POST:/api/ai/tts/convert
      */
-    aiControllerTextToSpeech: (
-      data: TextToSpeechDto,
-      params: RequestParams = {},
-    ) =>
+    aiControllerTextToSpeech: (data: TextToSpeechDto, params: RequestParams = {}) =>
       this.request<TextToSpeechResponseDto, any>({
         path: `/api/ai/tts/convert`,
         method: "POST",
@@ -1800,10 +1788,7 @@ export class Api<
      * @summary Stream chat response
      * @request POST:/api/ai/chat-streaming
      */
-    aiControllerChatStreaming: (
-      data: ChatRequestDto,
-      params: RequestParams = {},
-    ) =>
+    aiControllerChatStreaming: (data: ChatRequestDto, params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/api/ai/chat-streaming`,
         method: "POST",
@@ -1820,10 +1805,7 @@ export class Api<
      * @name AiControllerStartSpeaking
      * @request POST:/api/ai/speaking/start
      */
-    aiControllerStartSpeaking: (
-      data: StartSpeakingDto,
-      params: RequestParams = {},
-    ) =>
+    aiControllerStartSpeaking: (data: StartSpeakingDto, params: RequestParams = {}) =>
       this.request<StartSpeakingResponseDto, any>({
         path: `/api/ai/speaking/start`,
         method: "POST",
@@ -1857,10 +1839,7 @@ export class Api<
      * @name AiControllerEvaluateEssay
      * @request POST:/api/ai/evaluate-essay
      */
-    aiControllerEvaluateEssay: (
-      data: EvaluateEssayDto,
-      params: RequestParams = {},
-    ) =>
+    aiControllerEvaluateEssay: (data: EvaluateEssayDto, params: RequestParams = {}) =>
       this.request<EvaluateEssayResponseDto, any>({
         path: `/api/ai/evaluate-essay`,
         method: "POST",
@@ -1877,10 +1856,7 @@ export class Api<
      * @name AiControllerRecommendAnswer
      * @request GET:/api/ai/speaking/recommend-answer/{sessionId}
      */
-    aiControllerRecommendAnswer: (
-      sessionId: string,
-      params: RequestParams = {},
-    ) =>
+    aiControllerRecommendAnswer: (sessionId: string, params: RequestParams = {}) =>
       this.request<RecommendAnswerResponseDto, any>({
         path: `/api/ai/speaking/recommend-answer/${sessionId}`,
         method: "GET",
@@ -1896,10 +1872,7 @@ export class Api<
      * @summary Stream chat speaking response
      * @request POST:/api/ai/speaking/chat-streaming
      */
-    aiControllerChatSpeakingStreaming: (
-      data: SpeakingDto,
-      params: RequestParams = {},
-    ) =>
+    aiControllerChatSpeakingStreaming: (data: SpeakingDto, params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/api/ai/speaking/chat-streaming`,
         method: "POST",
@@ -1982,10 +1955,7 @@ export class Api<
      * @request GET:/api/users/username/{username}
      * @secure
      */
-    userControllerFindByUsername: (
-      username: string,
-      params: RequestParams = {},
-    ) =>
+    userControllerFindByUsername: (username: string, params: RequestParams = {}) =>
       this.request<UserResponse, any>({
         path: `/api/users/username/${username}`,
         method: "GET",
@@ -2002,10 +1972,7 @@ export class Api<
      * @request POST:/api/users/teachers
      * @secure
      */
-    userControllerCreateTeacher: (
-      data: TeacherDto,
-      params: RequestParams = {},
-    ) =>
+    userControllerCreateTeacher: (data: TeacherDto, params: RequestParams = {}) =>
       this.request<UserResponse, any>({
         path: `/api/users/teachers`,
         method: "POST",
@@ -2024,11 +1991,7 @@ export class Api<
      * @request PATCH:/api/users/teachers/{id}
      * @secure
      */
-    userControllerUpdateTeacher: (
-      id: string,
-      data: TeacherDto,
-      params: RequestParams = {},
-    ) =>
+    userControllerUpdateTeacher: (id: string, data: TeacherDto, params: RequestParams = {}) =>
       this.request<UserResponse, any>({
         path: `/api/users/teachers/${id}`,
         method: "PATCH",
@@ -2047,11 +2010,7 @@ export class Api<
      * @request PATCH:/api/users/teachers/{id}/profile
      * @secure
      */
-    userControllerUpdateTeacherProfile: (
-      id: string,
-      data: ProfileDto,
-      params: RequestParams = {},
-    ) =>
+    userControllerUpdateTeacherProfile: (id: string, data: ProfileDto, params: RequestParams = {}) =>
       this.request<UserResponse, any>({
         path: `/api/users/teachers/${id}/profile`,
         method: "PATCH",
@@ -2070,11 +2029,7 @@ export class Api<
      * @request PATCH:/api/users/students/{id}/profile
      * @secure
      */
-    userControllerUpdateStudentProfile: (
-      id: string,
-      data: ProfileDto,
-      params: RequestParams = {},
-    ) =>
+    userControllerUpdateStudentProfile: (id: string, data: ProfileDto, params: RequestParams = {}) =>
       this.request<UserResponse, any>({
         path: `/api/users/students/${id}/profile`,
         method: "PATCH",
@@ -2141,10 +2096,7 @@ export class Api<
      * @name AuthControllerLoginWithGoogle
      * @request POST:/api/auth/login/google
      */
-    authControllerLoginWithGoogle: (
-      data: LoginGoogleDto,
-      params: RequestParams = {},
-    ) =>
+    authControllerLoginWithGoogle: (data: LoginGoogleDto, params: RequestParams = {}) =>
       this.request<UserLoginResponse, void>({
         path: `/api/auth/login/google`,
         method: "POST",
@@ -2161,10 +2113,7 @@ export class Api<
      * @name AuthControllerLoginWithFacebook
      * @request POST:/api/auth/login/facebook
      */
-    authControllerLoginWithFacebook: (
-      data: LoginFacebookDto,
-      params: RequestParams = {},
-    ) =>
+    authControllerLoginWithFacebook: (data: LoginFacebookDto, params: RequestParams = {}) =>
       this.request<UserLoginResponse, void>({
         path: `/api/auth/login/facebook`,
         method: "POST",
@@ -2211,10 +2160,7 @@ export class Api<
      * @name AuthControllerRequestPasswordReset
      * @request POST:/api/auth/password-reset/request
      */
-    authControllerRequestPasswordReset: (
-      data: RequestResetPasswordDto,
-      params: RequestParams = {},
-    ) =>
+    authControllerRequestPasswordReset: (data: RequestResetPasswordDto, params: RequestParams = {}) =>
       this.request<RequestResetPasswordResponse, void>({
         path: `/api/auth/password-reset/request`,
         method: "POST",
@@ -2231,10 +2177,7 @@ export class Api<
      * @name AuthControllerVerifyResetCode
      * @request POST:/api/auth/password-reset/verify
      */
-    authControllerVerifyResetCode: (
-      data: VerifyResetCodeDto,
-      params: RequestParams = {},
-    ) =>
+    authControllerVerifyResetCode: (data: VerifyResetCodeDto, params: RequestParams = {}) =>
       this.request<VerifyResetCodeResponse, void>({
         path: `/api/auth/password-reset/verify`,
         method: "POST",
@@ -2251,10 +2194,7 @@ export class Api<
      * @name AuthControllerResetPassword
      * @request POST:/api/auth/password-reset/reset
      */
-    authControllerResetPassword: (
-      data: ResetPasswordDto,
-      params: RequestParams = {},
-    ) =>
+    authControllerResetPassword: (data: ResetPasswordDto, params: RequestParams = {}) =>
       this.request<ResetPasswordResponse, void>({
         path: `/api/auth/password-reset/reset`,
         method: "POST",
@@ -2430,11 +2370,7 @@ export class Api<
      * @request PATCH:/api/lessons/reading/{id}
      * @secure
      */
-    lessonControllerUpdateReading: (
-      id: string,
-      data: UpdateReadingDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerUpdateReading: (id: string, data: UpdateReadingDTO, params: RequestParams = {}) =>
       this.request<ReadingResponse, any>({
         path: `/api/lessons/reading/${id}`,
         method: "PATCH",
@@ -2453,10 +2389,7 @@ export class Api<
      * @request POST:/api/lessons/reading
      * @secure
      */
-    lessonControllerCreateReading: (
-      data: CreateReadingDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerCreateReading: (data: CreateReadingDTO, params: RequestParams = {}) =>
       this.request<ReadingResponse, any>({
         path: `/api/lessons/reading`,
         method: "POST",
@@ -2475,10 +2408,7 @@ export class Api<
      * @request GET:/api/lessons/listening/{id}
      * @secure
      */
-    lessonControllerFindOneListening: (
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerFindOneListening: (id: string, params: RequestParams = {}) =>
       this.request<ListeningResponse, any>({
         path: `/api/lessons/listening/${id}`,
         method: "GET",
@@ -2495,11 +2425,7 @@ export class Api<
      * @request PATCH:/api/lessons/listening/{id}
      * @secure
      */
-    lessonControllerUpdateListening: (
-      id: string,
-      data: UpdateListeningDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerUpdateListening: (id: string, data: UpdateListeningDTO, params: RequestParams = {}) =>
       this.request<ListeningResponse, any>({
         path: `/api/lessons/listening/${id}`,
         method: "PATCH",
@@ -2518,10 +2444,7 @@ export class Api<
      * @request POST:/api/lessons/listening
      * @secure
      */
-    lessonControllerCreateListening: (
-      data: CreateListeningDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerCreateListening: (data: CreateListeningDTO, params: RequestParams = {}) =>
       this.request<ListeningResponse, any>({
         path: `/api/lessons/listening`,
         method: "POST",
@@ -2557,11 +2480,7 @@ export class Api<
      * @request PATCH:/api/lessons/writing/{id}
      * @secure
      */
-    lessonControllerUpdateWriting: (
-      id: string,
-      data: UpdateWritingDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerUpdateWriting: (id: string, data: UpdateWritingDTO, params: RequestParams = {}) =>
       this.request<WritingResponse, any>({
         path: `/api/lessons/writing/${id}`,
         method: "PATCH",
@@ -2580,10 +2499,7 @@ export class Api<
      * @request POST:/api/lessons/writing
      * @secure
      */
-    lessonControllerCreateWriting: (
-      data: CreateWritingDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerCreateWriting: (data: CreateWritingDTO, params: RequestParams = {}) =>
       this.request<WritingResponse, any>({
         path: `/api/lessons/writing`,
         method: "POST",
@@ -2619,11 +2535,7 @@ export class Api<
      * @request PATCH:/api/lessons/speaking/{id}
      * @secure
      */
-    lessonControllerUpdateSpeaking: (
-      id: string,
-      data: UpdateSpeakingDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerUpdateSpeaking: (id: string, data: UpdateSpeakingDTO, params: RequestParams = {}) =>
       this.request<SpeakingResponse, any>({
         path: `/api/lessons/speaking/${id}`,
         method: "PATCH",
@@ -2642,10 +2554,7 @@ export class Api<
      * @request POST:/api/lessons/speaking
      * @secure
      */
-    lessonControllerCreateSpeaking: (
-      data: CreateSpeakingDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonControllerCreateSpeaking: (data: CreateSpeakingDTO, params: RequestParams = {}) =>
       this.request<SpeakingResponse, any>({
         path: `/api/lessons/speaking`,
         method: "POST",
@@ -2664,10 +2573,7 @@ export class Api<
      * @request POST:/api/comments
      * @secure
      */
-    commentControllerCreate: (
-      data: CreateCommentDto,
-      params: RequestParams = {},
-    ) =>
+    commentControllerCreate: (data: CreateCommentDto, params: RequestParams = {}) =>
       this.request<CreateCommentResponse, any>({
         path: `/api/comments`,
         method: "POST",
@@ -2742,11 +2648,7 @@ export class Api<
      * @request POST:/api/comments/{id}/reactions
      * @secure
      */
-    commentControllerAddReaction: (
-      id: string,
-      data: AddReactionDto,
-      params: RequestParams = {},
-    ) =>
+    commentControllerAddReaction: (id: string, data: AddReactionDto, params: RequestParams = {}) =>
       this.request<AddReactionResponse, any>({
         path: `/api/comments/${id}/reactions`,
         method: "POST",
@@ -2842,10 +2744,7 @@ export class Api<
      * @request DELETE:/api/lesson-submissions/{id}
      * @secure
      */
-    lessonSubmissionControllerRemove: (
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerRemove: (id: string, params: RequestParams = {}) =>
       this.request<DeleteLessonSubmissionResponse, any>({
         path: `/api/lesson-submissions/${id}`,
         method: "DELETE",
@@ -2862,10 +2761,7 @@ export class Api<
      * @request GET:/api/lesson-submissions/reading/{id}
      * @secure
      */
-    lessonSubmissionControllerFindOneReading: (
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerFindOneReading: (id: string, params: RequestParams = {}) =>
       this.request<ReadingSubmissionResponse, any>({
         path: `/api/lesson-submissions/reading/${id}`,
         method: "GET",
@@ -2882,10 +2778,7 @@ export class Api<
      * @request POST:/api/lesson-submissions/reading
      * @secure
      */
-    lessonSubmissionControllerCreateReading: (
-      data: CreateReadingSubmissionDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerCreateReading: (data: CreateReadingSubmissionDTO, params: RequestParams = {}) =>
       this.request<ReadingSubmissionResponse, any>({
         path: `/api/lesson-submissions/reading`,
         method: "POST",
@@ -2904,10 +2797,7 @@ export class Api<
      * @request GET:/api/lesson-submissions/listening/{id}
      * @secure
      */
-    lessonSubmissionControllerFindOneListening: (
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerFindOneListening: (id: string, params: RequestParams = {}) =>
       this.request<ListeningSubmissionResponse, any>({
         path: `/api/lesson-submissions/listening/${id}`,
         method: "GET",
@@ -2924,10 +2814,7 @@ export class Api<
      * @request POST:/api/lesson-submissions/listening
      * @secure
      */
-    lessonSubmissionControllerCreateListening: (
-      data: CreateListeningSubmissionDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerCreateListening: (data: CreateListeningSubmissionDTO, params: RequestParams = {}) =>
       this.request<ListeningSubmissionResponse, any>({
         path: `/api/lesson-submissions/listening`,
         method: "POST",
@@ -2946,10 +2833,7 @@ export class Api<
      * @request GET:/api/lesson-submissions/speaking/{id}
      * @secure
      */
-    lessonSubmissionControllerFindOneSpeaking: (
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerFindOneSpeaking: (id: string, params: RequestParams = {}) =>
       this.request<SpeakingSubmissionResponse, any>({
         path: `/api/lesson-submissions/speaking/${id}`,
         method: "GET",
@@ -2966,10 +2850,7 @@ export class Api<
      * @request POST:/api/lesson-submissions/speaking
      * @secure
      */
-    lessonSubmissionControllerCreateSpeaking: (
-      data: CreateSpeakingSubmissionDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerCreateSpeaking: (data: CreateSpeakingSubmissionDTO, params: RequestParams = {}) =>
       this.request<SpeakingSubmissionResponse, any>({
         path: `/api/lesson-submissions/speaking`,
         method: "POST",
@@ -2988,10 +2869,7 @@ export class Api<
      * @request GET:/api/lesson-submissions/writing/{id}
      * @secure
      */
-    lessonSubmissionControllerFindOneWriting: (
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerFindOneWriting: (id: string, params: RequestParams = {}) =>
       this.request<WritingSubmissionResultResponse, any>({
         path: `/api/lesson-submissions/writing/${id}`,
         method: "GET",
@@ -3031,10 +2909,7 @@ export class Api<
      * @request POST:/api/lesson-submissions/writing
      * @secure
      */
-    lessonSubmissionControllerCreateWriting: (
-      data: CreateWritingSubmissionDTO,
-      params: RequestParams = {},
-    ) =>
+    lessonSubmissionControllerCreateWriting: (data: CreateWritingSubmissionDTO, params: RequestParams = {}) =>
       this.request<WritingSubmissionResponse, any>({
         path: `/api/lesson-submissions/writing`,
         method: "POST",
@@ -3054,10 +2929,7 @@ export class Api<
      * @request POST:/api/vocabularies
      * @secure
      */
-    vocabularyControllerCreate: (
-      data: CreateVocabularyDto,
-      params: RequestParams = {},
-    ) =>
+    vocabularyControllerCreate: (data: CreateVocabularyDto, params: RequestParams = {}) =>
       this.request<VocabularyResponseDto, any>({
         path: `/api/vocabularies`,
         method: "POST",
@@ -3143,11 +3015,7 @@ export class Api<
      * @request PATCH:/api/vocabularies/{id}
      * @secure
      */
-    vocabularyControllerUpdate: (
-      id: string,
-      data: UpdateVocabularyDto,
-      params: RequestParams = {},
-    ) =>
+    vocabularyControllerUpdate: (id: string, data: UpdateVocabularyDto, params: RequestParams = {}) =>
       this.request<VocabularyResponseDto, any>({
         path: `/api/vocabularies/${id}`,
         method: "PATCH",
@@ -3185,11 +3053,7 @@ export class Api<
      * @request PATCH:/api/vocabularies/{id}/review
      * @secure
      */
-    vocabularyControllerUpdateReviewStatus: (
-      id: string,
-      data: UpdateVocabularyReviewDto,
-      params: RequestParams = {},
-    ) =>
+    vocabularyControllerUpdateReviewStatus: (id: string, data: UpdateVocabularyReviewDto, params: RequestParams = {}) =>
       this.request<VocabularyResponseDto, any>({
         path: `/api/vocabularies/${id}/review`,
         method: "PATCH",
@@ -3207,10 +3071,7 @@ export class Api<
      * @name PaymentControllerHandleCallback
      * @request POST:/api/payments/{provider}/callback
      */
-    paymentControllerHandleCallback: (
-      provider: string,
-      params: RequestParams = {},
-    ) =>
+    paymentControllerHandleCallback: (provider: string, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/payments/${provider}/callback`,
         method: "POST",
@@ -3259,10 +3120,7 @@ export class Api<
      * @request POST:/api/token/charge
      * @secure
      */
-    tokenControllerCreateTransaction: (
-      data: CreateTransactionDto,
-      params: RequestParams = {},
-    ) =>
+    tokenControllerCreateTransaction: (data: CreateTransactionDto, params: RequestParams = {}) =>
       this.request<PaymentUrlResponse, any>({
         path: `/api/token/charge`,
         method: "POST",
@@ -3343,10 +3201,7 @@ export class Api<
      * @request POST:/api/token/use
      * @secure
      */
-    tokenControllerUseTokens: (
-      data: UseTokensDto,
-      params: RequestParams = {},
-    ) =>
+    tokenControllerUseTokens: (data: UseTokensDto, params: RequestParams = {}) =>
       this.request<TransactionResponse, any>({
         path: `/api/token/use`,
         method: "POST",
@@ -3354,6 +3209,108 @@ export class Api<
         secure: true,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerSendNotification
+     * @request POST:/api/notifications/send
+     * @secure
+     */
+    notificationControllerSendNotification: (data: CreateNotificationDto, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/send`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerGetUserNotifications
+     * @request GET:/api/notifications
+     * @secure
+     */
+    notificationControllerGetUserNotifications: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        userId?: string;
+        isGlobal?: boolean;
+        type?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationResponse, any>({
+        path: `/api/notifications`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerMarkAsRead
+     * @request PATCH:/api/notifications/{id}/read
+     * @secure
+     */
+    notificationControllerMarkAsRead: (id: string, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/${id}/read`,
+        method: "PATCH",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerDeleteNotification
+     * @request DELETE:/api/notifications/{id}
+     * @secure
+     */
+    notificationControllerDeleteNotification: (id: string, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/${id}`,
+        method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationGatewayStream
+     * @request GET:/api/notifications-sse/stream
+     */
+    notificationGatewayStream: (
+      query: {
+        userId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/notifications-sse/stream`,
+        method: "GET",
+        query: query,
         ...params,
       }),
   };

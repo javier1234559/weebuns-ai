@@ -1,62 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { BellRing } from "lucide-react";
-import NotificationCard from "./NotificationCard";
-import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
 import Image from "next/image";
 import Link from "next/link";
-import { NotificationType } from "@/types/notification";
+import NotificationView from "@/feature/notification/views/NotificationView";
 
 const NewsFeedSection = () => {
-  const notifications = [
-    {
-      title: "Bạn đã gửi bài viết để kiểm tra",
-      link: "/luyen-thi/ielts/writing/task-1?status=unfinished",
-      dateCreated: "2024-05-06T12:17:23.345Z",
-      isRead: false,
-      type: "submission",
-      userData: {
-        user_created: "cc6ca7ca-ebd3-492f-a23b-0f5c0bde2098",
-        date_updated: "2025-01-17T07:57:47.213Z",
-      },
-    },
-    {
-      title: "Luyện Writing AI / Reading / Listening FREE",
-      link: "/luyen-thi/ielts/writing/task-1?status=unfinished",
-      dateCreated: "2024-05-06T12:17:23.345Z",
-      isRead: false,
-      type: "advertisement",
-      userData: {
-        user_created: "cc6ca7ca-ebd3-492f-a23b-0f5c0bde2098",
-        date_updated: "2025-01-17T07:57:47.213Z",
-      },
-    },
-    {
-      title: "John Doe đã bình luận bài viết của bạn",
-      link: "/luyen-thi/ielts/writing/task-1?status=unfinished",
-      dateCreated: "2024-05-06T12:17:23.345Z",
-      isRead: false,
-      type: "comment_reply",
-      userData: {
-        user_created: "cc6ca7ca-ebd3-492f-a23b-0f5c0bde2098",
-        date_updated: "2025-01-17T07:57:47.213Z",
-      },
-    },
-    {
-      title: "John Doe đã nhắc đến bạn trong bài viết",
-      link: "/luyen-thi/ielts/writing/task-1?status=unfinished",
-      dateCreated: "2024-05-06T12:17:23.345Z",
-      isRead: false,
-      type: "comment_mention",
-      userData: {
-        user_created: "cc6ca7ca-ebd3-492f-a23b-0f5c0bde2098",
-        date_updated: "2025-01-17T07:57:47.213Z",
-      },
-    },
-  ];
 
   const carouselItems = [
     {
@@ -78,10 +28,6 @@ const NewsFeedSection = () => {
       link: "/ielts-reading-guide",
     },
   ];
-
-  const handleNotificationClick = (notification: any) => {
-    console.log("clicked", notification);
-  };
 
   return (
     <div className="sha flex w-full flex-col gap-6 md:!flex-row">
@@ -117,32 +63,7 @@ const NewsFeedSection = () => {
         </Splide>
       </div>
 
-      {/* Panel */}
-      <Card className="md:aspect-none relative aspect-square w-full sm:aspect-video md:w-1/3">
-        <div className="flex items-center justify-between border-b p-4">
-          <div className="flex items-center gap-2">
-            <BellRing className="size-4 text-gray-500" />
-            <h2 className="font-medium">Trung tâm thông báo</h2>
-          </div>
-          <Button variant="link" className="text-sm text-blue-500">
-            Xem tất cả
-          </Button>
-        </div>
-        <CardContent className="thin-scrollbar max-h-[224px] overflow-y-auto rounded-lg p-1">
-          <div className="divide-y">
-            {notifications.map((notification, index) => (
-              <NotificationCard
-                key={index}
-                {...notification}
-                type={notification.type as NotificationType}
-                onClick={() => {
-                  handleNotificationClick(notification);
-                }}
-              />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      <NotificationView />
     </div>
   );
 };

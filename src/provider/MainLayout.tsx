@@ -8,8 +8,8 @@ import Footer from "@/components/layout/footer";
 import Header from "@/components/layout/header";
 import { AppProgressBar } from "next-nprogress-bar";
 import { Toaster as ToasterSonner } from "@/components/ui/sonner";
-import { Toaster } from "@/components/ui/toaster";
 import { ConfirmDialogProvider } from "@/components/common/app-confirm-dialog";
+import NotificationEvent from "@/feature/notification/components/NotificationEvent";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,8 +39,8 @@ export default function MainProviders({
             <div className="flex min-h-screen flex-col">
               <Header />
               {children}
-              <Toaster />
               <ToasterSonner position="top-right"/>
+              <NotificationEvent />
               <AppProgressBar
                 height="4px"
                 color="hsl(var(--primary))"
