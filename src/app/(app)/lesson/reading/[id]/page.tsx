@@ -23,7 +23,7 @@ export default function ReadingPageDetail({ params }: PageProps) {
       </div>
 
       <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
-        <CommentSystemView identifierId={`reading-detail-${id}`} />
+        <CommentSystemView identifierId={`readingDetail_${id}`} />
       </div>
     </div>
   );

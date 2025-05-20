@@ -43,7 +43,9 @@ export function NotificationToast({
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <h3 className="mb-1 line-clamp-1 text-sm font-semibold">{title}</h3>
+          <h3 className="mb-1 line-clamp-2 max-w-[240px] text-sm font-semibold">
+            {title}
+          </h3>
           <p className="line-clamp-2 max-w-[240px] text-sm text-muted-foreground">
             {content}
           </p>
@@ -63,16 +65,18 @@ export function NotificationToast({
   );
 
   if (actionUrl) {
+    console.log("actionUrl", actionUrl);
     return (
-      <Link
+      <a
         href={actionUrl}
+        target="_blank"
         className={cn(
           "block w-full transition-opacity duration-200 hover:opacity-80",
           className,
         )}
       >
         {toastContent}
-      </Link>
+      </a>
     );
   }
 

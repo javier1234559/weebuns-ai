@@ -51,7 +51,7 @@ export default function WritingPage() {
       </div>
 
       <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
-        <CommentSystemView identifierId={"writing-all"} />
+        <CommentSystemView identifierId={"writingAll"} />
       </div>
     </div>
   );

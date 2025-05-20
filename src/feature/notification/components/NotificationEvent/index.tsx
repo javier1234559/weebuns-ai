@@ -8,7 +8,6 @@ import { NotificationData, NotificationToast } from "./NotificationToast";
 
 export default function NotificationEvent() {
   const user = useAuthStore((state) => state.user);
-  console.log("NotificationEvent  MOUNTED");
 
   useEffect(() => {
     if (!user) return;

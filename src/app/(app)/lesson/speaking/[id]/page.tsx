@@ -28,7 +28,7 @@ export default function SpeakingPageDetail({
       </div>
 
       <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
-        <CommentSystemView identifierId={`speaking-detail-${id}`} />
+        <CommentSystemView identifierId={`speakingDetail_${id}`} />
       </div>
     </div>
   );

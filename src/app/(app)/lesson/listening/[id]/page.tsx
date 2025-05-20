@@ -26,7 +26,7 @@ export default function ListeningPageDetail({
       </div>
 
       <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
-        <CommentSystemView identifierId={`listening-detail-${id}`} />
+        <CommentSystemView identifierId={`listeningDetail_${id}`} />
       </div>
     </div>
   );

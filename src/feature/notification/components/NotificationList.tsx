@@ -31,8 +31,8 @@ export default function NotificationList({
               type={notification.type as NotificationType}
               title={notification.title}
               content={notification.content}
-              thumbnailUrl={notification.thumbnailUrl}
-              actionUrl={notification.actionUrl}
+              thumbnailUrl={notification.thumbnailUrl ?? undefined}
+              actionUrl={notification.actionUrl ?? undefined}
               isGlobal={notification.isGlobal}
               userId={notification.userId}
               isRead={notification.isRead}

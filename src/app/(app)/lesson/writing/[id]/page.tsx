@@ -29,7 +29,7 @@ export default function WritingPageDetail({
       </div>
 
       <div className="mx-2 my-10 rounded-xl bg-card p-4 md:mx-0">
-        <CommentSystemView identifierId={`writing-detail-${id}`} />
+        <CommentSystemView identifierId={`writingDetail_${id}`} />
       </div>
     </div>
   );
