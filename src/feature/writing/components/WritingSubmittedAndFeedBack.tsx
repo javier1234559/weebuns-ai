@@ -9,7 +9,7 @@ import { SampleTab } from "./result/SampleTab";
 import { useState } from "react";
 import { SampleEssayDTO, WritingSubmission } from "@/services/swagger-types";
 import { cn } from "@/lib/utils";
-import { mergeContentHtml } from "@/feature/writing/utils";
+import { mergedContentHtml } from "@/feature/writing/utils";
 
 interface WritingSubmittedAndFeedBackProps {
   data: WritingSubmission;
@@ -20,7 +20,7 @@ export default function WritingSubmittedAndFeedBack({
   data,
   exampleEssay,
 }: WritingSubmittedAndFeedBackProps) {
-  const [selectedTab, setSelectedTab] = useState<string>("original");
+  const [selectedTab, setSelectedTab] = useState<string>("evaluation");
 
   const tabs = [
     {
@@ -29,7 +29,7 @@ export default function WritingSubmittedAndFeedBack({
       icon: Clock,
       component: (
         <OriginalTab
-          data={mergeContentHtml(
+          data={mergedContentHtml(
             data.content?.user_data ?? {
               instruction: "",
               body1: "",
@@ -50,7 +50,7 @@ export default function WritingSubmittedAndFeedBack({
       value: "sample",
       label: "Sample Essay",
       icon: BookOpen,
-      component: <SampleTab data={mergeContentHtml(exampleEssay)} />,
+      component: <SampleTab data={mergedContentHtml(exampleEssay)} />,
     },
   ];
 

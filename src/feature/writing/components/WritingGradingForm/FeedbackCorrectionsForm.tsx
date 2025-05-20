@@ -1,7 +1,8 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { WritingGradingFormValues, Correction } from "./schema";
-import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import {
@@ -64,7 +65,7 @@ export function FeedbackCorrectionsForm({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 border-t border-primary/30 pt-4">
       {selectedText && (
         <div className="rounded-md border border-primary/30 bg-primary/5 p-3">
           <div className="mb-2">
@@ -137,7 +138,7 @@ export function FeedbackCorrectionsForm({
         </div>
       )}
 
-      <div className="space-y-3">
+      <div className="thin-scrollbar max-h-[500px] space-y-3 overflow-y-auto">
         {corrections.map((correction) => (
           <div
             key={correction.id}

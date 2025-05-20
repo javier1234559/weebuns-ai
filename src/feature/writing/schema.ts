@@ -27,8 +27,12 @@ export type ContentWritingSubmissionDTO = z.infer<
 >;
 
 export const defaultValues: UserDataDTO = {
-  instruction: "Relocating for work is common and offers more benefits than challenges.",
-  body1: "There are some drawbacks when people move for better job opportunities.",
-  body2: "However, the benefits, especially in career prospects and personal growth, outweigh the negatives.",
-  conclusion: "Although relocating may cause issues, the personal and professional gains are far more significant.",
+  instruction:
+    "<p>Relocating for work is common and offers more benefits than challenges.</p>",
+  body1:
+    "<p>There are some drawbacks when people move for better job opportunities.</p>",
+  body2:
+    "<p>However, the benefits, especially in career prospects and personal growth, outweigh the negatives.</p>",
+  conclusion:
+    "<p>Although relocating may cause issues, the personal and professional gains are far more significant.</p>",
 };

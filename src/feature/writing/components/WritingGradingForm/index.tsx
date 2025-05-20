@@ -1,10 +1,9 @@
+"use client";
+
 import { WritingSubmission } from "@/services/swagger-types";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Highlighter, Save, Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -136,7 +135,7 @@ export default function WritingGradingForm({
           <div className="flex w-full flex-col gap-4 md:flex-row">
             {/* Left side - Essay and scored criteria */}
             <div className="w-full space-y-4 md:w-3/5">
-              <Card className="shadow-sm">
+              <Card className="border border-gray-200 shadow-lg dark:border-gray-500">
                 <CardContent className="pt-4">
                   <ContentGradingForm
                     selectionMode={selectionMode}
@@ -146,7 +145,7 @@ export default function WritingGradingForm({
                 </CardContent>
               </Card>
 
-              <Card className="shadow-sm">
+              <Card className="border border-gray-200 shadow-lg dark:border-gray-500">
                 <CardHeader className="pb-2">
                   <CardTitle>Grading Criteria</CardTitle>
                 </CardHeader>
@@ -158,7 +157,7 @@ export default function WritingGradingForm({
 
             {/* Right side - Corrections and feedback */}
             <div className="w-full md:w-2/5">
-              <Card className="h-full shadow-sm">
+              <Card className="h-full border border-gray-200 shadow-lg dark:border-gray-500">
                 <CardHeader className="pb-2">
                   <CardTitle>Feedback</CardTitle>
                 </CardHeader>

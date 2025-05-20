@@ -318,4 +318,19 @@
     color: hsl(var(--correction-suggestion-foreground));
   }
 
+  .correction-wrapper {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .correction-wrapper.focused {
+    border: 2px solid black !important;
+    background-color: yellow !important;
+  }
+
+  .temp-highlight {
+    background-color:  hsl(var(--correction-highlight)) !important;
+    border-bottom: 2px solid hsl(var(--correction-highlight-foreground)) !important;
+  }
+
 }
