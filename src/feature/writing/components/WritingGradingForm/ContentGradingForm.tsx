@@ -21,8 +21,6 @@ export function ContentGradingForm({
 }: ContentGradingFormProps) {
   const form = useFormContext<WritingGradingFormValues>();
 
-  console.log(JSON.stringify(form.getValues("corrections"), null, 2));
-
   const essayDisplayRef = useRef<HTMLDivElement>(null);
   const [tempHighlight, setTempHighlight] = useState<{
     text: string;

@@ -2,13 +2,18 @@
 
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/feature/auth/hooks/useLogout";
+import { cn } from "@/lib/utils";
 
-export default function LogoutButton() {
+interface LogoutButtonProps {
+  className?: string;
+}
+
+export default function LogoutButton({ className }: LogoutButtonProps) {
   const { handleLogout } = useLogout();
 
   return (
     <Button
-      className="bg-red-500 hover:bg-red-600"
+      className={cn("bg-red-500 hover:bg-red-600", className)}
       size="sm"
       onClick={handleLogout}
     >

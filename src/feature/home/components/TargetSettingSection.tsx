@@ -10,6 +10,9 @@ import {
   TargetSettingModal,
   TargetFormData,
 } from "@/feature/home/modal/TargetSettingModal";
+import { useAuthStore } from "@/store/auth-store";
+import { useUpdateStudentProfile } from "@/feature/user/hooks/useUser";
+import { toast } from "sonner";
 
 interface ScoreDisplayProps {
   label: string;
@@ -49,36 +52,76 @@ const OverviewCard = ({
 );
 
 export const TargetSettingSection = () => {
+  const { user, setUser } = useAuthStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [data, setData] = useState<TargetFormData>({
-    target_study_duration: 0,
-    target_reading: 7,
-    target_listening: 7,
-    target_writing: 6,
-    target_speaking: 6,
-    next_exam_date: new Date("2025-03-06T05:07:00.323Z"),
-  });
+  const { mutate: updateStudentProfile } = useUpdateStudentProfile();
 
   const calculateOverallScore = () => {
+    if (!user?.studentProfile) return "0.0";
     const scores = [
-      data.target_reading,
-      data.target_listening,
-      data.target_writing,
-      data.target_speaking,
+      user.studentProfile.targetReading ?? 0,
+      user.studentProfile.targetListening ?? 0,
+      user.studentProfile.targetWriting ?? 0,
+      user.studentProfile.targetSpeaking ?? 0,
     ];
     return (scores.reduce((a, b) => a + b, 0) / 4).toFixed(1);
   };
 
   const daysUntilExam = () => {
+    if (!user?.studentProfile?.nextExamDate) return 0;
     const today = new Date();
-    const diffTime = Math.abs(data.next_exam_date.getTime() - today.getTime());
+    const examDate = new Date(user.studentProfile.nextExamDate);
+    const diffTime = Math.abs(examDate.getTime() - today.getTime());
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   };
 
   const handleSubmit = (formData: TargetFormData) => {
-    setData(formData);
+    if (!user?.studentProfile?.id) {
+      toast.error("Không tìm thấy thông tin học sinh");
+      return;
+    }
+
+    updateStudentProfile({
+      id: user.id,
+      data: {
+        targetStudyDuration: formData.target_study_duration,
+        targetReading: formData.target_reading,
+        targetListening: formData.target_listening,
+        targetWriting: formData.target_writing,
+        targetSpeaking: formData.target_speaking,
+        nextExamDate: formData.next_exam_date,
+      },
+    }, {
+      onSuccess: () => {
+        if (user.studentProfile) {
+          setUser({
+            ...user,
+            studentProfile: {
+              ...user.studentProfile,
+              targetStudyDuration: formData.target_study_duration,
+              targetReading: formData.target_reading,
+              targetListening: formData.target_listening,
+              targetWriting: formData.target_writing,
+              targetSpeaking: formData.target_speaking,
+              nextExamDate: formData.next_exam_date,
+            }
+          });
+        }
+        toast.success("Cập nhật thành công");
+      },
+      onError: () => {
+        toast.error("Cập nhật thất bại");
+      },
+    });
     setIsModalOpen(false);
   };
+
+  if (!user?.studentProfile) {
+    return null;
+  }
+
+  const { studentProfile } = user;
+  const nextExamDate = studentProfile.nextExamDate ?? new Date().toISOString();
 
   return (
     <>
@@ -120,7 +163,7 @@ export const TargetSettingSection = () => {
                         Ngày dự thi
                       </div>
                       <div className="text-base font-medium">
-                        {format(data.next_exam_date, "dd/MM/yyyy")}
+                        {format(new Date(nextExamDate), "dd/MM/yyyy")}
                       </div>
                     </div>
                     <div className="text-right">
@@ -139,10 +182,10 @@ export const TargetSettingSection = () => {
 
             {/* Individual Scores */}
             <div className="grid grid-cols-4 gap-3">
-              <ScoreDisplay label="Reading" score={data.target_reading} />
-              <ScoreDisplay label="Listening" score={data.target_listening} />
-              <ScoreDisplay label="Writing" score={data.target_writing} />
-              <ScoreDisplay label="Speaking" score={data.target_speaking} />
+              <ScoreDisplay label="Reading" score={studentProfile.targetReading ?? 0} />
+              <ScoreDisplay label="Listening" score={studentProfile.targetListening ?? 0} />
+              <ScoreDisplay label="Writing" score={studentProfile.targetWriting ?? 0} />
+              <ScoreDisplay label="Speaking" score={studentProfile.targetSpeaking ?? 0} />
             </div>
           </div>
         </CardContent>
@@ -153,8 +196,12 @@ export const TargetSettingSection = () => {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmit}
         initialData={{
-          ...data,
-          next_exam_date: data.next_exam_date.toISOString(),
+          target_study_duration: studentProfile.targetStudyDuration ?? 6,
+          target_reading: studentProfile.targetReading ?? 6,
+          target_listening: studentProfile.targetListening ?? 6,
+          target_writing: studentProfile.targetWriting ?? 6,
+          target_speaking: studentProfile.targetSpeaking ?? 6,
+          next_exam_date: nextExamDate,
         }}
       />
     </>

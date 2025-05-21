@@ -3,7 +3,6 @@ import { INotification, NotificationType } from "@/feature/notification/notifica
 import NotificationCard from "./NotificationCard";
 import { BellRing } from "lucide-react";
 import NotificationShowMore from "./NotificationShowMore";
-
 interface NotificationListProps {
   notifications: INotification[];
   handleNotificationClick: (notification: INotification) => void;

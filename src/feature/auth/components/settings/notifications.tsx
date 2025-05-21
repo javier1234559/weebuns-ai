@@ -1,3 +1,7 @@
+"use client";
+
+import NotificationDialogView from "@/feature/notification/views/NotificationDialogView";
+
 export default function NotificationsView() {
-  return <div>Notifications</div>;
+  return <NotificationDialogView isOpen={true} onClose={() => {}} />;
 }

@@ -399,6 +399,18 @@ export interface DeleteUserResponse {
   message: string;
 }
 
+export interface UpdateUserDto {
+  last_name?: string;
+  first_name?: string;
+  username?: string;
+  email?: string;
+  nativeLanguage?: string;
+  profile_picture?: string;
+  role?: "user" | "admin" | "teacher";
+  auth_provider?: "local" | "google" | "facebook";
+  bio: string;
+}
+
 export interface RegisterDto {
   email: string;
   username: string;
@@ -1054,6 +1066,38 @@ export interface DeleteCommentResponse {
   message: string;
 }
 
+export interface CreateNotificationDto {
+  userId: string;
+  type: "system" | "advertisement" | "submission" | "comment_reply" | "comment_mention";
+  title: string;
+  content: string;
+  thumbnailUrl?: string;
+  actionUrl?: string;
+  /** @default false */
+  isGlobal: boolean;
+}
+
+export interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  content: string;
+  thumbnailUrl: string | null;
+  actionUrl: string | null;
+  isGlobal: boolean;
+  userId: object;
+  isRead: boolean;
+  createdById: string;
+  /** @format date-time */
+  createdAt: string;
+  expiresAt: object;
+}
+
+export interface NotificationResponse {
+  data: Notification[];
+  pagination: PaginationOutputDto;
+}
+
 export interface LessonSubmissionsResponse {
   data: LessonSubmission[];
   pagination: PaginationOutputDto;
@@ -1454,38 +1498,6 @@ export interface UseTokensDto {
 
 export interface TransactionResponse {
   transaction: Transaction;
-}
-
-export interface CreateNotificationDto {
-  userId: string;
-  type: "system" | "advertisement" | "submission" | "comment_reply" | "comment_mention";
-  title: string;
-  content: string;
-  thumbnailUrl?: string;
-  actionUrl?: string;
-  /** @default false */
-  isGlobal: boolean;
-}
-
-export interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  content: string;
-  thumbnailUrl: string | null;
-  actionUrl: string | null;
-  isGlobal: boolean;
-  userId: object;
-  isRead: boolean;
-  createdById: string;
-  /** @format date-time */
-  createdAt: string;
-  expiresAt: object;
-}
-
-export interface NotificationResponse {
-  data: Notification[];
-  pagination: PaginationOutputDto;
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -1943,6 +1955,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/users/${id}`,
         method: "DELETE",
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags users
+     * @name UserControllerUpdateUser
+     * @request PATCH:/api/users/{id}
+     * @secure
+     */
+    userControllerUpdateUser: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
+      this.request<UserResponse, any>({
+        path: `/api/users/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2679,6 +2710,109 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags notifications
+     * @name NotificationControllerSendNotification
+     * @request POST:/api/notifications/send
+     * @secure
+     */
+    notificationControllerSendNotification: (data: CreateNotificationDto, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/send`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerGetUserNotifications
+     * @request GET:/api/notifications
+     * @secure
+     */
+    notificationControllerGetUserNotifications: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        userId?: string;
+        isGlobal?: boolean;
+        type?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationResponse, any>({
+        path: `/api/notifications`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerMarkAsRead
+     * @request PATCH:/api/notifications/{id}/read
+     * @secure
+     */
+    notificationControllerMarkAsRead: (id: string, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/${id}/read`,
+        method: "PATCH",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerDeleteNotification
+     * @request DELETE:/api/notifications/{id}
+     * @secure
+     */
+    notificationControllerDeleteNotification: (id: string, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/${id}`,
+        method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationGatewayStream
+     * @request GET:/api/notifications-sse/stream
+     */
+    notificationGatewayStream: (
+      query: {
+        userId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/notifications-sse/stream`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags lesson-submissions
      * @name LessonSubmissionControllerFindAll
      * @request GET:/api/lesson-submissions
@@ -3145,6 +3279,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         page?: number;
         /** @default 10 */
         perPage?: number;
+        search?: string;
         paymentType?: string;
         status?: string;
         type?: string;
@@ -3176,6 +3311,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         page?: number;
         /** @default 10 */
         perPage?: number;
+        search?: string;
         paymentType?: string;
         status?: string;
         type?: string;
@@ -3209,108 +3345,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         secure: true,
         type: ContentType.Json,
         format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationControllerSendNotification
-     * @request POST:/api/notifications/send
-     * @secure
-     */
-    notificationControllerSendNotification: (data: CreateNotificationDto, params: RequestParams = {}) =>
-      this.request<string, any>({
-        path: `/api/notifications/send`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationControllerGetUserNotifications
-     * @request GET:/api/notifications
-     * @secure
-     */
-    notificationControllerGetUserNotifications: (
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        perPage?: number;
-        userId?: string;
-        isGlobal?: boolean;
-        type?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<NotificationResponse, any>({
-        path: `/api/notifications`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationControllerMarkAsRead
-     * @request PATCH:/api/notifications/{id}/read
-     * @secure
-     */
-    notificationControllerMarkAsRead: (id: string, params: RequestParams = {}) =>
-      this.request<string, any>({
-        path: `/api/notifications/${id}/read`,
-        method: "PATCH",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationControllerDeleteNotification
-     * @request DELETE:/api/notifications/{id}
-     * @secure
-     */
-    notificationControllerDeleteNotification: (id: string, params: RequestParams = {}) =>
-      this.request<string, any>({
-        path: `/api/notifications/${id}`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationGatewayStream
-     * @request GET:/api/notifications-sse/stream
-     */
-    notificationGatewayStream: (
-      query: {
-        userId: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/notifications-sse/stream`,
-        method: "GET",
-        query: query,
         ...params,
       }),
   };

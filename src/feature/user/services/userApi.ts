@@ -1,11 +1,9 @@
 import { handleApiError } from "@/lib/utils";
 import api from "@/services/baseApi";
 import {
-  RequestResetPasswordDto,
-  ResetPasswordDto,
-  VerifyResetCodeDto,
   TeacherDto,
   ProfileDto,
+  UpdateUserDto,
 } from "@/services/swagger-types";
 
 export interface FindAllUserQuery {
@@ -16,6 +14,18 @@ export interface FindAllUserQuery {
 }
 
 const userApi = {
+  updateUser: (id: string, data: UpdateUserDto) =>
+    api
+      .userControllerUpdateUser(id, data)
+      .then((res) => res.data)
+      .catch((error) => {
+        handleApiError(error?.response?.data);
+        throw new Error(
+          error?.response?.data?.error ||
+            "Đã xảy ra lỗi khi cập nhật thông tin",
+        );
+      }),
+
   findByUserName: (username: string) =>
     api
       .userControllerFindByUsername(username)

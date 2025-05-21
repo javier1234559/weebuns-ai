@@ -7,7 +7,10 @@ import { INotification } from "../notification.type";
 import { useEffect } from "react";
 import { useState } from "react";
 
-export default function NotificationView() {
+interface NotificationViewProps {
+  className?: string;
+}
+export default function NotificationView({ className }: NotificationViewProps) {
   const [userId, setUserId] = useState<string>("");
   const user = useAuthStore((state) => state.user);
 

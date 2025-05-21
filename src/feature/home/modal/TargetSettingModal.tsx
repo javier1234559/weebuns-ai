@@ -37,7 +37,7 @@ const formSchema = z.object({
   target_listening: z.number().min(0).max(9).step(0.5),
   target_writing: z.number().min(0).max(9).step(0.5),
   target_speaking: z.number().min(0).max(9).step(0.5),
-  next_exam_date: z.date(),
+  next_exam_date: z.string().datetime()
 });
 
 export type TargetFormData = z.infer<typeof formSchema>;
@@ -61,16 +61,15 @@ export const TargetSettingModal = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...initialData,
-      next_exam_date: new Date(initialData.next_exam_date),
+      next_exam_date: initialData.next_exam_date,
     },
   });
 
-  // Reset form when modal opens with new initial data
   useEffect(() => {
     if (isOpen) {
       form.reset({
         ...initialData,
-        next_exam_date: new Date(initialData.next_exam_date),
+        next_exam_date: initialData.next_exam_date,
       });
     }
   }, [isOpen, initialData, form]);
@@ -209,8 +208,8 @@ export const TargetSettingModal = ({
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
+                        selected={field.value ? new Date(field.value) : undefined}
+                        onSelect={(date) => field.onChange(date?.toISOString())}
                         disabled={(date) =>
                           date < new Date() || date > new Date("2025-12-31")
                         }
