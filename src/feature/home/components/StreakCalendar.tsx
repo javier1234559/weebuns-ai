@@ -45,6 +45,7 @@ interface ActivityData {
 interface StreakCalendarProps {
   activities?: Record<string, ActivityData>;
   initialDate?: Date;
+  onChangeMonthAndYear?: (month: number, year: number) => void;
 }
 
 const calculateIntensity = (activity: ActivityData) => {
@@ -153,6 +154,7 @@ const DayCell = ({
 export const StreakCalendar: React.FC<StreakCalendarProps> = ({
   activities = {},
   initialDate = new Date(),
+  onChangeMonthAndYear,
 }) => {
   const [currentDate, setCurrentDate] = useState(initialDate);
 
@@ -186,13 +188,29 @@ export const StreakCalendar: React.FC<StreakCalendarProps> = ({
     };
   }, [currentDate, activities]);
 
+  const handleNextMonth = () => {
+    setCurrentDate((date) => addMonths(date, 1));
+    onChangeMonthAndYear?.(
+      currentDate.getMonth(),
+      currentDate.getFullYear(),
+    );
+  };
+
+  const handlePrevMonth = () => {
+    setCurrentDate((date) => subMonths(date, 1));
+    onChangeMonthAndYear?.(
+      currentDate.getMonth(),
+      currentDate.getFullYear(),
+    );
+  };
+
   return (
     <div className="w-full px-6">
       <div className="mb-4 flex items-center justify-between">
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setCurrentDate((date) => subMonths(date, 1))}
+          onClick={handlePrevMonth}
           className="hover:bg-primary"
         >
           <ChevronLeft className="size-4" />
@@ -203,7 +221,7 @@ export const StreakCalendar: React.FC<StreakCalendarProps> = ({
         <Button
           variant="ghost"
           size="icon"
-          onClick={() => setCurrentDate((date) => addMonths(date, 1))}
+          onClick={handleNextMonth}
           className="hover:bg-primary"
         >
           <ChevronRight className="size-4" />

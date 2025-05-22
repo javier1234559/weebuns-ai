@@ -1526,6 +1526,45 @@ export interface TransactionResponse {
   transaction: Transaction;
 }
 
+export interface ActivityDataResponse {
+  /**
+   * Record of activities by date
+   * @example {"2025-02-17":{"date":"2025-02-17","reading":2,"listening":1,"writing":0,"speaking":0,"total_time":"3h39m"}}
+   */
+  data: Record<
+    string,
+    {
+      /** @example "2025-02-17" */
+      date?: string;
+      /** @example 2 */
+      reading?: number;
+      /** @example 1 */
+      listening?: number;
+      /** @example 0 */
+      writing?: number;
+      /** @example 0 */
+      speaking?: number;
+      /** @example "3h39m" */
+      total_time?: string;
+    }
+  >;
+}
+
+export interface CreateStudyActivityDto {
+  /** @example "2024-12-20" */
+  date: string;
+  /** @example 30 */
+  reading: number;
+  /** @example 20 */
+  listening: number;
+  /** @example 15 */
+  writing: number;
+  /** @example 25 */
+  speaking: number;
+  /** @example 90 */
+  totalMinutes: number;
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
@@ -3389,6 +3428,63 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags study-activity
+     * @name StudyActivityControllerGetActivitiesByMonth
+     * @request GET:/api/study-activity/{userId}
+     */
+    studyActivityControllerGetActivitiesByMonth: (
+      userId: string,
+      query: {
+        /** @example 2 */
+        month: number;
+        /** @example 2024 */
+        year: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ActivityDataResponse, any>({
+        path: `/api/study-activity/${userId}`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags study-activity
+     * @name StudyActivityControllerUpsertActivity
+     * @request POST:/api/study-activity/{userId}
+     */
+    studyActivityControllerUpsertActivity: (userId: string, data: CreateStudyActivityDto, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/study-activity/${userId}`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags study-activity
+     * @name StudyActivityControllerDeleteActivity
+     * @request DELETE:/api/study-activity/{userId}/{date}
+     */
+    studyActivityControllerDeleteActivity: (userId: string, date: string, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/study-activity/${userId}/${date}`,
+        method: "DELETE",
         format: "json",
         ...params,
       }),

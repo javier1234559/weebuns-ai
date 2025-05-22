@@ -25,7 +25,7 @@ export function WritingDetailView({
 
   const handleSubmit = async (data: CreateWritingSubmissionDTO) => {
     const submission = await submitWritingMutation.mutateAsync(data);
-    const submissionId = submission.data.id;
+    const submissionId = submission.data.id ?? "";
     if (submissionId) {
       toast.success("Lesson submitted successfully. Navigate to result page");
       const path = replaceRouteName(RouteNames.WritingResult, {
@@ -57,6 +57,8 @@ export function WritingDetailView({
       content={data?.data.content ?? undefined}
       lessonId={id}
       createdBy={data?.data.createdBy}
+      isPractice={data?.data.lessonType === "practice"}
+      timeLimit={data?.data.timeLimit ?? undefined}
     />
   );
 }

@@ -17,6 +17,8 @@ import { useRouter } from "next/navigation";
 import { ReadingResultFeedback } from "@/feature/reading/components/ReadingResultFeedback";
 import { RouteNames } from "@/constraints/route-name";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
+import { CountUpTimer } from "@/components/feature/CountUpTimer";
 
 interface ReadingFeedback {
   accuracy: number;
@@ -62,6 +64,38 @@ export function ReadingTest({
     new Set(),
   );
 
+  const handleSubmit = () => {
+    const submissionData: CreateReadingSubmissionDTO = {
+      lessonId: lessonId,
+      submissionType: "reading",
+      tokensUsed: 0,
+      content: {
+        text: content,
+        questions: questions.map((q) => ({
+          id: q.id,
+          question: q.question,
+          right_answer: q.right_answer,
+          answer_list: q.answer_list,
+          selected_answer: selectedAnswers[q.id],
+          bookmarked: bookmarkedQuestions.has(q.id),
+        })),
+      },
+    };
+    onSubmit?.(submissionData);
+    handleSubmitActivity();
+  };
+
+  const {
+    timerRef,
+    handleTimeUp: handleActivityTimeUp,
+    handleSubmit: handleSubmitActivity,
+  } = useActivityTracking({
+    skill: "reading",
+    isPractice,
+    timeLimit,
+    onTimeUp: handleSubmit,
+  });
+
   const handleAnswerSelect = (questionId: string, answer: string) => {
     setSelectedAnswers((prev) => ({
       ...prev,
@@ -69,9 +103,6 @@ export function ReadingTest({
     }));
   };
 
-  const handleTimeUp = () => {
-    console.log("Time up");
-  };
 
   const handleQuestionSelect = (id: string) => {
     setCurrentQuestionId(id);
@@ -99,26 +130,6 @@ export function ReadingTest({
     });
   };
 
-  const handleSubmit = () => {
-    const submissionData: CreateReadingSubmissionDTO = {
-      lessonId: lessonId,
-      submissionType: "reading",
-      tokensUsed: 0,
-      content: {
-        text: content,
-        questions: questions.map((q) => ({
-          id: q.id,
-          question: q.question,
-          right_answer: q.right_answer,
-          answer_list: q.answer_list,
-          selected_answer: selectedAnswers[q.id],
-          bookmarked: bookmarkedQuestions.has(q.id),
-        })),
-      },
-    };
-    onSubmit?.(submissionData);
-  };
-
   const handleBackToHome = () => {
     router.push(RouteNames.Home);
   };
@@ -139,9 +150,13 @@ export function ReadingTest({
               startTime={new Date(
                 Date.now() + 1000 * 60 * timeLimit,
               ).toISOString()}
-              onEnd={handleTimeUp}
+              onEnd={handleActivityTimeUp}
               size="large"
             />
+          )}
+
+          {isPractice && !isResultView && (
+            <CountUpTimer ref={timerRef} />
           )}
 
           <QuestionSheet

@@ -9,7 +9,6 @@ import {
   BookOpen,
   Check,
   Star,
-  BookOpenCheck,
   Globe,
 } from "lucide-react";
 import ChatPanel from "@/feature/writing/components/chat-panel";
@@ -46,6 +45,9 @@ import { TokenProtectedForm } from "@/feature/token/components/TokenProtectedFor
 import { TOKEN_COSTS } from "@/feature/token/constants";
 import UserPreview from "@/feature/user/components/UserPreview";
 import { cn } from "@/lib/utils";
+import { CountUpTimer } from "@/components/feature/CountUpTimer";
+import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
+import { Timer } from "@/components/feature/Timer";
 
 interface WritingAgentLayoutProps {
   topic: string;
@@ -54,6 +56,8 @@ interface WritingAgentLayoutProps {
   content?: ContentWritingDTO;
   lessonId?: string;
   createdBy?: User;
+  isPractice?: boolean;
+  timeLimit?: number;
 }
 
 export default function WritingAgentLayout({
@@ -63,6 +67,8 @@ export default function WritingAgentLayout({
   content,
   lessonId,
   createdBy,
+  isPractice,
+  timeLimit,
 }: WritingAgentLayoutProps) {
   const isMobile = useIsMobile();
   const [selectedTab, setSelectedTab] = useState<string>("chat");
@@ -114,6 +120,22 @@ export default function WritingAgentLayout({
       });
     }
   };
+
+  const handleFormSubmitTimeUp = () => {
+    const data = form.getValues();
+    console.log(JSON.stringify(data, null, 2));
+    handleFormSubmit(data);
+  }
+
+  const {
+    handleTimeUp: handleActivityTimeUp,
+  } = useActivityTracking({
+    skill: "writing",
+    isPractice,
+    timeLimit,
+    onTimeUp: handleFormSubmitTimeUp,
+  });
+
 
   // Get full content for submission and evaluation
   const getFullContent = (): string => {
@@ -241,6 +263,23 @@ export default function WritingAgentLayout({
             Evaluate Essay
           </Button>
           <div className="ml-auto flex items-center gap-2">
+            <div className="mr-4 flex items-center gap-2">
+            { timeLimit && !isPractice && (
+            <Timer
+              startTime={new Date(
+                Date.now() + 1000 * 60 * timeLimit,
+              ).toISOString()}
+              onEnd={handleActivityTimeUp}
+              size="large"
+            />
+            )}
+
+            {isPractice && (
+              <CountUpTimer />
+            )}
+
+
+            </div>
             <Label htmlFor="show-examples">Show Example</Label>
             <Switch
               id="show-examples"

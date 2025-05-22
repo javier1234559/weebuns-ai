@@ -2,6 +2,7 @@ import { TokenProtectedButton } from "@/feature/token/components/TokenProtectedB
 import { PlayIcon } from "lucide-react";
 import { useStartSpeaking } from "@/feature/ai/hooks/useAi";
 import { StartSpeakingDto } from "@/services/swagger-types";
+import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
 
 interface StartSpeakingSessionButtonProps {
   promptText: string;
@@ -36,10 +37,18 @@ export function StartSpeakingSessionButton({
 
     startSpeaking(data, {
       onSuccess: (response) => {
-        onSuccess?.(response);
+        onSuccess?.(response as { sessionId: string; topicText: string });
       },
     });
+    handleSubmitActivity();
   };
+
+  const {
+    handleSubmit: handleSubmitActivity,
+  } = useActivityTracking({
+    skill: "speaking",
+    isPractice: true,
+  });
 
   return (
     <TokenProtectedButton

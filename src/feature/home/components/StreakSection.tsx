@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Calendar } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import viLocale from "@fullcalendar/core/locales/vi";
 import { StreakCalendar } from "@/feature/home/components/StreakCalendar";
+import { useStudyActivities } from "@/feature/activity/hooks/useActivity";
+import { useAuthStore } from "@/store/auth-store";
 
 interface ActivityData {
   date: string;
@@ -16,25 +18,6 @@ interface ActivityData {
   speaking: number;
   total_time: string;
 }
-
-const sampleActivities: Record<string, ActivityData> = {
-  "2025-02-17": {
-    date: "2025-02-17",
-    reading: 2,
-    listening: 1,
-    writing: 0,
-    speaking: 0,
-    total_time: "3h39m",
-  },
-  "2025-02-18": {
-    date: "2025-02-18",
-    reading: 1,
-    listening: 0,
-    writing: 0,
-    speaking: 0,
-    total_time: "0m",
-  },
-};
 
 const calculateActivityLevel = (activity: ActivityData) => {
   const total =
@@ -51,6 +34,20 @@ const calculateActivityLevel = (activity: ActivityData) => {
 
 export const StreakSection = () => {
   const calendarRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuthStore();
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const { data: activities = { data: {} } } = useStudyActivities(
+    user?.id || "",
+    {
+      month: currentDate.getMonth() + 1,
+      year: currentDate.getFullYear(),
+    },
+  );
+
+  const handleChangeMonthAndYear = (month: number, year: number) => {
+    setCurrentDate(new Date(year, month - 1, 1));
+  };
 
   useEffect(() => {
     if (!calendarRef.current) return;
@@ -68,7 +65,7 @@ export const StreakSection = () => {
       },
       dayCellContent: (info) => {
         const dateStr = info.date.toISOString().split("T")[0];
-        const activity = sampleActivities[dateStr];
+        const activity = activities.data[dateStr] as ActivityData | undefined;
         const dayNumber = info.dayNumberText;
 
         if (activity) {
@@ -108,7 +105,7 @@ export const StreakSection = () => {
     return () => {
       calendar.destroy();
     };
-  }, []);
+  }, [activities]);
 
   return (
     <Card>
@@ -131,7 +128,10 @@ export const StreakSection = () => {
           </div>
         </div>
 
-        <StreakCalendar activities={sampleActivities} />
+        <StreakCalendar
+          activities={activities.data as Record<string, ActivityData>}
+          onChangeMonthAndYear={handleChangeMonthAndYear}
+        />
       </CardContent>
     </Card>
   );

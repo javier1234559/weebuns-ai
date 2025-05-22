@@ -15,6 +15,8 @@ import { useRouter } from "next/navigation";
 import { RouteNames } from "@/constraints/route-name";
 import { Card, CardContent } from "@/components/ui/card";
 import { ListeningResultFeedback } from "@/feature/listening/components/ListeningResultFeedback";
+import { CountUpTimer } from "@/components/feature/CountUpTimer";
+import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
 
 interface ListeningTestProps {
   audioUrl: string;
@@ -46,26 +48,48 @@ export function ListeningTest({
   resultListeningData,
 }: ListeningTestProps) {
   const router = useRouter();
-  const [selectedAnswers, setSelectedAnswers] = useState<
-    Record<string, string>
-  >({});
-  const [currentQuestionId, setCurrentQuestionId] = useState<string | null>(
-    null,
-  );
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  const [currentQuestionId, setCurrentQuestionId] = useState<string | null>(null);
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Set<string>>(
-    new Set(),
-  );
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Set<string>>(new Set());
+
+  const handleSubmit = () => {
+    const submissionData: CreateListeningSubmissionDTO = {
+      lessonId: lessonId,
+      submissionType: "listening",
+      tokensUsed: 0,
+      content: {
+        audio_url: audioUrl,
+        question_list: questions.map((q) => ({
+          id: q.id,
+          question: q.question,
+          right_answer: q.right_answer,
+          answer_list: q.answer_list,
+          selected_answer: selectedAnswers[q.id],
+          bookmarked: bookmarkedQuestions.has(q.id),
+        })),
+      },
+    };
+    onSubmit?.(submissionData);
+    handleSubmitActivity();
+  };
+
+  const {
+    timerRef,
+    handleTimeUp: handleActivityTimeUp,
+    handleSubmit: handleSubmitActivity,
+  } = useActivityTracking({
+    skill: "listening",
+    isPractice,
+    timeLimit,
+    onTimeUp: handleSubmit,
+  });
 
   const handleAnswerSelect = (questionId: string, answer: string) => {
     setSelectedAnswers((prev) => ({
       ...prev,
       [questionId]: answer,
     }));
-  };
-
-  const handleTimeUp = () => {
-    console.log("Time up");
   };
 
   const handleQuestionSelect = (id: string) => {
@@ -94,26 +118,6 @@ export function ListeningTest({
     });
   };
 
-  const handleSubmit = () => {
-    const submissionData: CreateListeningSubmissionDTO = {
-      lessonId: lessonId,
-      submissionType: "listening",
-      tokensUsed: 0,
-      content: {
-        audio_url: audioUrl,
-        question_list: questions.map((q) => ({
-          id: q.id,
-          question: q.question,
-          right_answer: q.right_answer,
-          answer_list: q.answer_list,
-          selected_answer: selectedAnswers[q.id],
-          bookmarked: bookmarkedQuestions.has(q.id),
-        })),
-      },
-    };
-    onSubmit?.(submissionData);
-  };
-
   const handleBackToHome = () => {
     router.push(RouteNames.Home);
   };
@@ -134,9 +138,13 @@ export function ListeningTest({
               startTime={new Date(
                 Date.now() + 1000 * 60 * timeLimit,
               ).toISOString()}
-              onEnd={handleTimeUp}
+              onEnd={handleActivityTimeUp}
               size="large"
             />
+          )}
+
+          {isPractice && !isResultView && (
+            <CountUpTimer ref={timerRef} />
           )}
 
           <QuestionSheet
