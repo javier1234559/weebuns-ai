@@ -82,6 +82,7 @@ export function ReadingDetailView({ id }: ReadingDetailViewProps) {
                     avatar: data?.data.createdBy.profilePicture ?? "",
                     bio: data?.data.createdBy.bio ?? "",
                     role: data?.data.createdBy.role,
+                    username: data?.data.createdBy.username ?? "",
                   }}
                 />
               )}

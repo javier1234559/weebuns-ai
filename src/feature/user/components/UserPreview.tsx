@@ -1,16 +1,14 @@
 "use client";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { replaceRouteName, RouteNames } from "@/constraints/route-name";
 import Link from "next/link";
-import { useState } from "react";
-import { toast } from "sonner";
 
 interface UserPreviewProps {
   user: {
     id: string;
     name: string;
+    username: string;
     avatar: string;
     bio?: string;
     role?: string;
@@ -22,14 +20,7 @@ interface UserPreviewProps {
 export default function UserPreview({
   user,
   className = "",
-  showFollowButton = true,
 }: UserPreviewProps) {
-  const [isFollowing, setIsFollowing] = useState(false);
-
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
-    toast.success(`User ID: ${user.id}`);
-  };
 
   return (
     <div
@@ -38,16 +29,14 @@ export default function UserPreview({
     >
       <Avatar className="size-12">
         <AvatarImage
-          src={"/images/auth/building.jpg"}
+          src={user.avatar}
           alt={user.name}
           className="size-full object-cover"
         />
       </Avatar>
       <div className="flex min-w-0 flex-1 flex-col justify-center gap-2">
         <Link
-          href={replaceRouteName(RouteNames.ProfileDetail, {
-            username: user.name,
-          })}
+          href={`/profile/${user.username}`}
           className="truncate text-sm font-medium text-foreground"
         >
           {user.name}
@@ -56,17 +45,6 @@ export default function UserPreview({
           <span className="truncate text-xs text-muted-foreground">
             {user.bio}
           </span>
-        )}
-        {showFollowButton && (
-          <Button
-            size="sm"
-            type="button"
-            variant={isFollowing ? "outline" : "default"}
-            className={`h-7 w-fit px-2 py-1 text-xs font-medium transition-colors duration-300 ${isFollowing ? "border-primary bg-transparent text-primary" : "bg-primary text-white hover:bg-primary/90"}`}
-            onClick={handleFollow}
-          >
-            {isFollowing ? "FOLLOWING" : "FOLLOW"}
-          </Button>
         )}
       </div>
     </div>

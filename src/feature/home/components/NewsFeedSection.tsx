@@ -13,19 +13,13 @@ const NewsFeedSection = () => {
       title: "Hướng dẫn viết Writing Task 1",
       image:
         "https://cms.youpass.vn/assets/2391ddd1-deb2-451e-b1d1-c2f519badba2?width=1000",
-      link: "/ielts-writing-task-1-guide",
+        link: "https://ielts1984.vn/ielts-insights",
     },
     {
       title: "Hướng dẫn viết Reading",
       image:
-        "https://cms.youpass.vn/assets/2391ddd1-deb2-451e-b1d1-c2f519badba2?width=1000",
-      link: "/ielts-reading-guide",
-    },
-    {
-      title: "Hướng dẫn viết Reading",
-      image:
-        "https://cms.youpass.vn/assets/2391ddd1-deb2-451e-b1d1-c2f519badba2?width=1000",
-      link: "/ielts-reading-guide",
+        "https://cms.youpass.vn/assets/b72096f2-117a-4021-9662-91771c3bb03e?width=1500",
+      link: "https://ielts1984.vn/ielts-insights",
     },
   ];
 

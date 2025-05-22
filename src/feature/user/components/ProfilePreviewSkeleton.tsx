@@ -29,72 +29,12 @@ export default function ProfilePreviewSkeleton() {
               </div>
             </div>
           </div>
+          <div className="p-6">
+            <Skeleton className="h-[500px] w-full" />
+          </div>
         </header>
 
         {/* Main Content Skeleton */}
-        <main className="rounded-lg bg-card p-6 shadow-sm">
-          <Tabs defaultValue="lessons" className="w-full">
-            <TabsList className="mb-6 w-full justify-center border-b bg-muted/50">
-              <TabsTrigger value="lessons" disabled className="px-6 py-3">
-                Lessons
-              </TabsTrigger>
-              <TabsTrigger value="about" disabled className="px-6 py-3">
-                About
-              </TabsTrigger>
-              <TabsTrigger value="stats" disabled className="px-6 py-3">
-                Stats
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="lessons">
-              {/* Search and Filter Skeletons */}
-              <div className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row">
-                <Skeleton className="h-12 w-full md:w-1/2" />
-                <Skeleton className="h-10 w-full md:w-40" />
-              </div>
-
-              {/* Featured Lessons Skeleton */}
-              <div className="mb-12">
-                <Skeleton className="mb-4 h-6 w-48" />
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {[1, 2, 3].map((i) => (
-                    <Card key={i} className="overflow-hidden">
-                      <Skeleton className="h-48 w-full" />
-                      <CardContent className="p-4">
-                        <Skeleton className="mb-2 h-6 w-full" />
-                        <div className="flex gap-2">
-                          <Skeleton className="h-5 w-16" />
-                          <Skeleton className="h-5 w-16" />
-                          <Skeleton className="h-5 w-16" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-
-              {/* All Lessons Skeleton */}
-              <div>
-                <Skeleton className="mb-4 h-6 w-32" />
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <Card key={i} className="overflow-hidden">
-                      <Skeleton className="h-48 w-full" />
-                      <CardContent className="p-4">
-                        <Skeleton className="mb-2 h-6 w-full" />
-                        <div className="flex gap-2">
-                          <Skeleton className="h-5 w-16" />
-                          <Skeleton className="h-5 w-16" />
-                          <Skeleton className="h-5 w-16" />
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </main>
       </div>
     </div>
   );

@@ -82,7 +82,7 @@ const Header = () => {
             >
               <PawPrint className="size-8" />
               <span className="text-2xl font-bold font-space-grotesk">
-                Weebuns AI
+                Weebuns
               </span>
             </AppLink>
           </div>

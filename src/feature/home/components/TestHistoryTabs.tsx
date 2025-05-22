@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Pencil, BookOpen, Ear, MessageCircle } from "lucide-react";
 import {
   Card,
@@ -38,9 +38,9 @@ export function TestHistoryTabs() {
         icon: <Pencil className="size-4" />,
         subTabs: [
           {
-            id: "writing-submitted",
-            value: "submitted",
-            label: "Đã nộp",
+            id: "writing-draft",
+            value: "draft",
+            label: "Đang làm",
             content: (
               <SubmissionLessonHistoryView
                 submissionType={SkillType.Writing}
@@ -49,13 +49,13 @@ export function TestHistoryTabs() {
             ),
           },
           {
-            id: "writing-completed",
-            value: "completed",
-            label: "Đã làm",
+            id: "writing-submitted",
+            value: "submitted",
+            label: "Đã nộp",
             content: (
               <SubmissionLessonHistoryView
                 submissionType={SkillType.Writing}
-                status={SubmissionStatus.Completed}
+                status={SubmissionStatus.Submitted}
               />
             ),
           },
@@ -89,13 +89,13 @@ export function TestHistoryTabs() {
             ),
           },
           {
-            id: "reading-completed",
-            value: "completed",
-            label: "Đã làm",
+            id: "reading-submitted",
+            value: "submitted",
+            label: "Đã nộp",
             content: (
               <SubmissionLessonHistoryView
                 submissionType={SkillType.Reading}
-                status={SubmissionStatus.Completed}
+                status={SubmissionStatus.Submitted}
               />
             ),
           },
@@ -118,13 +118,13 @@ export function TestHistoryTabs() {
             ),
           },
           {
-            id: "listening-completed",
-            value: "completed",
-            label: "Đã làm",
+            id: "listening-submitted",
+            value: "submitted",
+            label: "Đã nộp",
             content: (
               <SubmissionLessonHistoryView
                 submissionType={SkillType.Listening}
-                status={SubmissionStatus.Completed}
+                status={SubmissionStatus.Submitted}
               />
             ),
           },
@@ -153,7 +153,7 @@ export function TestHistoryTabs() {
             content: (
               <SubmissionLessonHistoryView
                 submissionType={SkillType.Speaking}
-                status={SubmissionStatus.Completed}
+                status={SubmissionStatus.Submitted}
               />
             ),
           },

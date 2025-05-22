@@ -119,3 +119,10 @@ export const useRemoveUser = () => {
     },
   });
 };
+
+export const useFindByUsername = (username: string) => {
+  return useQuery({
+    queryKey: USER_KEY_FACTORY.detail(username),
+    queryFn: () => userApi.findByUserName(username),
+  });
+};

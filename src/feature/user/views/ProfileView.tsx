@@ -24,7 +24,10 @@ import {
   Eye,
 } from "lucide-react";
 import Image from "next/image";
-
+import { useFindByUsername } from "../hooks/useUser";
+import { HeaderSection } from "../components/HeaderSection";
+import { AboutTab } from "../components/AboutTab";
+import ProfilePreviewSkeleton from "../components/ProfilePreviewSkeleton";
 // Type definitions
 interface Lesson {
   id: number;
@@ -83,7 +86,7 @@ const teacherData: TeacherData = {
   ],
 };
 
-const featuredLessons: Lesson[] = [
+const featuredLessons = [
   {
     id: 1,
     title: "IELTS Writing Task 2 Masterclass",
@@ -107,7 +110,7 @@ const featuredLessons: Lesson[] = [
   },
 ];
 
-const allLessons: Lesson[] = [
+const allLessons = [
   ...featuredLessons,
   {
     id: 4,
@@ -204,205 +207,27 @@ export default function ProfileView({ username }: ProfileViewProps) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [filter, setFilter] = useState("all");
 
-  // Filter lessons based on selection
-  const filteredLessons = (): Lesson[] => {
-    if (filter === "all") return allLessons;
-    if (filter === "popular")
-      return [...allLessons].sort((a, b) => b.id - a.id);
-    return allLessons.filter((lesson) =>
-      lesson.tags.some((tag) => tag.toLowerCase() === filter.toLowerCase()),
-    );
-  };
+  const { data: userResponse, isLoading } = useFindByUsername(username);
+
+  if (isLoading || !userResponse) {
+    return <ProfilePreviewSkeleton />;
+  }
+
+  const user = userResponse.user;
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="w-full">
-        {/* Header Section */}
-        <header className="mb-8 rounded-lg bg-card shadow-sm">
-          <div className="flex flex-col items-center p-6">
-            {/* Avatar and Basic Info */}
-            <div className="mb-4 flex flex-col items-center">
-              <Avatar className="mb-4 size-24 border-2 border-primary md:size-28">
-                <Image
-                  src={teacherData.avatar}
-                  alt={teacherData.name}
-                  width={100}
-                  height={100}
-                  className="size-full object-cover"
-                />
-              </Avatar>
+      <Card className="w-full">
+        <HeaderSection
+          user={user}
+          isFollowing={isFollowing}
+          onFollowToggle={() => setIsFollowing(!isFollowing)}
+        />
 
-              <h1 className="mb-1 text-2xl font-bold text-foreground md:text-3xl">
-                {teacherData.name}
-              </h1>
-              <p className="mb-2 max-w-md text-center text-muted-foreground">
-                {teacherData.bio}
-              </p>
-              <p className="mb-4 text-sm text-muted-foreground">
-                {teacherData.followers} followers
-              </p>
-
-              <Button
-                className={`px-8 py-2 transition-all duration-300 ${
-                  isFollowing
-                    ? "bg-muted text-muted-foreground hover:bg-muted/80"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
-                }`}
-                onClick={() => setIsFollowing(!isFollowing)}
-              >
-                {isFollowing ? "Following" : "Follow"}
-              </Button>
-
-              {/* Social Links */}
-              <div className="mt-4 flex space-x-4">
-                {teacherData.socialLinks.map((link, index) => (
-                  <button
-                    key={index}
-                    className="text-muted-foreground transition-colors duration-300 hover:text-primary"
-                  >
-                    {link.icon}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content with Tabs */}
-        <main className="rounded-lg bg-card p-6 shadow-sm">
-          <Tabs defaultValue="lessons" className="w-full">
-            <TabsList className="mb-6 w-full justify-center overflow-x-auto border-b bg-muted/50">
-              <TabsTrigger value="lessons" className="px-6 py-3">
-                Lessons
-              </TabsTrigger>
-              <TabsTrigger value="about" className="px-6 py-3">
-                About
-              </TabsTrigger>
-              <TabsTrigger value="stats" className="px-6 py-3">
-                Stats
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Lessons Tab Content */}
-            <TabsContent
-              value="lessons"
-              className="mt-4 duration-500 animate-in fade-in-50"
-            >
-              {/* Search and Filter */}
-              <div className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row">
-                <div className="relative w-full md:w-1/2">
-                  <Search className="absolute left-3 top-3 size-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search lessons by Ms. Anna"
-                    className="rounded-full bg-muted/50 py-6 pl-10"
-                  />
-                </div>
-                <Select value={filter} onValueChange={setFilter}>
-                  <SelectTrigger className="w-full bg-muted/50 md:w-40">
-                    <SelectValue placeholder="Filter by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Lessons</SelectItem>
-                    <SelectItem value="popular">Popular</SelectItem>
-                    <SelectItem value="writing">Writing</SelectItem>
-                    <SelectItem value="speaking">Speaking</SelectItem>
-                    <SelectItem value="reading">Reading</SelectItem>
-                    <SelectItem value="listening">Listening</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Featured Lessons Section */}
-              <div className="mb-12">
-                <h2 className="mb-4 flex items-center text-xl font-semibold text-foreground">
-                  <Star className="mr-2 size-5 text-warning" /> Featured Lessons
-                </h2>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {featuredLessons.map((lesson) => (
-                    <LessonCard
-                      key={lesson.id}
-                      lesson={lesson}
-                      featured={true}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* All Lessons Grid */}
-              <div>
-                <h2 className="mb-4 text-xl font-semibold text-foreground">
-                  All Lessons
-                </h2>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                  {filteredLessons()
-                    .filter((lesson) => !lesson.featured)
-                    .map((lesson) => (
-                      <LessonCard key={lesson.id} lesson={lesson} />
-                    ))}
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* About Tab Content */}
-            <TabsContent
-              value="about"
-              className="duration-500 animate-in fade-in-50"
-            >
-              <div className="rounded-lg bg-muted/50 p-6">
-                <h2 className="mb-4 text-xl font-semibold text-foreground">
-                  About Ms. Anna
-                </h2>
-                <p className="mb-8 leading-relaxed text-muted-foreground">
-                  {teacherData.longBio}
-                </p>
-
-                <h3 className="mb-3 text-lg font-semibold text-foreground">
-                  Intro Video
-                </h3>
-                <div className="mb-8 flex h-72 w-full items-center justify-center rounded-lg bg-muted md:h-96">
-                  <p className="text-muted-foreground">
-                    YouTube video embed placeholder
-                  </p>
-                </div>
-
-                <h3 className="mb-3 text-lg font-semibold text-foreground">
-                  Certifications
-                </h3>
-                <ul className="list-inside list-disc space-y-2 text-muted-foreground">
-                  {teacherData.certifications.map((cert, index) => (
-                    <li key={index}>{cert}</li>
-                  ))}
-                </ul>
-              </div>
-            </TabsContent>
-
-            {/* Stats Tab Content */}
-            <TabsContent
-              value="stats"
-              className="duration-500 animate-in fade-in-50"
-            >
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                {teacherData.stats.map((stat, index) => (
-                  <Card
-                    key={index}
-                    className="overflow-hidden bg-muted/50 transition-all hover:shadow-md"
-                  >
-                    <CardContent className="flex flex-col items-center p-6">
-                      <div className="mb-4 rounded-full bg-primary/10 p-4 text-primary">
-                        {stat.icon}
-                      </div>
-                      <h3 className="mb-1 text-3xl font-bold text-foreground">
-                        {stat.value}
-                      </h3>
-                      <p className="text-muted-foreground">{stat.label}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
+        {user.teacherProfile && (
+          <AboutTab teacherProfile={user.teacherProfile} />
+        )}
+      </Card>
     </div>
   );
 }

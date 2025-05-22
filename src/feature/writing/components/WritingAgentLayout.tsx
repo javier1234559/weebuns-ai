@@ -228,6 +228,7 @@ export default function WritingAgentLayout({
                     avatar: createdBy.profilePicture ?? "",
                     bio: "IELTS coach with 10 years of experience helping students achieve band 7.0+",
                     role: createdBy.role,
+                    username: createdBy.username ?? "",
                   }}
                 />
               )}

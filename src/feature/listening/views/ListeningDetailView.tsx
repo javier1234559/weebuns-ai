@@ -76,6 +76,7 @@ export function ListeningDetailView({ id }: ListeningDetailViewProps) {
                     avatar: data?.data.createdBy.profilePicture ?? "",
                     bio: "IELTS coach with 10 years of experience helping students achieve band 7.0+",
                     role: data?.data.createdBy.role,
+                    username: data?.data.createdBy.username ?? "",
                   }}
                 />
               )}
