@@ -363,6 +363,18 @@ export interface UserResponse {
   user: UserDto;
 }
 
+export interface CreateUserDto {
+  username: string;
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+  profilePicture?: string;
+  bio?: string;
+  /** @default "user" */
+  role: "user" | "admin" | "teacher";
+}
+
 export interface TeacherDto {
   username: string;
   email: string;
@@ -375,6 +387,20 @@ export interface TeacherDto {
   certifications?: string;
   teachingExperience?: string;
   other?: string;
+}
+
+export interface UpdateProfileTeacherDto {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  bio: string;
+  profilePicture: string;
+  longBio: string;
+  introVideoUrlEmbed: string;
+  certifications: string;
+  teachingExperience: string;
+  other: string;
 }
 
 export interface ProfileDto {
@@ -400,15 +426,15 @@ export interface DeleteUserResponse {
 }
 
 export interface UpdateUserDto {
-  last_name?: string;
-  first_name?: string;
   username?: string;
   email?: string;
-  nativeLanguage?: string;
-  profile_picture?: string;
+  password?: string;
+  firstName?: string;
+  lastName?: string;
+  profilePicture?: string;
+  bio?: string;
+  /** @default "user" */
   role?: "user" | "admin" | "teacher";
-  auth_provider?: "local" | "google" | "facebook";
-  bio: string;
 }
 
 export interface RegisterDto {
@@ -1067,7 +1093,7 @@ export interface DeleteCommentResponse {
 }
 
 export interface CreateNotificationDto {
-  userId: string;
+  userId?: string;
   type: "system" | "advertisement" | "submission" | "comment_reply" | "comment_mention";
   title: string;
   content: string;
@@ -1929,6 +1955,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags users
+     * @name UserControllerCreateUser
+     * @request POST:/api/users
+     * @secure
+     */
+    userControllerCreateUser: (data: CreateUserDto, params: RequestParams = {}) =>
+      this.request<UserResponse, any>({
+        path: `/api/users`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags users
      * @name UserControllerFindById
      * @request GET:/api/users/{id}
      * @secure
@@ -2041,7 +2086,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/users/teachers/{id}/profile
      * @secure
      */
-    userControllerUpdateTeacherProfile: (id: string, data: ProfileDto, params: RequestParams = {}) =>
+    userControllerUpdateTeacherProfile: (id: string, data: UpdateProfileTeacherDto, params: RequestParams = {}) =>
       this.request<UserResponse, any>({
         path: `/api/users/teachers/${id}/profile`,
         method: "PATCH",

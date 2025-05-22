@@ -4,8 +4,8 @@ import {
   ProfileDto,
   UsersResponse,
   UserResponse,
-  UserDto,
   UpdateUserDto,
+  UpdateProfileTeacherDto,
 } from "@/services/swagger-types";
 import {
   useMutation,
@@ -89,7 +89,7 @@ export const useUpdateTeacherProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: ProfileDto }) =>
+    mutationFn: ({ id, data }: { id: string; data: UpdateProfileTeacherDto }) =>
       userApi.updateTeacherProfile(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: USER_KEY_FACTORY.all });

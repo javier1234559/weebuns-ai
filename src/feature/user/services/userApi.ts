@@ -4,6 +4,7 @@ import {
   TeacherDto,
   ProfileDto,
   UpdateUserDto,
+  UpdateProfileTeacherDto,
 } from "@/services/swagger-types";
 
 export interface FindAllUserQuery {
@@ -97,7 +98,7 @@ const userApi = {
         );
       }),
 
-  updateTeacherProfile: (id: string, data: ProfileDto) =>
+  updateTeacherProfile: (id: string, data: UpdateProfileTeacherDto) =>
     api
       .userControllerUpdateTeacherProfile(id, data)
       .then((res) => res.data)

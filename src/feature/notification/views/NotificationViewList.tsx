@@ -40,6 +40,7 @@ export default function NotificationViewList({ isOpen }: NotificationViewListPro
       page,
       perPage,
       userId: user?.id || "",
+      isGlobal: true,
     },
     {
       enabled: isOpen,

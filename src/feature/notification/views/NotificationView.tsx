@@ -23,6 +23,7 @@ export default function NotificationView({ className }: NotificationViewProps) {
       page: 1,
       perPage: 10,
       userId: userId || "",
+      isGlobal: true,
     },
     {
       enabled: !!userId,

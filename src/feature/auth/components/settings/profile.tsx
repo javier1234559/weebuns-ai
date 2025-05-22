@@ -22,8 +22,8 @@ export default function ProfileView() {
       data: {
         username: values.username,
         email: values.email,
-        first_name: values.firstName,
-        last_name: values.lastName,
+        firstName: values.firstName,
+        lastName: values.lastName,
         bio: values.bio ?? "",
       },
     }, {
