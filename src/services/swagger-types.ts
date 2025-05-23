@@ -618,7 +618,7 @@ export interface User {
 export enum SubmissionStatus {
   Draft = "draft",
   Submitted = "submitted",
-  Completed = "completed",
+  Taken = "taken",
   Scored = "scored",
 }
 
@@ -1356,6 +1356,95 @@ export interface UpdateWritingSubmissionDTO {
   feedback?: WritingFeedbackDTO;
 }
 
+export interface TokenWallet {
+  id: string;
+  userId: string;
+  balance: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  deletedAt?: object;
+}
+
+export interface TokenWalletResponse {
+  wallet: TokenWallet;
+}
+
+export interface TokenPackage {
+  id: string;
+  pricePerToken: number;
+  oldPricePerToken: number;
+  message: string;
+  popular: boolean;
+  code: string;
+  name: string;
+  tokens: number;
+  price: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface TokenPackagesResponse {
+  packages: TokenPackage[];
+}
+
+export interface CreateTransactionDto {
+  packageCode: string;
+  paymentType: "bank" | "momo" | "zalopay" | "internal";
+}
+
+export interface PaymentUrlResponse {
+  paymentUrl: string;
+}
+
+export interface Transaction {
+  id: string;
+  transactionId: string;
+  userId: string;
+  packageId: object;
+  currency: string;
+  amount: number;
+  tokenAmount: number;
+  paymentType: "bank" | "momo" | "zalopay" | "internal";
+  status: "pending" | "completed" | "failed" | "refunded";
+  /** @format date-time */
+  paymentDate: string;
+  type: "TOKEN_PURCHASE" | "TOKEN_USE" | "TOKEN_EARN" | "TOKEN_WITHDRAW";
+  reason?: object;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  package?: TokenPackage;
+  user?: User;
+}
+
+export interface TransactionsResponse {
+  data: Transaction[];
+  pagination: PaginationOutputDto;
+}
+
+export interface UseTokensDto {
+  tokenAmount: number;
+  reason?: string;
+}
+
+export interface TransactionResponse {
+  transaction: Transaction;
+}
+
+export interface WithdrawTokensDto {
+  tokenAmount: number;
+}
+
+export interface TransactionWithUserResponse {
+  transaction: Transaction;
+  user: User;
+}
+
 export interface CreateVocabularyDto {
   term: string;
   meaning: string[];
@@ -1444,86 +1533,6 @@ export interface UpdateVocabularyReviewDto {
 
 export interface DeleteVocabularyResponse {
   message: string;
-}
-
-export interface TokenWallet {
-  id: string;
-  userId: string;
-  balance: number;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  deletedAt?: object;
-}
-
-export interface TokenWalletResponse {
-  wallet: TokenWallet;
-}
-
-export interface TokenPackage {
-  id: string;
-  pricePerToken: number;
-  oldPricePerToken: number;
-  message: string;
-  popular: boolean;
-  code: string;
-  name: string;
-  tokens: number;
-  price: number;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-}
-
-export interface TokenPackagesResponse {
-  packages: TokenPackage[];
-}
-
-export interface CreateTransactionDto {
-  packageCode: string;
-  paymentType: "bank" | "momo" | "zalopay" | "internal";
-}
-
-export interface PaymentUrlResponse {
-  paymentUrl: string;
-}
-
-export interface Transaction {
-  id: string;
-  transactionId: string;
-  userId: string;
-  packageId: object;
-  currency: string;
-  amount: number;
-  tokenAmount: number;
-  paymentType: "bank" | "momo" | "zalopay" | "internal";
-  status: "pending" | "completed" | "failed" | "refunded";
-  /** @format date-time */
-  paymentDate: string;
-  type: "token_purchase" | "token_use";
-  reason?: object;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  package?: TokenPackage;
-  user?: User;
-}
-
-export interface TransactionsResponse {
-  data: Transaction[];
-  pagination: PaginationOutputDto;
-}
-
-export interface UseTokensDto {
-  tokenAmount: number;
-  reason?: string;
-}
-
-export interface TransactionResponse {
-  transaction: Transaction;
 }
 
 export interface ActivityDataResponse {
@@ -1723,6 +1732,78 @@ export class HttpClient<SecurityDataType = unknown> {
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
+    /**
+     * No description
+     *
+     * @tags health
+     * @name HealthControllerCheck
+     * @request GET:/api/health
+     */
+    healthControllerCheck: (params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          status?: string;
+          /** @example {"database":{"status":"up"}} */
+          info?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+          /** @example {} */
+          error?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+          /** @example {"database":{"status":"up"}} */
+          details?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+        },
+        {
+          /** @example "error" */
+          status?: string;
+          /** @example {"database":{"status":"up"}} */
+          info?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+          /** @example {"redis":{"status":"down","message":"Could not connect"}} */
+          error?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+          /** @example {"database":{"status":"up"},"redis":{"status":"down","message":"Could not connect"}} */
+          details?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+        }
+      >({
+        path: `/api/health`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
     /**
      * No description
      *
@@ -2828,6 +2909,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         userId?: string;
         isGlobal?: boolean;
         type?: string;
+        createdBy?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -3141,6 +3223,275 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags lesson-submissions
+     * @name LessonSubmissionControllerClaimSubmission
+     * @request POST:/api/lesson-submissions/writing/claim/{id}
+     * @secure
+     */
+    lessonSubmissionControllerClaimSubmission: (id: string, params: RequestParams = {}) =>
+      this.request<WritingSubmissionResponse, any>({
+        path: `/api/lesson-submissions/writing/claim/${id}`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags lesson-submissions
+     * @name LessonSubmissionControllerCancelClaimSubmission
+     * @request POST:/api/lesson-submissions/writing/cancel-claim/{id}
+     * @secure
+     */
+    lessonSubmissionControllerCancelClaimSubmission: (id: string, params: RequestParams = {}) =>
+      this.request<WritingSubmissionResponse, any>({
+        path: `/api/lesson-submissions/writing/cancel-claim/${id}`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetWallet
+     * @request GET:/api/token/wallet
+     * @secure
+     */
+    tokenControllerGetWallet: (params: RequestParams = {}) =>
+      this.request<TokenWalletResponse, any>({
+        path: `/api/token/wallet`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetPackages
+     * @request GET:/api/token/plans
+     * @secure
+     */
+    tokenControllerGetPackages: (params: RequestParams = {}) =>
+      this.request<TokenPackagesResponse, any>({
+        path: `/api/token/plans`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerCreateTransaction
+     * @request POST:/api/token/charge
+     * @secure
+     */
+    tokenControllerCreateTransaction: (data: CreateTransactionDto, params: RequestParams = {}) =>
+      this.request<PaymentUrlResponse, any>({
+        path: `/api/token/charge`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetTransactions
+     * @request GET:/api/token/transactions
+     * @secure
+     */
+    tokenControllerGetTransactions: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        paymentType?: string;
+        status?: string;
+        type?: string;
+        from?: string;
+        to?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TransactionsResponse, any>({
+        path: `/api/token/transactions`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetAdminTransactions
+     * @request GET:/api/token/admin/transactions
+     * @secure
+     */
+    tokenControllerGetAdminTransactions: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        paymentType?: string;
+        status?: string;
+        type?: string;
+        from?: string;
+        to?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TransactionsResponse, any>({
+        path: `/api/token/admin/transactions`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerUseTokens
+     * @request POST:/api/token/use
+     * @secure
+     */
+    tokenControllerUseTokens: (data: UseTokensDto, params: RequestParams = {}) =>
+      this.request<TransactionResponse, any>({
+        path: `/api/token/use`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerWithdrawTokens
+     * @request POST:/api/token/withdraw
+     * @secure
+     */
+    tokenControllerWithdrawTokens: (data: WithdrawTokensDto, params: RequestParams = {}) =>
+      this.request<TransactionResponse, any>({
+        path: `/api/token/withdraw`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetWithdrawalRequests
+     * @request GET:/api/token/withdrawal-requests
+     * @secure
+     */
+    tokenControllerGetWithdrawalRequests: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        paymentType?: string;
+        status?: string;
+        type?: string;
+        from?: string;
+        to?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TransactionsResponse, any>({
+        path: `/api/token/withdrawal-requests`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetWithdrawalRequestDetails
+     * @request GET:/api/token/withdrawal-requests/{requestId}
+     * @secure
+     */
+    tokenControllerGetWithdrawalRequestDetails: (requestId: string, params: RequestParams = {}) =>
+      this.request<TransactionWithUserResponse, any>({
+        path: `/api/token/withdrawal-requests/${requestId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerApproveWithdrawalRequest
+     * @request POST:/api/token/withdrawal-requests/{requestId}/approve
+     * @secure
+     */
+    tokenControllerApproveWithdrawalRequest: (requestId: string, params: RequestParams = {}) =>
+      this.request<TransactionResponse, any>({
+        path: `/api/token/withdrawal-requests/${requestId}/approve`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags payments
+     * @name PaymentControllerHandleCallback
+     * @request POST:/api/payments/{provider}/callback
+     */
+    paymentControllerHandleCallback: (provider: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/payments/${provider}/callback`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags vocabularies
      * @name VocabularyControllerCreate
      * @summary Create a new vocabulary
@@ -3275,156 +3626,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<VocabularyResponseDto, any>({
         path: `/api/vocabularies/${id}/review`,
         method: "PATCH",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags payments
-     * @name PaymentControllerHandleCallback
-     * @request POST:/api/payments/{provider}/callback
-     */
-    paymentControllerHandleCallback: (provider: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/api/payments/${provider}/callback`,
-        method: "POST",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetWallet
-     * @request GET:/api/token/wallet
-     * @secure
-     */
-    tokenControllerGetWallet: (params: RequestParams = {}) =>
-      this.request<TokenWalletResponse, any>({
-        path: `/api/token/wallet`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetPackages
-     * @request GET:/api/token/plans
-     * @secure
-     */
-    tokenControllerGetPackages: (params: RequestParams = {}) =>
-      this.request<TokenPackagesResponse, any>({
-        path: `/api/token/plans`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerCreateTransaction
-     * @request POST:/api/token/charge
-     * @secure
-     */
-    tokenControllerCreateTransaction: (data: CreateTransactionDto, params: RequestParams = {}) =>
-      this.request<PaymentUrlResponse, any>({
-        path: `/api/token/charge`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetTransactions
-     * @request GET:/api/token/transactions
-     * @secure
-     */
-    tokenControllerGetTransactions: (
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        perPage?: number;
-        search?: string;
-        paymentType?: string;
-        status?: string;
-        type?: string;
-        from?: string;
-        to?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<TransactionsResponse, any>({
-        path: `/api/token/transactions`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetAdminTransactions
-     * @request GET:/api/token/admin/transactions
-     * @secure
-     */
-    tokenControllerGetAdminTransactions: (
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        perPage?: number;
-        search?: string;
-        paymentType?: string;
-        status?: string;
-        type?: string;
-        from?: string;
-        to?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<TransactionsResponse, any>({
-        path: `/api/token/admin/transactions`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerUseTokens
-     * @request POST:/api/token/use
-     * @secure
-     */
-    tokenControllerUseTokens: (data: UseTokensDto, params: RequestParams = {}) =>
-      this.request<TransactionResponse, any>({
-        path: `/api/token/use`,
-        method: "POST",
         body: data,
         secure: true,
         type: ContentType.Json,
