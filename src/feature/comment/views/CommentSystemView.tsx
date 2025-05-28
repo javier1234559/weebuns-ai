@@ -107,7 +107,7 @@ export default function CommentSystemView({
   if (error) {
     return (
       <div className="text-center text-red-500">
-        Failed to load comments. Please try again later.
+        Lỗi khi tải bình luận. Vui lòng thử lại sau.
       </div>
     );
   }
@@ -115,7 +115,7 @@ export default function CommentSystemView({
   if (!user?.id) {
     return (
       <div className="text-center text-muted-foreground">
-        Please login to comment
+        Hãy đăng nhập để bình luận
       </div>
     );
   }

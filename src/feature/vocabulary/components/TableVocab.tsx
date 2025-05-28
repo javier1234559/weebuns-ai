@@ -41,11 +41,13 @@ export default function TableVocab({ vocabularies }: TableVocabProps) {
                 />
               </TableCell>
               <TableCell className="w-1/4 font-medium">
-                TERM ({vocabularies.length})
+                Từ vựng ({vocabularies.length})
               </TableCell>
-              <TableCell className="w-1/3 font-medium">MEANING</TableCell>
-              <TableCell className="w-1/4 font-medium">SOURCE TEXT</TableCell>
-              <TableCell className="w-1/6 font-medium">STATUS</TableCell>
+              <TableCell className="w-1/3 font-medium">Nghĩa</TableCell>
+              <TableCell className="w-1/4 font-medium">Ví dụ</TableCell>
+              <TableCell className="w-1/6 font-medium">
+                Mức độ quen thuộc
+              </TableCell>
             </TableRow>
           </TableHeader>
           <TableBody>

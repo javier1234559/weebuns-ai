@@ -45,7 +45,7 @@ const Header = () => {
       id: "lesson",
       label: "Bài học",
       icon: <GraduationCapIcon className="size-4" />,
-      href: RouteNames.Lesson,
+      href: "/lesson",
     },
     {
       id: "blog",

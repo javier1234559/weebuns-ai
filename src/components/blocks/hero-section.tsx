@@ -4,9 +4,10 @@ import { Glow } from "@/components/ui/glow";
 import { cn } from "@/lib/utils";
 import { RouteNames } from "@/constraints/route-name";
 import ThemeSwitchImage from "./theme-switch-image";
+import RotatingText from "../custom/rotate-text";
 
 const heroData = {
-  title: "Luyện Đề Tiếng Anh 4 Kỹ Năng Cùng AI & Giáo Viên Thật",
+  title: "Luyện Đề Tiếng Anh 4 Kỹ Năng Cùng",
   description:
     "Nền tảng học tiếng Anh toàn diện: Luyện Viết, Đọc, Nghe, Nói với công nghệ AI hỗ trợ & hệ thống giáo viên đồng hành. Theo dõi, đánh giá và kết nối với giáo viên yêu thích của bạn.",
   primaryCta: {
@@ -43,6 +44,18 @@ export function HeroSection() {
             )}
           >
             {heroData.title}
+            <RotatingText
+              texts={["AI", "Giáo Viên Thật"]}
+              mainClassName="px-2 sm:px-2 text-foreground md:px-3 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+              staggerFrom={"last"}
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "-120%" }}
+              staggerDuration={0.025}
+              splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+              transition={{ type: "spring", damping: 30, stiffness: 400 }}
+              rotationInterval={5000}
+            />
           </h1>
 
           {/* Description */}
@@ -51,7 +64,6 @@ export function HeroSection() {
               "max-w-[550px] animate-appear opacity-0 [animation-delay:150ms]",
               "text-base sm:text-lg md:text-xl",
               "text-muted-foreground",
-              "font-medium",
             )}
           >
             {heroData.description}

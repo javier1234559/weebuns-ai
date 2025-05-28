@@ -103,7 +103,7 @@ export function LoginForm() {
       });
 
       toast.success("Login successful!");
-      router.push(RouteNames.Home);
+      window.location.href = RouteNames.Home;
       return result;
     } catch (error) {
       console.error("Login error:", error);

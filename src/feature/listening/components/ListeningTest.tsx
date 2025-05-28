@@ -17,6 +17,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ListeningResultFeedback } from "@/feature/listening/components/ListeningResultFeedback";
 import { CountUpTimer } from "@/components/feature/CountUpTimer";
 import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
+import { useIsLogined } from "@/hooks/useIsLogined";
 
 interface ListeningTestProps {
   audioUrl: string;
@@ -48,10 +49,17 @@ export function ListeningTest({
   resultListeningData,
 }: ListeningTestProps) {
   const router = useRouter();
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const [currentQuestionId, setCurrentQuestionId] = useState<string | null>(null);
+  const isLogined = useIsLogined();
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    Record<string, string>
+  >({});
+  const [currentQuestionId, setCurrentQuestionId] = useState<string | null>(
+    null,
+  );
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
-  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Set<string>>(new Set());
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState<Set<string>>(
+    new Set(),
+  );
 
   const handleSubmit = () => {
     const submissionData: CreateListeningSubmissionDTO = {
@@ -125,56 +133,66 @@ export function ListeningTest({
   return (
     <div>
       <Card className="mb-4 w-full">
-        <CardContent className="flex w-full items-center justify-end gap-4 p-4">
-          {isPractice && !isResultView && (
-            <Button variant="outline" onClick={handleShowAnswers}>
-              <Eye className="size-2" />
-              {showCorrectAnswers ? "Hide answers" : "Show answers"}
-            </Button>
-          )}
+        {!isLogined ? (
+          <CardContent className="flex w-full items-center justify-center gap-4 p-4">
+            <div className="flex flex-col items-center justify-center gap-4 text-sm text-muted-foreground">
+              <div>Đăng nhập để lưu bài làm</div>
+              <Button variant="outline" onClick={handleBackToHome}>
+                <Home className="mr-2 size-2" />
+                Quay về trang chủ
+              </Button>
+            </div>
+          </CardContent>
+        ) : (
+          <CardContent className="flex w-full items-center justify-end gap-4 p-4">
+            {isPractice && !isResultView && (
+              <Button variant="outline" onClick={handleShowAnswers}>
+                <Eye className="size-2" />
+                {showCorrectAnswers ? "Ẩn đáp án" : "Hiện đáp án"}
+              </Button>
+            )}
 
-          {!isResultView && timeLimit && !isPractice && (
-            <Timer
-              startTime={new Date(
-                Date.now() + 1000 * 60 * timeLimit,
-              ).toISOString()}
-              onEnd={handleActivityTimeUp}
-              size="large"
+            {!isResultView && timeLimit && !isPractice && (
+              <Timer
+                startTime={new Date(
+                  Date.now() + 1000 * 60 * timeLimit,
+                ).toISOString()}
+                onEnd={handleActivityTimeUp}
+                size="large"
+              />
+            )}
+
+            {isPractice && !isResultView && <CountUpTimer ref={timerRef} />}
+
+            <QuestionSheet
+              questions={questions}
+              selectedAnswers={
+                isResultView && resultListeningData?.selectedAnswers
+                  ? resultListeningData.selectedAnswers
+                  : selectedAnswers
+              }
+              currentQuestionId={currentQuestionId ?? undefined}
+              showCorrectAnswers={isResultView || showCorrectAnswers}
+              bookmarkedQuestions={bookmarkedQuestions}
+              onQuestionSelect={handleQuestionSelect}
+              onBookmarkToggle={handleBookmark}
             />
-          )}
 
-          {isPractice && !isResultView && (
-            <CountUpTimer ref={timerRef} />
-          )}
+            {!isResultView && (
+              <Button variant="outline" onClick={handleSubmit}>
+                <CircleCheckBig className="size-2" />
+                Nộp bài
+              </Button>
+            )}
 
-          <QuestionSheet
-            questions={questions}
-            selectedAnswers={
-              isResultView && resultListeningData?.selectedAnswers
-                ? resultListeningData.selectedAnswers
-                : selectedAnswers
-            }
-            currentQuestionId={currentQuestionId ?? undefined}
-            showCorrectAnswers={isResultView || showCorrectAnswers}
-            bookmarkedQuestions={bookmarkedQuestions}
-            onQuestionSelect={handleQuestionSelect}
-            onBookmarkToggle={handleBookmark}
-          />
-
-          {!isResultView && (
-            <Button variant="outline" onClick={handleSubmit}>
-              <CircleCheckBig className="size-2" />
-              Nộp bài
-            </Button>
-          )}
-
-          {isResultView && (
-            <Button variant="outline" onClick={handleBackToHome}>
-              <Home className="mr-2 size-2" />
-              Back to Home
-            </Button>
-          )}
-        </CardContent>
+            {isResultView && (
+              <Button variant="outline" onClick={handleBackToHome}>
+                <Home className="mr-2 size-2" />
+                Quay lại trang chủ
+              </Button>
+            )}
+          </CardContent>
+        )}
       </Card>
 
       <ListeningResultFeedback

@@ -10,6 +10,7 @@ import {
   Check,
   Star,
   Globe,
+  Save,
 } from "lucide-react";
 import ChatPanel from "@/feature/writing/components/chat-panel";
 import { VocabularyPanel } from "@/feature/writing/components/vocabulary-panel";
@@ -48,6 +49,7 @@ import { cn } from "@/lib/utils";
 import { CountUpTimer } from "@/components/feature/CountUpTimer";
 import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
 import { Timer } from "@/components/feature/Timer";
+import { useIsLogined } from "@/hooks/useIsLogined";
 
 interface WritingAgentLayoutProps {
   topic: string;
@@ -71,6 +73,7 @@ export default function WritingAgentLayout({
   timeLimit,
 }: WritingAgentLayoutProps) {
   const isMobile = useIsMobile();
+  const isLogined = useIsLogined();
   const [selectedTab, setSelectedTab] = useState<string>("chat");
   const [isShowExamples, setIsShowExamples] = useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<any[]>([]);
@@ -125,17 +128,14 @@ export default function WritingAgentLayout({
     const data = form.getValues();
     console.log(JSON.stringify(data, null, 2));
     handleFormSubmit(data);
-  }
+  };
 
-  const {
-    handleTimeUp: handleActivityTimeUp,
-  } = useActivityTracking({
+  const { handleTimeUp: handleActivityTimeUp } = useActivityTracking({
     skill: "writing",
     isPractice,
     timeLimit,
     onTimeUp: handleFormSubmitTimeUp,
   });
-
 
   // Get full content for submission and evaluation
   const getFullContent = (): string => {
@@ -201,6 +201,10 @@ export default function WritingAgentLayout({
     setSelectedTab("chat");
   };
 
+  const handleSave = () => {
+    console.log("save");
+  };
+
   return (
     <TokenProtectedForm
       requiredTokens={TOKEN_COSTS.SUBMIT_ESSAY}
@@ -241,7 +245,7 @@ export default function WritingAgentLayout({
         <CardContent className="flex flex-wrap items-center gap-2 py-4">
           <Button type="button" variant="outline" onClick={handleChat}>
             <MessageSquare className="mr-2 size-4" />
-            Chat with AI
+            Chat với AI
           </Button>
           <Button
             type="button"
@@ -249,7 +253,7 @@ export default function WritingAgentLayout({
             onClick={handleGenerateVocabulary}
           >
             <BookOpen className="mr-2 size-4" />
-            Vocabulary
+            Từ vựng
           </Button>
           <Button
             type="button"
@@ -257,31 +261,27 @@ export default function WritingAgentLayout({
             onClick={handleGenerateOutline}
           >
             <Check className="mr-2 size-4" />
-            Analysis Guide
+            Hướng dẫn phân tích
           </Button>
           <Button type="button" variant="outline" onClick={handleEvaluateEssay}>
             <Star className="mr-2 size-4" />
-            Evaluate Essay
+            Đánh giá bài viết
           </Button>
           <div className="ml-auto flex items-center gap-2">
             <div className="mr-4 flex items-center gap-2">
-            { timeLimit && !isPractice && (
-            <Timer
-              startTime={new Date(
-                Date.now() + 1000 * 60 * timeLimit,
-              ).toISOString()}
-              onEnd={handleActivityTimeUp}
-              size="large"
-            />
-            )}
+              {timeLimit && !isPractice && (
+                <Timer
+                  startTime={new Date(
+                    Date.now() + 1000 * 60 * timeLimit,
+                  ).toISOString()}
+                  onEnd={handleActivityTimeUp}
+                  size="large"
+                />
+              )}
 
-            {isPractice && (
-              <CountUpTimer />
-            )}
-
-
+              {isPractice && <CountUpTimer />}
             </div>
-            <Label htmlFor="show-examples">Show Example</Label>
+            <Label htmlFor="show-examples">Hiện ví dụ</Label>
             <Switch
               id="show-examples"
               checked={isShowExamples}
@@ -301,9 +301,9 @@ export default function WritingAgentLayout({
           <Card>
             <CardHeader>
               <CardTitle>
-                <div className="text-lg font-medium">Writing tools</div>
+                <div className="text-lg font-medium">Công cụ hỗ trợ</div>
                 <p className="text-sm font-normal text-muted-foreground">
-                  Tools to help you write your essay.
+                  Công cụ hỗ trợ viết bài của bạn.
                 </p>
               </CardTitle>
             </CardHeader>
@@ -422,14 +422,24 @@ export default function WritingAgentLayout({
                   />
                 </div>
               </div>
-              <div className="mt-6 flex justify-end gap-2">
-                {!isReadOnly && (
-                  <Button type="submit">
-                    <Globe className="mr-2 size-4" />
-                    Submit ({TOKEN_COSTS.SUBMIT_ESSAY} Tokens)
+              {!isLogined ? (
+                <div className="mt-4 flex justify-end gap-2 text-sm text-muted-foreground">
+                  Đăng nhập để nộp bài hoặc lưu bài viết
+                </div>
+              ) : (
+                <div className="mt-6 flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={handleSave}>
+                    <Save className="mr-2 size-4" />
+                    Lưu
                   </Button>
-                )}
-              </div>
+                  {!isReadOnly && (
+                    <Button type="submit">
+                      <Globe className="mr-2 size-4" />
+                      Nộp bài ({TOKEN_COSTS.SUBMIT_ESSAY} Tokens)
+                    </Button>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         </Pane>

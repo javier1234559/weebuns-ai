@@ -22,7 +22,7 @@ export default function ReviewVocabularyPage() {
         <Link href={RouteNames.MyVocabulary}>
           <Button variant="outline">
             <Home className="mr-2 size-2" />
-            Back to Home
+            Quay lại trang chủ
           </Button>
         </Link>
       </div>

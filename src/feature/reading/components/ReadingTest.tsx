@@ -19,6 +19,7 @@ import { RouteNames } from "@/constraints/route-name";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
 import { CountUpTimer } from "@/components/feature/CountUpTimer";
+import { useIsLogined } from "@/hooks/useIsLogined";
 
 interface ReadingFeedback {
   accuracy: number;
@@ -52,6 +53,7 @@ export function ReadingTest({
   timeLimit,
 }: ReadingTestProps) {
   const isMobile = useIsMobile();
+  const isLogined = useIsLogined();
   const router = useRouter();
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<string, string>
@@ -103,7 +105,6 @@ export function ReadingTest({
     }));
   };
 
-
   const handleQuestionSelect = (id: string) => {
     setCurrentQuestionId(id);
     const element = document.getElementById(`question-${id}`);
@@ -137,56 +138,66 @@ export function ReadingTest({
   return (
     <div>
       <Card className="mb-4 w-full">
-        <CardContent className="flex w-full items-center justify-end gap-4 p-4">
-          {isPractice && !isResultView && (
-            <Button variant="outline" onClick={handleShowAnswers}>
-              <Eye className="mr-2 size-2" />
-              {showCorrectAnswers ? "Hide answers" : "Show answers"}
-            </Button>
-          )}
+        {!isLogined ? (
+          <CardContent className="flex w-full items-center justify-center gap-4 p-4">
+            <div className="flex flex-col items-center justify-center gap-4 text-sm text-muted-foreground">
+              <div>Đăng nhập để lưu bài làm</div>
+              <Button variant="outline" onClick={handleBackToHome}>
+                <Home className="mr-2 size-2" />
+                Quay về trang chủ
+              </Button>
+            </div>
+          </CardContent>
+        ) : (
+          <CardContent className="flex w-full items-center justify-end gap-4 p-4">
+            {isPractice && !isResultView && (
+              <Button variant="outline" onClick={handleShowAnswers}>
+                <Eye className="mr-2 size-2" />
+                {showCorrectAnswers ? "Ẩn đáp án" : "Hiện đáp án"}
+              </Button>
+            )}
 
-          {!isResultView && timeLimit && !isPractice && (
-            <Timer
-              startTime={new Date(
-                Date.now() + 1000 * 60 * timeLimit,
-              ).toISOString()}
-              onEnd={handleActivityTimeUp}
-              size="large"
+            {!isResultView && timeLimit && !isPractice && (
+              <Timer
+                startTime={new Date(
+                  Date.now() + 1000 * 60 * timeLimit,
+                ).toISOString()}
+                onEnd={handleActivityTimeUp}
+                size="large"
+              />
+            )}
+
+            {isPractice && !isResultView && <CountUpTimer ref={timerRef} />}
+
+            <QuestionSheet
+              questions={questions}
+              selectedAnswers={
+                isResultView && resultReadingData?.selectedAnswers
+                  ? resultReadingData.selectedAnswers
+                  : selectedAnswers
+              }
+              currentQuestionId={currentQuestionId ?? undefined}
+              showCorrectAnswers={isResultView || showCorrectAnswers}
+              bookmarkedQuestions={bookmarkedQuestions}
+              onQuestionSelect={handleQuestionSelect}
+              onBookmarkToggle={handleBookmark}
             />
-          )}
 
-          {isPractice && !isResultView && (
-            <CountUpTimer ref={timerRef} />
-          )}
+            {!isResultView && (
+              <Button variant="outline" size="sm" onClick={handleSubmit}>
+                <CircleCheckBig className="mr-2 size-2" />
+                Nộp bài
+              </Button>
+            )}
 
-          <QuestionSheet
-            questions={questions}
-            selectedAnswers={
-              isResultView && resultReadingData?.selectedAnswers
-                ? resultReadingData.selectedAnswers
-                : selectedAnswers
-            }
-            currentQuestionId={currentQuestionId ?? undefined}
-            showCorrectAnswers={isResultView || showCorrectAnswers}
-            bookmarkedQuestions={bookmarkedQuestions}
-            onQuestionSelect={handleQuestionSelect}
-            onBookmarkToggle={handleBookmark}
-          />
-
-          {!isResultView && (
-            <Button variant="outline" size="sm" onClick={handleSubmit}>
-              <CircleCheckBig className="mr-2 size-2" />
-              Nộp bài
-            </Button>
-          )}
-
-          {isResultView && (
-            <Button variant="outline" onClick={handleBackToHome}>
-              <Home className="mr-2 size-2" />
-              Back to Home
-            </Button>
-          )}
-        </CardContent>
+            {isResultView && (
+              <Button variant="outline" onClick={handleBackToHome}>
+                <Home className="mr-2 size-2" />
+                Quay lại trang chủ
+              </Button>
+            )}
+          </CardContent>
+        )}
       </Card>
 
       <ReadingResultFeedback

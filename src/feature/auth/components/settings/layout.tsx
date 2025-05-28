@@ -8,25 +8,17 @@ export default function SettingLayout({
 }) {
   const sidebarNavItems = [
     {
-      title: "Profile",
+      title: "Thông tin tài khoản",
       href: RouteNames.ME,
     },
-    // {
-    //   title: "Appearance",
-    //   href: RouteNames.SettingsAppearance,
-    // },
     {
-      title: "Notifications",
+      title: "Thông báo",
       href: RouteNames.SettingsNotifications,
     },
     {
-      title: "Payment",
+      title: "Thanh toán",
       href: RouteNames.SettingsPayment,
     },
-    // {
-    //   title: "History",
-    //   href: RouteNames.SettingsHistory,
-    // },
   ];
   return (
     <div className="space-y-6 p-10 py-0 md:block ">

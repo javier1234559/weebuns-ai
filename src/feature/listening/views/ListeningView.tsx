@@ -107,11 +107,10 @@ export function ListeningView() {
       <div className="rounded-xl border bg-card p-4 shadow-sm md:p-6">
         <div className="prose max-w-none">
           <h1 className="text-xl font-semibold text-foreground">
-            Listening Practice
+            Luyện Đề Nghe Tiếng Anh
           </h1>
           <p className="text-muted-foreground">
-            Select a listening task from the sidebar to begin your practice
-            session.
+            Chọn một bài nghe để bắt đầu phiên luyện tập.
           </p>
         </div>
         <div className="mt-4">

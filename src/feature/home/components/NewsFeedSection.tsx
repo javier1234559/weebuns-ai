@@ -7,13 +7,12 @@ import Link from "next/link";
 import NotificationView from "@/feature/notification/views/NotificationView";
 
 const NewsFeedSection = () => {
-
   const carouselItems = [
     {
       title: "Hướng dẫn viết Writing Task 1",
       image:
         "https://cms.youpass.vn/assets/2391ddd1-deb2-451e-b1d1-c2f519badba2?width=1000",
-        link: "https://ielts1984.vn/ielts-insights",
+      link: "https://ielts1984.vn/ielts-insights",
     },
     {
       title: "Hướng dẫn viết Reading",

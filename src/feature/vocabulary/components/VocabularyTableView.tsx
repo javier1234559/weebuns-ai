@@ -22,11 +22,11 @@ export default function VocabularyTableView({
 }: VocabularyTableViewProps) {
   const TABS = [
     {
-      label: "All",
+      label: "Tất cả",
       value: "all",
     },
     {
-      label: "Due for Review(SRS)",
+      label: "Cần ôn tập (SRS)",
       value: "review",
     },
   ];

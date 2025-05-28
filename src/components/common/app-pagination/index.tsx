@@ -136,7 +136,7 @@ function AppPagination({
                 : "cursor-pointer"
             }`}
           >
-            {isMobile ? "" : "Previous"}
+            {isMobile ? "" : "Trước"}
           </PaginationPrevious>
         </PaginationItem>
 
@@ -151,7 +151,7 @@ function AppPagination({
                 : "cursor-pointer"
             }`}
           >
-            {isMobile ? "" : "Next"}
+            {isMobile ? "" : "Tiếp"}
           </PaginationNext>
         </PaginationItem>
       </PaginationContent>

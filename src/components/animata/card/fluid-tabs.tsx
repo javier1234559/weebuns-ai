@@ -22,7 +22,10 @@ export default function FluidTabs({ tabs }: FluidTabsProps) {
   const [prevPath, setPrevPath] = useState(pathname);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const activeTab = tabs.find((tab) => tab.href === pathname)?.id || tabs[0].id;
+  const activeTab =
+    tabs.find((tab) => {
+      return pathname.includes(tab.href);
+    })?.id || tabs[0].id;
 
   useEffect(() => {
     return () => {
@@ -70,11 +73,7 @@ export default function FluidTabs({ tabs }: FluidTabsProps) {
               relative z-10 flex w-full items-center justify-center gap-1
               rounded-full px-1.5 py-1.5 text-sm font-medium
               transition-all duration-300
-              ${
-                activeTab === tab.id
-                  ? "text-primary"
-                  : "hover:text-primary"
-              }
+              ${activeTab === tab.id ? "text-primary" : "hover:text-primary"}
               ${touchedTab === tab.id ? "blur-sm" : ""}
             `}
             onClick={() => handleTabClick(tab.id)}

@@ -118,11 +118,10 @@ export function ReadingView() {
       <div className="rounded-xl border bg-card p-4 shadow-sm md:p-6">
         <div className="prose max-w-none">
           <h1 className="text-xl font-semibold text-foreground">
-            Reading Practice
+            Luyện Đề Đọc Tiếng Anh
           </h1>
           <p className="text-muted-foreground">
-            Select a reading task from the sidebar to begin your practice
-            session.
+            Chọn một bài đọc để bắt đầu phiên luyện tập.
           </p>
         </div>
         <div className="mt-4">

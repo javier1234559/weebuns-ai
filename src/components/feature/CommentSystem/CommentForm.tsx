@@ -36,13 +36,13 @@ export function CommentForm({ currentUser, onSubmit }: CommentFormProps) {
       </Avatar>
       <div className="flex-1 space-y-2">
         <Textarea
-          placeholder="Write a comment..."
+          placeholder="Viết bình luận..."
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
           className="min-h-[100px] resize-none"
         />
         <div className="flex justify-end">
-          <Button onClick={handleSubmit}>Comment</Button>
+          <Button onClick={handleSubmit}>Thêm bình luận</Button>
         </div>
       </div>
     </div>

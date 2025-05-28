@@ -106,11 +106,10 @@ export function SpeakingView() {
       <div className="rounded-xl border bg-card p-4 shadow-sm md:p-6">
         <div className="prose max-w-none">
           <h1 className="text-xl font-semibold text-foreground">
-            Speaking Practice
+            Luyện Nói Tiếng Anh với AI
           </h1>
           <p className="text-muted-foreground">
-            Select a speaking task from the sidebar to begin your practice
-            session.
+            Chọn một bài nói để bắt đầu phiên luyện tập.
           </p>
         </div>
         <div className="mt-4">

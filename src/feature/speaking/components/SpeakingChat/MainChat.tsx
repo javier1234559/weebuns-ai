@@ -139,11 +139,11 @@ const MainChat = ({
   return (
     <div className="flex flex-col rounded-lg bg-card">
       <div className="flex items-center justify-between border-b p-4">
-        <h2 className="text-xl font-semibold">Speaking Practice</h2>
+        <h2 className="text-xl font-semibold">Luyện nói</h2>
         {isResultView && (
           <Button variant="outline" size="sm" onClick={handleBackToHome}>
             <Home className="mr-2 size-4" />
-            Back to Home
+            Quay lại trang chủ
           </Button>
         )}
         {!isResultView && (
@@ -154,7 +154,7 @@ const MainChat = ({
             onClick={handleSave}
             disabled={chatHistory.length === 0}
           >
-            Save
+            Lưu
           </Button>
         )}
       </div>

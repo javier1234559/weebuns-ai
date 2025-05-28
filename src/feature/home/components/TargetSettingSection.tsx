@@ -81,38 +81,41 @@ export const TargetSettingSection = () => {
       return;
     }
 
-    updateStudentProfile({
-      id: user.id,
-      data: {
-        targetStudyDuration: formData.target_study_duration,
-        targetReading: formData.target_reading,
-        targetListening: formData.target_listening,
-        targetWriting: formData.target_writing,
-        targetSpeaking: formData.target_speaking,
-        nextExamDate: formData.next_exam_date,
+    updateStudentProfile(
+      {
+        id: user.id,
+        data: {
+          targetStudyDuration: formData.target_study_duration,
+          targetReading: formData.target_reading,
+          targetListening: formData.target_listening,
+          targetWriting: formData.target_writing,
+          targetSpeaking: formData.target_speaking,
+          nextExamDate: formData.next_exam_date,
+        },
       },
-    }, {
-      onSuccess: () => {
-        if (user.studentProfile) {
-          setUser({
-            ...user,
-            studentProfile: {
-              ...user.studentProfile,
-              targetStudyDuration: formData.target_study_duration,
-              targetReading: formData.target_reading,
-              targetListening: formData.target_listening,
-              targetWriting: formData.target_writing,
-              targetSpeaking: formData.target_speaking,
-              nextExamDate: formData.next_exam_date,
-            }
-          });
-        }
-        toast.success("Cập nhật thành công");
+      {
+        onSuccess: () => {
+          if (user.studentProfile) {
+            setUser({
+              ...user,
+              studentProfile: {
+                ...user.studentProfile,
+                targetStudyDuration: formData.target_study_duration,
+                targetReading: formData.target_reading,
+                targetListening: formData.target_listening,
+                targetWriting: formData.target_writing,
+                targetSpeaking: formData.target_speaking,
+                nextExamDate: formData.next_exam_date,
+              },
+            });
+          }
+          toast.success("Cập nhật thành công");
+        },
+        onError: () => {
+          toast.error("Cập nhật thất bại");
+        },
       },
-      onError: () => {
-        toast.error("Cập nhật thất bại");
-      },
-    });
+    );
     setIsModalOpen(false);
   };
 
@@ -129,7 +132,7 @@ export const TargetSettingSection = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg font-medium">
-              Đo lường &quot;sự chăm chỉ&quot; của bạn
+              Mục tiêu học tập của bạn
             </CardTitle>
             <Button
               variant="ghost"
@@ -182,10 +185,22 @@ export const TargetSettingSection = () => {
 
             {/* Individual Scores */}
             <div className="grid grid-cols-4 gap-3">
-              <ScoreDisplay label="Reading" score={studentProfile.targetReading ?? 0} />
-              <ScoreDisplay label="Listening" score={studentProfile.targetListening ?? 0} />
-              <ScoreDisplay label="Writing" score={studentProfile.targetWriting ?? 0} />
-              <ScoreDisplay label="Speaking" score={studentProfile.targetSpeaking ?? 0} />
+              <ScoreDisplay
+                label="Reading"
+                score={studentProfile.targetReading ?? 0}
+              />
+              <ScoreDisplay
+                label="Listening"
+                score={studentProfile.targetListening ?? 0}
+              />
+              <ScoreDisplay
+                label="Writing"
+                score={studentProfile.targetWriting ?? 0}
+              />
+              <ScoreDisplay
+                label="Speaking"
+                score={studentProfile.targetSpeaking ?? 0}
+              />
             </div>
           </div>
         </CardContent>

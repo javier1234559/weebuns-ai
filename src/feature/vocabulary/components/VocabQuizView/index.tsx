@@ -89,9 +89,9 @@ export default function VocabQuizView() {
             onClick={toggleShowFront}
           >
             {showFrontContent ? (
-              <p className="text-sm text-muted-foreground">Show less</p>
+              <p className="text-sm text-muted-foreground">Hiện ít hơn</p>
             ) : (
-              <p className="text-sm text-muted-foreground">Show more</p>
+              <p className="text-sm text-muted-foreground">Hiện thêm</p>
             )}
           </button>
         </div>
@@ -128,9 +128,9 @@ export default function VocabQuizView() {
             onClick={toggleShowFront}
           >
             {showFrontContent ? (
-              <p className="text-sm text-muted-foreground">Show less</p>
+              <p className="text-sm text-muted-foreground">Hiện ít hơn</p>
             ) : (
-              <p className="text-sm text-muted-foreground">Show more</p>
+              <p className="text-sm text-muted-foreground">Hiện thêm</p>
             )}
           </button>
         </div>
@@ -164,13 +164,15 @@ export default function VocabQuizView() {
   return (
     <div className="mx-auto flex h-full w-[90vw] max-w-[900px] flex-col space-y-4 px-4 pb-4">
       <div className="space-y-4 border-b p-4">
-        <h2 className="text-2xl font-bold">Review Vocab</h2>
+        <h2 className="text-2xl font-bold">Ôn tập từ vựng</h2>
         <p className="text-muted-foreground">
-          There are {totalWords} words to review in this session.
+          Có {totalWords} từ vựng cần ôn tập trong phiên học này.
         </p>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Session Progress</p>
+            <p className="text-sm text-muted-foreground">
+              Tiến trình phiên học
+            </p>
             <p className="text-sm text-muted-foreground">
               {Math.round(progress)}%
             </p>

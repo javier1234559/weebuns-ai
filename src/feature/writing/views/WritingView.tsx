@@ -2,7 +2,7 @@
 
 import AppPagination from "@/components/common/app-pagination";
 import { SearchInput } from "@/components/feature/SearchInput";
- import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { LessonNavigation } from "@/feature/lesson/components/LessonNavigation";
 import {
   ContainerSidebar,
@@ -104,11 +104,10 @@ export function WritingView() {
       <div className="rounded-xl border bg-card p-4 shadow-sm md:p-6">
         <div className="prose max-w-none">
           <h1 className="text-xl font-semibold text-foreground">
-            Writing Practice
+            Luyện Đề Viết Tiếng Anh
           </h1>
           <p className="text-muted-foreground">
-            Select a writing task from the sidebar to begin your practice
-            session.
+            Chọn một bài viết để bắt đầu phiên luyện tập.
           </p>
         </div>
         <div className="mt-4">
