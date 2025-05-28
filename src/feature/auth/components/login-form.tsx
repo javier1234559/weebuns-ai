@@ -70,7 +70,7 @@ export function LoginForm() {
       });
 
       toast.success("Login successful!");
-      router.push(RouteNames.Home);
+      window.location.href = RouteNames.Home;
     } catch (error) {
       console.error("Login error:", error);
       toast.error("Login failed. Please try again.");
