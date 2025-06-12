@@ -23,7 +23,9 @@ export function WritingDetailView({
   const { data, isLoading, error } = useWritingDetail(id);
   const submitWritingMutation = useCreateWritingSubmission();
 
-  const handleSubmit = async (data: CreateWritingSubmissionDTO) => {
+  const handleSubmitWithConfirmation = async (
+    data: CreateWritingSubmissionDTO,
+  ) => {
     const submission = await submitWritingMutation.mutateAsync(data);
     const submissionId = submission.data.id ?? "";
     if (submissionId) {
@@ -37,8 +39,14 @@ export function WritingDetailView({
     }
   };
 
-  const handleSubmitWithConfirmation = (data: CreateWritingSubmissionDTO) => {
-    handleSubmit(data);
+  const handleSave = async (data: CreateWritingSubmissionDTO) => {
+    const submission = await submitWritingMutation.mutateAsync(data);
+    const submissionId = submission.data.id ?? "";
+    if (submissionId) {
+      toast.success("Lesson saved successfully");
+    } else {
+      toast.error("Lesson saving failed");
+    }
   };
 
   if (isLoading) {
@@ -54,6 +62,7 @@ export function WritingDetailView({
       topic={data?.data.title ?? ""}
       isReadOnly={isReadOnly}
       onSubmit={handleSubmitWithConfirmation}
+      onSave={handleSave}
       content={data?.data.content ?? undefined}
       lessonId={id}
       createdBy={data?.data.createdBy}

@@ -73,6 +73,8 @@ const SpeakingSubmit = ({
     setAudioUrl("");
   };
 
+  console.log(value);
+
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-2">
       {audioUrl && (
@@ -86,7 +88,7 @@ const SpeakingSubmit = ({
 
       <AudioRecorder onRecordingComplete={handleRecordingComplete} />
       <Button
-        disabled={isLoading || !audioBlob}
+        disabled={value.trim() === "" || isLoading}
         type="submit"
         className="px-10"
         onClick={onSubmit}

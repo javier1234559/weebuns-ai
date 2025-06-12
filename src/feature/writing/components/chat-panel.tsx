@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useAuthStore } from "@/store/auth-store";
 import { CornerDownLeft } from "lucide-react";
 import {
@@ -10,30 +10,36 @@ import {
 } from "@/components/ui/chat/chat-bubble";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { ChatInput } from "@/components/ui/chat/chat-input";
-import { simpleInlineMarkdownToHtml } from "@/lib/text";
 import { TokenProtectedButton } from "@/feature/token/components/TokenProtectedButton";
 import { TOKEN_COSTS } from "@/feature/token/constants";
-import { useStreamingChatWithHistory } from "@/hooks/useStreamingChatWithHistory";
+import TextTypewriterMD from "@/components/animata/text/text-typewriter-md";
 
 interface ChatPanelProps {
   topic: string;
   content: string;
+  messages: any[];
+  onSendMessage: (message: string) => void;
+  loading?: boolean;
 }
 
 const DEFAULT_MESSAGE = "Ok bạn có thể cho tôi một số ý để viết không?";
 
-export default function ChatPanel({ topic, content }: ChatPanelProps) {
+export default function ChatPanel({
+  messages,
+  onSendMessage,
+  loading = false,
+}: ChatPanelProps) {
   const { user } = useAuthStore();
   const [input, setInput] = useState(DEFAULT_MESSAGE);
-  const { messages, loading, sendMessage } =
-    useStreamingChatWithHistory({
-      apiUrl: "/api/ai/chat",
-    });
+  const lastMessageIdRef = useRef<number>(0);
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
-    await sendMessage({ content: input, extraBody: { topic, content } });
+    await onSendMessage(input);
     setInput("");
+    // Update the last message ID to the current messages length
+    // The next AI response will have this ID
+    lastMessageIdRef.current = messages.length;
   };
 
   return (
@@ -44,8 +50,10 @@ export default function ChatPanel({ topic, content }: ChatPanelProps) {
             <ChatBubble variant="received">
               <ChatBubbleAvatar fallback="AI" />
               <ChatBubbleMessage>
-                Hello! I&apos;m your writing assistant. How can I help you
-                today?
+                <TextTypewriterMD
+                  text="Hello! I'm your writing assistant. How can I help you today?"
+                  renderMarkdown
+                />
               </ChatBubbleMessage>
             </ChatBubble>
           )}
@@ -61,11 +69,15 @@ export default function ChatPanel({ topic, content }: ChatPanelProps) {
                 fallback={msg.role === "user" ? "US" : "AI"}
               />
               <ChatBubbleMessage>
-                <span
-                  className="animate-fade-in"
-                  dangerouslySetInnerHTML={{
-                    __html: simpleInlineMarkdownToHtml(msg.content),
-                  }}
+                <TextTypewriterMD
+                  text={msg.content}
+                  renderMarkdown
+                  typeSpeed={7}
+                  skipAnimation={
+                    msg.role === "user" ||
+                    idx !== messages.length - 1 ||
+                    idx <= lastMessageIdRef.current
+                  }
                 />
               </ChatBubbleMessage>
             </ChatBubble>

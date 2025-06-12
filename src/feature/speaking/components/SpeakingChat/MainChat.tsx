@@ -14,10 +14,11 @@ import {
 } from "@/components/ui/chat/chat-bubble";
 import { ChatMessageList } from "@/components/ui/chat/chat-message-list";
 import { ChatInput } from "@/components/ui/chat/chat-input";
-import { useCreateSpeakingSubmission } from "@/feature/lesson/hooks/useSubmissionLessonClient";
+import { useSaveSpeakingSubmission } from "@/feature/lesson/hooks/useSubmissionLessonClient";
 import {
-  CreateSpeakingSubmissionDTO,
   ChatMessageDTO,
+  UpdateSpeakingSubmissionDTO,
+  SubmissionStatus,
 } from "@/services/swagger-types";
 import { useRouter } from "next/navigation";
 import { RouteNames } from "@/constraints/route-name";
@@ -30,6 +31,8 @@ import SpeakingSubmit from "./SpeakingSubmit";
 import { Switch } from "@/components/ui/switch";
 import { globalConfig } from "@/config";
 import { useAuthStore } from "@/store/auth-store";
+import { TOKEN_COSTS } from "@/feature/token/constants";
+import { useClearSpeakingSession } from "@/feature/ai/hooks/useAi";
 
 interface MainChatProps {
   context?: string;
@@ -51,9 +54,10 @@ const MainChat = ({
   const { suggestedResponses, firstGreeting, refetchRecommend } =
     useSuggestChat({
       sessionId,
+      isResultView,
     });
   const { ref, scrollToBottom } = useScrollToBottom<HTMLDivElement>();
-  const createSpeakingSubmission = useCreateSpeakingSubmission();
+  const createSpeakingSubmission = useSaveSpeakingSubmission();
   const { parts, fullText, sendMessage } = useStreamingChat({
     apiUrl: `${globalConfig.API_URL}/api/ai/speaking/chat-streaming`,
   });
@@ -64,6 +68,7 @@ const MainChat = ({
   const [isStreaming, setIsStreaming] = useState(false);
   const [playingMessageId, setPlayingMessageId] = useState<string | null>(null);
   const [isVoiceMode, setIsVoiceMode] = useState(true);
+  const { mutate: clearSpeakingSession } = useClearSpeakingSession();
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
@@ -87,19 +92,26 @@ const MainChat = ({
 
   const handleSave = async () => {
     try {
-      const submissionData: CreateSpeakingSubmissionDTO = {
+      const submissionData: UpdateSpeakingSubmissionDTO = {
         lessonId: lessonId as string,
         submissionType: "speaking",
-        tokensUsed: 0,
+        tokensUsed: TOKEN_COSTS.SPEAKING,
+        status: SubmissionStatus.Submitted,
         content: {
           topic_text: context || "",
           prompt_text: context || "",
           chat_history: chatHistory,
         },
       };
-
-      await createSpeakingSubmission.mutateAsync(submissionData);
+      await createSpeakingSubmission.mutateAsync({
+        id: sessionId,
+        data: submissionData,
+      });
       toast.success("Chat history saved successfully!");
+
+      //check speaking session
+      clearSpeakingSession(sessionId);
+      router.push(RouteNames.Home);
     } catch (error) {
       console.error("Error saving chat history:", error);
       toast.error("Failed to save chat history");
@@ -149,12 +161,11 @@ const MainChat = ({
         {!isResultView && (
           <Button
             size="sm"
-            variant="outline"
             className="mr-2"
             onClick={handleSave}
             disabled={chatHistory.length === 0}
           >
-            Lưu
+            Kết thúc và lưu
           </Button>
         )}
       </div>
@@ -183,7 +194,7 @@ const MainChat = ({
               <span
                 className="animate-fade-in"
                 dangerouslySetInnerHTML={{
-                  __html: simpleInlineMarkdownToHtml(message.text),
+                  __html: simpleInlineMarkdownToHtml(message?.text ?? ""),
                 }}
               />
               <div className="mt-2 flex items-center gap-2">

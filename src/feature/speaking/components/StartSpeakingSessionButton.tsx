@@ -5,6 +5,8 @@ import { StartSpeakingDto } from "@/services/swagger-types";
 import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
 
 interface StartSpeakingSessionButtonProps {
+  lessonId: string;
+  userId: string;
   promptText: string;
   topicText: string;
   followupExamples: string[];
@@ -16,6 +18,8 @@ interface StartSpeakingSessionButtonProps {
 }
 
 export function StartSpeakingSessionButton({
+  lessonId,
+  userId,
   promptText,
   topicText,
   followupExamples,
@@ -29,6 +33,8 @@ export function StartSpeakingSessionButton({
 
   const handleStartSpeaking = async () => {
     const data: StartSpeakingDto = {
+      lessonId,
+      userId,
       promptText,
       topicText,
       followupExamples,

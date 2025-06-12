@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, BookOpen, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { LessonSubmission } from "@/services/swagger-types";
+import { LessonSubmission, SubmissionStatus } from "@/services/swagger-types";
 
 interface LessonCardListProps {
   data: LessonSubmission[];
@@ -55,9 +55,17 @@ export function LessonCardList({ data }: LessonCardListProps) {
   };
 
   // Generate URL based on skill
-  const getLessonUrl = (item: LessonSubmission) => {
+  const getLessonUrl = (item: LessonSubmission, status: SubmissionStatus) => {
+    let buildUrl = "";
+
     const skill = item.lesson?.skill?.toLowerCase() || "";
-    return `/lesson/${skill}/${item.lessonId}/result?submissionId=${item.id}`;
+    if (skill === "speaking" && status === SubmissionStatus.Draft) {
+      buildUrl = `/lesson/speaking/${item.lessonId}?sessionId=${item.id}`;
+    } else {
+      buildUrl = `/lesson/${skill}/${item.lessonId}/result?submissionId=${item.id}`;
+    }
+
+    return buildUrl;
   };
 
   return (
@@ -125,7 +133,9 @@ export function LessonCardList({ data }: LessonCardListProps) {
                 size="icon"
                 variant="ghost"
                 className="size-8"
-                onClick={() => window.open(getLessonUrl(item), "_blank")}
+                onClick={() =>
+                  window.open(getLessonUrl(item, item.status), "_blank")
+                }
                 title="Open in new tab"
               >
                 <ExternalLink className="size-4" />

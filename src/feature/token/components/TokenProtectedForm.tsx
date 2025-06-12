@@ -31,8 +31,8 @@ export const TokenProtectedForm = ({
   onError,
   children,
   className,
-  confirmTitle = "Confirm Submission",
-  confirmDescription = "Are you sure you want to submit? This action will cost tokens.",
+  confirmTitle = "Xác nhận thực hiện",
+  confirmDescription = "Bạn có chắc chắn muốn thực hiện hành động này không? Hành động này sẽ tốn token.",
 }: TokenProtectedFormProps) => {
   const { data: wallet, isLoading } = useWallet();
   const useTokensMutation = useUseTokens();
@@ -52,8 +52,8 @@ export const TokenProtectedForm = ({
     if (isDisabled) {
       if (!hasEnoughBalance) {
         toast({
-          title: "Insufficient Tokens",
-          description: `You need ${requiredTokens} tokens to perform this action. Current balance: ${balance}`,
+          title: "Không đủ token",
+          description: `Bạn cần ${requiredTokens} token để thực hiện hành động này. Số token hiện có: ${balance}`,
           variant: "destructive",
         });
       }
@@ -72,13 +72,13 @@ export const TokenProtectedForm = ({
       await useTokensMutation.mutateAsync({ tokenAmount: requiredTokens });
       await onSubmit(pendingData);
       toast({
-        title: "Success",
-        description: `Action completed. Tokens remaining: ${balance - requiredTokens}`,
+        title: "Thành công",
+        description: `Hành động đã hoàn thành. Số token còn lại: ${balance - requiredTokens}`,
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to perform action. Please try again.",
+        title: "Lỗi",
+        description: "Không thực hiện được hành động. Vui lòng thử lại.",
         variant: "destructive",
       });
       onError?.(error);
@@ -123,16 +123,16 @@ export const TokenProtectedForm = ({
               onClick={() => setShowConfirmDialog(false)}
               disabled={isActionPending}
             >
-              Cancel
+              Hủy
             </Button>
             <Button onClick={handleConfirm} disabled={isActionPending}>
               {isActionPending ? (
                 <>
                   <div className="mr-2 size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                  Processing...
+                  Đang xử lý...
                 </>
               ) : (
-                "Confirm"
+                "Xác nhận"
               )}
             </Button>
           </DialogFooter>

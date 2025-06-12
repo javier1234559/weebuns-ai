@@ -2,17 +2,8 @@
 
 import { LessonQueryParams } from "@/feature/lesson/services/lessonApi";
 import lessonApi from "@/feature/lesson/services/lessonApi";
-import submissionApi from "@/feature/lesson/services/submissionApi";
-import {
-  CreateSpeakingSubmissionDTO,
-  LessonsResponse,
-} from "@/services/swagger-types";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-  UseQueryOptions,
-} from "@tanstack/react-query";
+import { LessonsResponse } from "@/services/swagger-types";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 
 export const SPEAKING_KEY_FACTORY = {
   all: ["speaking"] as const,
@@ -46,19 +37,19 @@ export const useSpeakingDetail = (id: string, options?: unknown) => {
   });
 };
 
-export const useSpeakingSubmission = (
-  data: CreateSpeakingSubmissionDTO,
-  options?: unknown,
-) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: () => submissionApi.createSpeaking(data),
-    onSuccess: () => {
-      // Invalidate all speaking-related queries
-      queryClient.invalidateQueries({
-        queryKey: SPEAKING_KEY_FACTORY.all,
-      });
-    },
-    ...(typeof options === "object" ? options : {}),
-  });
-};
+// export const useSpeakingSubmission = (
+//   data: CreateSpeakingSubmissionDTO,
+//   options?: unknown,
+// ) => {
+//   const queryClient = useQueryClient();
+//   return useMutation({
+//     mutationFn: () => submissionApi.createSpeaking(data),
+//     onSuccess: () => {
+//       // Invalidate all speaking-related queries
+//       queryClient.invalidateQueries({
+//         queryKey: SPEAKING_KEY_FACTORY.all,
+//       });
+//     },
+//     ...(typeof options === "object" ? options : {}),
+//   });
+// };

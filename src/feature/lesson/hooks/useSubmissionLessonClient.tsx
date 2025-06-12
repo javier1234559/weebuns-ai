@@ -12,10 +12,10 @@ import submissionApi, {
 import {
   CreateReadingSubmissionDTO,
   CreateListeningSubmissionDTO,
-  CreateSpeakingSubmissionDTO,
   CreateWritingSubmissionDTO,
   UpdateWritingSubmissionDTO,
   LessonSubmissionsResponse,
+  UpdateSpeakingSubmissionDTO,
 } from "@/services/swagger-types";
 
 const SUBMISSION_BASE = ["submission"] as const;
@@ -39,7 +39,9 @@ export const useSubmissionList = (
   return useQuery({
     queryKey: SUBMISSION_KEY_FACTORY.list(params),
     queryFn: () => submissionApi.getAllSubmissionsByUser(params),
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    refetchOnWindowFocus: true, // Refresh when window regains focus
+    refetchOnMount: true, // Refresh when component mounts
+    refetchOnReconnect: true, // Refresh when reconnecting
     enabled: true,
     ...(typeof options === "object" ? options : {}),
   });
@@ -106,12 +108,17 @@ export const useSpeakingSubmissionDetail = (id: string, options?: unknown) => {
   });
 };
 
-export const useCreateSpeakingSubmission = () => {
+export const useSaveSpeakingSubmission = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateSpeakingSubmissionDTO) =>
-      submissionApi.createSpeaking(data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: string;
+      data: UpdateSpeakingSubmissionDTO;
+    }) => submissionApi.updateSpeaking(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: SUBMISSION_KEY_FACTORY.lists(),

@@ -44,7 +44,7 @@ export function TestHistoryTabs() {
             content: (
               <SubmissionLessonHistoryView
                 submissionType={SkillType.Writing}
-                status={SubmissionStatus.Submitted}
+                status={SubmissionStatus.Draft}
               />
             ),
           },
@@ -67,6 +67,35 @@ export function TestHistoryTabs() {
               <SubmissionLessonHistoryView
                 submissionType={SkillType.Writing}
                 status={SubmissionStatus.Scored}
+              />
+            ),
+          },
+        ],
+      },
+      {
+        id: "speaking",
+        label: "Speaking",
+        icon: <MessageCircle className="size-4" />,
+        subTabs: [
+          {
+            id: "speaking-draft",
+            value: "draft",
+            label: "Đang làm",
+            content: (
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Speaking}
+                status={SubmissionStatus.Draft}
+              />
+            ),
+          },
+          {
+            id: "speaking-completed",
+            value: "completed",
+            label: "Đã làm",
+            content: (
+              <SubmissionLessonHistoryView
+                submissionType={SkillType.Speaking}
+                status={SubmissionStatus.Submitted}
               />
             ),
           },
@@ -124,35 +153,6 @@ export function TestHistoryTabs() {
             content: (
               <SubmissionLessonHistoryView
                 submissionType={SkillType.Listening}
-                status={SubmissionStatus.Submitted}
-              />
-            ),
-          },
-        ],
-      },
-      {
-        id: "speaking",
-        label: "Speaking",
-        icon: <MessageCircle className="size-4" />,
-        subTabs: [
-          {
-            id: "speaking-draft",
-            value: "draft",
-            label: "Đang làm",
-            content: (
-              <SubmissionLessonHistoryView
-                submissionType={SkillType.Speaking}
-                status={SubmissionStatus.Draft}
-              />
-            ),
-          },
-          {
-            id: "speaking-completed",
-            value: "completed",
-            label: "Đã làm",
-            content: (
-              <SubmissionLessonHistoryView
-                submissionType={SkillType.Speaking}
                 status={SubmissionStatus.Submitted}
               />
             ),

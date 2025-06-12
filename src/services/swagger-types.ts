@@ -6,12 +6,23 @@
  * ----------------------------------------------------------------------
  */
 
-export interface CheckSessionResponseDto {
+export interface ChatMessageDto {
   /**
-   * Status of the session
-   * @example true
+   * Role of the message sender (user or assistant)
+   * @example "user"
    */
+  role: string;
+  /**
+   * Content of the message
+   * @example "Tell me about the benefits of learning a new language"
+   */
+  content: string;
+}
+
+export interface CheckSessionResponseDto {
   status: boolean;
+  history?: ChatMessageDto[];
+  systemPrompt?: string;
 }
 
 export interface TranslateDto {
@@ -112,19 +123,6 @@ export interface ChatRequestDto {
   systemPrompt?: string;
 }
 
-export interface ChatMessageDto {
-  /**
-   * Role of the message sender (user or assistant)
-   * @example "user"
-   */
-  role: string;
-  /**
-   * Content of the message
-   * @example "Tell me about the benefits of learning a new language"
-   */
-  content: string;
-}
-
 export interface ChatResponseDto {
   /**
    * The response from the AI assistant
@@ -141,39 +139,18 @@ export interface ChatResponseDto {
 }
 
 export interface StartSpeakingDto {
-  /**
-   * Initial prompt for the AI
-   * @example "Let's practice speaking English"
-   */
+  lessonId: string;
+  userId: string;
   promptText: string;
-  /**
-   * Topic to discuss
-   * @example "Travel and Tourism"
-   */
   topicText: string;
-  /**
-   * Example follow-up questions
-   * @example ["What places have you visited?","How was your last trip?"]
-   */
   followupExamples: string[];
-  /**
-   * Background knowledge for the topic
-   * @example "Focus on travel experiences and cultural differences"
-   */
   backgroundKnowledge: string;
 }
 
 export interface StartSpeakingResponseDto {
-  /**
-   * Session ID for continuing the conversation
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
   sessionId: string;
-  /**
-   * Topic of the conversation
-   * @example "Travel and Tourism"
-   */
-  topicText: string;
+  topicText?: string;
+  submissionId: string;
 }
 
 export interface SpeakingDto {
@@ -544,25 +521,48 @@ export interface ResetPasswordResponse {
   message: string;
 }
 
-export type DeleteResponseDto = object;
-
-export enum SkillType {
-  Listening = "listening",
-  Reading = "reading",
-  Writing = "writing",
-  Speaking = "speaking",
+export interface TokenWallet {
+  id: string;
+  userId: string;
+  balance: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  deletedAt?: object;
 }
 
-export enum LessonType {
-  Practice = "practice",
-  Test = "test",
+export interface TokenWalletResponse {
+  wallet: TokenWallet;
 }
 
-export enum ContentStatus {
-  Draft = "draft",
-  Published = "published",
-  Private = "private",
-  Deleted = "deleted",
+export interface TokenPackage {
+  id: string;
+  pricePerToken: number;
+  oldPricePerToken: number;
+  message: string;
+  popular: boolean;
+  code: string;
+  name: string;
+  tokens: number;
+  price: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface TokenPackagesResponse {
+  packages: TokenPackage[];
+}
+
+export interface CreateTransactionDto {
+  packageCode: string;
+  paymentType: "bank" | "momo" | "zalopay" | "internal";
+}
+
+export interface PaymentUrlResponse {
+  paymentUrl: string;
 }
 
 export interface User {
@@ -613,6 +613,105 @@ export interface User {
   deletedAt: string | null;
   teacherProfile: TeacherProfileEntity | null;
   studentProfile: StudentProfileEntity | null;
+}
+
+export interface Transaction {
+  id: string;
+  transactionId: string;
+  userId: string;
+  packageId: object;
+  currency: string;
+  amount: number;
+  tokenAmount: number;
+  paymentType: "bank" | "momo" | "zalopay" | "internal";
+  status: "pending" | "completed" | "failed" | "refunded";
+  /** @format date-time */
+  paymentDate: string;
+  type: "TOKEN_PURCHASE" | "TOKEN_USE" | "TOKEN_EARN" | "TOKEN_WITHDRAW";
+  reason?: object;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  package?: TokenPackage;
+  user?: User;
+}
+
+export interface TransactionsResponse {
+  data: Transaction[];
+  pagination: PaginationOutputDto;
+}
+
+export interface UseTokensDto {
+  tokenAmount: number;
+  reason?: string;
+}
+
+export interface TransactionResponse {
+  transaction: Transaction;
+}
+
+export interface WithdrawTokensDto {
+  tokenAmount: number;
+}
+
+export interface TransactionWithUserResponse {
+  transaction: Transaction;
+  user: User;
+}
+
+export interface CreateNotificationDto {
+  userId?: string;
+  type: "system" | "advertisement" | "submission" | "comment_reply" | "comment_mention";
+  title: string;
+  content: string;
+  thumbnailUrl?: string;
+  actionUrl?: string;
+  /** @default false */
+  isGlobal: boolean;
+}
+
+export interface Notification {
+  id: string;
+  type: string;
+  title: string;
+  content: string;
+  thumbnailUrl: string | null;
+  actionUrl: string | null;
+  isGlobal: boolean;
+  userId: object;
+  isRead: boolean;
+  createdById: string;
+  /** @format date-time */
+  createdAt: string;
+  expiresAt: object;
+}
+
+export interface NotificationResponse {
+  data: Notification[];
+  pagination: PaginationOutputDto;
+}
+
+export type DeleteResponseDto = object;
+
+export enum SkillType {
+  Listening = "listening",
+  Reading = "reading",
+  Writing = "writing",
+  Speaking = "speaking",
+}
+
+export enum LessonType {
+  Practice = "practice",
+  Test = "test",
+}
+
+export enum ContentStatus {
+  Draft = "draft",
+  Published = "published",
+  Private = "private",
+  Deleted = "deleted",
+  Pending = "pending",
 }
 
 export enum SubmissionStatus {
@@ -695,6 +794,15 @@ export interface LessonsResponse {
   pagination: PaginationOutputDto;
 }
 
+export interface UpdateLessonDTO {
+  title?: string;
+  description?: string;
+  level?: string;
+  topic?: string;
+  thumbnailUrl?: string;
+  status?: string;
+}
+
 export interface DeleteLessonResponse {
   message: string;
 }
@@ -754,7 +862,7 @@ export interface CreateReadingDTO {
   timeLimit: number;
   tags: string[];
   thumbnailUrl: string;
-  status: "draft" | "published" | "private" | "deleted";
+  status: "draft" | "published" | "private" | "deleted" | "pending";
   createdById?: string;
   content: ContentReadingDTO;
 }
@@ -768,7 +876,7 @@ export interface UpdateReadingDTO {
   timeLimit: number;
   tags: string[];
   thumbnailUrl: string;
-  status: "draft" | "published" | "private" | "deleted";
+  status: "draft" | "published" | "private" | "deleted" | "pending";
   createdById?: string;
   content?: ContentReadingDTO;
 }
@@ -817,7 +925,7 @@ export interface CreateListeningDTO {
   timeLimit: number;
   tags: string[];
   thumbnailUrl: string;
-  status: "draft" | "published" | "private" | "deleted";
+  status: "draft" | "published" | "private" | "deleted" | "pending";
   createdById?: string;
   content: ContentListeningDTO;
 }
@@ -831,7 +939,7 @@ export interface UpdateListeningDTO {
   timeLimit: number;
   tags: string[];
   thumbnailUrl: string;
-  status: "draft" | "published" | "private" | "deleted";
+  status: "draft" | "published" | "private" | "deleted" | "pending";
   createdById?: string;
   content?: ContentListeningDTO;
 }
@@ -923,7 +1031,7 @@ export interface CreateWritingDTO {
   timeLimit: number;
   tags: string[];
   thumbnailUrl: string;
-  status: "draft" | "published" | "private" | "deleted";
+  status: "draft" | "published" | "private" | "deleted" | "pending";
   createdById?: string;
   content: ContentWritingDTO;
 }
@@ -937,7 +1045,7 @@ export interface UpdateWritingDTO {
   timeLimit: number;
   tags: string[];
   thumbnailUrl: string;
-  status: "draft" | "published" | "private" | "deleted";
+  status: "draft" | "published" | "private" | "deleted" | "pending";
   createdById?: string;
   content?: ContentWritingDTO;
 }
@@ -1004,7 +1112,7 @@ export interface CreateSpeakingDTO {
   timeLimit: number;
   tags: string[];
   thumbnailUrl: string;
-  status: "draft" | "published" | "private" | "deleted";
+  status: "draft" | "published" | "private" | "deleted" | "pending";
   createdById?: string;
   content: ContentSpeakingDTO;
 }
@@ -1018,7 +1126,7 @@ export interface UpdateSpeakingDTO {
   timeLimit: number;
   tags: string[];
   thumbnailUrl: string;
-  status: "draft" | "published" | "private" | "deleted";
+  status: "draft" | "published" | "private" | "deleted" | "pending";
   createdById?: string;
   content?: ContentSpeakingDTO;
 }
@@ -1090,38 +1198,6 @@ export interface AddReactionResponse {
 
 export interface DeleteCommentResponse {
   message: string;
-}
-
-export interface CreateNotificationDto {
-  userId?: string;
-  type: "system" | "advertisement" | "submission" | "comment_reply" | "comment_mention";
-  title: string;
-  content: string;
-  thumbnailUrl?: string;
-  actionUrl?: string;
-  /** @default false */
-  isGlobal: boolean;
-}
-
-export interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  content: string;
-  thumbnailUrl: string | null;
-  actionUrl: string | null;
-  isGlobal: boolean;
-  userId: object;
-  isRead: boolean;
-  createdById: string;
-  /** @format date-time */
-  createdAt: string;
-  expiresAt: object;
-}
-
-export interface NotificationResponse {
-  data: Notification[];
-  pagination: PaginationOutputDto;
 }
 
 export interface LessonSubmissionsResponse {
@@ -1276,11 +1352,12 @@ export interface SpeakingSubmissionResponse {
   data: SpeakingSubmission;
 }
 
-export interface CreateSpeakingSubmissionDTO {
+export interface UpdateSpeakingSubmissionDTO {
   lessonId: string;
   submissionType: "listening" | "reading" | "writing" | "speaking";
   tokensUsed: number;
-  content: ContentSpeakingSubmissionDTO;
+  status?: string;
+  content?: ContentSpeakingSubmissionDTO;
 }
 
 export interface UserDataDTO {
@@ -1341,6 +1418,7 @@ export interface CreateWritingSubmissionDTO {
   lessonId: string;
   submissionType: "listening" | "reading" | "writing" | "speaking";
   tokensUsed: number;
+  status?: string;
   content: ContentWritingSubmissionDTO;
 }
 
@@ -1354,95 +1432,6 @@ export interface UpdateWritingSubmissionDTO {
   tokensUsed: number;
   content?: ContentWritingSubmissionDTO;
   feedback?: WritingFeedbackDTO;
-}
-
-export interface TokenWallet {
-  id: string;
-  userId: string;
-  balance: number;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  deletedAt?: object;
-}
-
-export interface TokenWalletResponse {
-  wallet: TokenWallet;
-}
-
-export interface TokenPackage {
-  id: string;
-  pricePerToken: number;
-  oldPricePerToken: number;
-  message: string;
-  popular: boolean;
-  code: string;
-  name: string;
-  tokens: number;
-  price: number;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-}
-
-export interface TokenPackagesResponse {
-  packages: TokenPackage[];
-}
-
-export interface CreateTransactionDto {
-  packageCode: string;
-  paymentType: "bank" | "momo" | "zalopay" | "internal";
-}
-
-export interface PaymentUrlResponse {
-  paymentUrl: string;
-}
-
-export interface Transaction {
-  id: string;
-  transactionId: string;
-  userId: string;
-  packageId: object;
-  currency: string;
-  amount: number;
-  tokenAmount: number;
-  paymentType: "bank" | "momo" | "zalopay" | "internal";
-  status: "pending" | "completed" | "failed" | "refunded";
-  /** @format date-time */
-  paymentDate: string;
-  type: "TOKEN_PURCHASE" | "TOKEN_USE" | "TOKEN_EARN" | "TOKEN_WITHDRAW";
-  reason?: object;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-  package?: TokenPackage;
-  user?: User;
-}
-
-export interface TransactionsResponse {
-  data: Transaction[];
-  pagination: PaginationOutputDto;
-}
-
-export interface UseTokensDto {
-  tokenAmount: number;
-  reason?: string;
-}
-
-export interface TransactionResponse {
-  transaction: Transaction;
-}
-
-export interface WithdrawTokensDto {
-  tokenAmount: number;
-}
-
-export interface TransactionWithUserResponse {
-  transaction: Transaction;
-  user: User;
 }
 
 export interface CreateVocabularyDto {
@@ -1572,6 +1561,45 @@ export interface CreateStudyActivityDto {
   speaking: number;
   /** @example 90 */
   totalMinutes: number;
+}
+
+export interface Banner {
+  id: string;
+  title: string;
+  orderIndex: number;
+  imageUrl: string;
+  actionLink: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface BannerResponse {
+  data: Banner[];
+  pagination: PaginationOutputDto;
+}
+
+export interface SingleBannerResponse {
+  data: Banner;
+}
+
+export interface CreateBannerDto {
+  title: string;
+  orderIndex: number;
+  imageUrl: string;
+  actionLink: string;
+}
+
+export interface UpdateBannerDto {
+  title: string;
+  orderIndex: number;
+  imageUrl: string;
+  actionLink: string;
+}
+
+export interface DeleteBannerResponse {
+  message: string;
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
@@ -2043,6 +2071,36 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags ai
+     * @name AiControllerCheckSpeakingSession
+     * @request GET:/api/ai/speaking/check-session/{sessionId}
+     */
+    aiControllerCheckSpeakingSession: (sessionId: string, params: RequestParams = {}) =>
+      this.request<CheckSessionResponseDto, any>({
+        path: `/api/ai/speaking/check-session/${sessionId}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiControllerClearSpeakingSession
+     * @request DELETE:/api/ai/speaking/clear-session/{sessionId}
+     */
+    aiControllerClearSpeakingSession: (sessionId: string, params: RequestParams = {}) =>
+      this.request<DeleteResponseDto, any>({
+        path: `/api/ai/speaking/clear-session/${sessionId}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags users
      * @name UserControllerFindAll
      * @request GET:/api/users
@@ -2403,6 +2461,364 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @tags token
+     * @name TokenControllerGetWallet
+     * @request GET:/api/token/wallet
+     * @secure
+     */
+    tokenControllerGetWallet: (params: RequestParams = {}) =>
+      this.request<TokenWalletResponse, any>({
+        path: `/api/token/wallet`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetPackages
+     * @request GET:/api/token/plans
+     * @secure
+     */
+    tokenControllerGetPackages: (params: RequestParams = {}) =>
+      this.request<TokenPackagesResponse, any>({
+        path: `/api/token/plans`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerCreateTransaction
+     * @request POST:/api/token/charge
+     * @secure
+     */
+    tokenControllerCreateTransaction: (data: CreateTransactionDto, params: RequestParams = {}) =>
+      this.request<PaymentUrlResponse, any>({
+        path: `/api/token/charge`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetTransactions
+     * @request GET:/api/token/transactions
+     * @secure
+     */
+    tokenControllerGetTransactions: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        paymentType?: string;
+        status?: string;
+        type?: string;
+        from?: string;
+        to?: string;
+        userId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TransactionsResponse, any>({
+        path: `/api/token/transactions`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetAdminTransactions
+     * @request GET:/api/token/admin/transactions
+     * @secure
+     */
+    tokenControllerGetAdminTransactions: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        paymentType?: string;
+        status?: string;
+        type?: string;
+        from?: string;
+        to?: string;
+        userId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TransactionsResponse, any>({
+        path: `/api/token/admin/transactions`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerUseTokens
+     * @request POST:/api/token/use
+     * @secure
+     */
+    tokenControllerUseTokens: (data: UseTokensDto, params: RequestParams = {}) =>
+      this.request<TransactionResponse, any>({
+        path: `/api/token/use`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerWithdrawTokens
+     * @request POST:/api/token/withdraw
+     * @secure
+     */
+    tokenControllerWithdrawTokens: (data: WithdrawTokensDto, params: RequestParams = {}) =>
+      this.request<TransactionResponse, any>({
+        path: `/api/token/withdraw`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetWithdrawalRequests
+     * @request GET:/api/token/withdrawal-requests
+     * @secure
+     */
+    tokenControllerGetWithdrawalRequests: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        paymentType?: string;
+        status?: string;
+        type?: string;
+        from?: string;
+        to?: string;
+        userId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<TransactionsResponse, any>({
+        path: `/api/token/withdrawal-requests`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerGetWithdrawalRequestDetails
+     * @request GET:/api/token/withdrawal-requests/{requestId}
+     * @secure
+     */
+    tokenControllerGetWithdrawalRequestDetails: (requestId: string, params: RequestParams = {}) =>
+      this.request<TransactionWithUserResponse, any>({
+        path: `/api/token/withdrawal-requests/${requestId}`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerApproveWithdrawalRequest
+     * @request POST:/api/token/withdrawal-requests/{requestId}/approve
+     * @secure
+     */
+    tokenControllerApproveWithdrawalRequest: (requestId: string, params: RequestParams = {}) =>
+      this.request<TransactionResponse, any>({
+        path: `/api/token/withdrawal-requests/${requestId}/approve`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags token
+     * @name TokenControllerDeclineWithdrawalRequest
+     * @request POST:/api/token/withdrawal-requests/{requestId}/decline
+     * @secure
+     */
+    tokenControllerDeclineWithdrawalRequest: (requestId: string, params: RequestParams = {}) =>
+      this.request<TransactionResponse, any>({
+        path: `/api/token/withdrawal-requests/${requestId}/decline`,
+        method: "POST",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags payments
+     * @name PaymentControllerHandleCallback
+     * @request POST:/api/payments/{provider}/callback
+     */
+    paymentControllerHandleCallback: (provider: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/payments/${provider}/callback`,
+        method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerSendNotification
+     * @request POST:/api/notifications/send
+     * @secure
+     */
+    notificationControllerSendNotification: (data: CreateNotificationDto, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/send`,
+        method: "POST",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerGetUserNotifications
+     * @request GET:/api/notifications
+     * @secure
+     */
+    notificationControllerGetUserNotifications: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        userId?: string;
+        isGlobal?: boolean;
+        type?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<NotificationResponse, any>({
+        path: `/api/notifications`,
+        method: "GET",
+        query: query,
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerMarkAsRead
+     * @request PATCH:/api/notifications/{id}/read
+     * @secure
+     */
+    notificationControllerMarkAsRead: (id: string, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/${id}/read`,
+        method: "PATCH",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationControllerDeleteNotification
+     * @request DELETE:/api/notifications/{id}
+     * @secure
+     */
+    notificationControllerDeleteNotification: (id: string, params: RequestParams = {}) =>
+      this.request<string, any>({
+        path: `/api/notifications/${id}`,
+        method: "DELETE",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notifications
+     * @name NotificationGatewayStream
+     * @request GET:/api/notifications-sse/stream
+     */
+    notificationGatewayStream: (
+      query: {
+        userId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/notifications-sse/stream`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @tags upload
      * @name UploadControllerUploadFile
      * @request POST:/api/uploads
@@ -2520,6 +2936,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "GET",
         query: query,
         secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags lessons
+     * @name LessonControllerUpdateLesson
+     * @request PATCH:/api/lessons/{id}
+     * @secure
+     */
+    lessonControllerUpdateLesson: (id: string, data: UpdateLessonDTO, params: RequestParams = {}) =>
+      this.request<LessonsResponse, any>({
+        path: `/api/lessons/${id}`,
+        method: "PATCH",
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2875,110 +3310,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags notifications
-     * @name NotificationControllerSendNotification
-     * @request POST:/api/notifications/send
-     * @secure
-     */
-    notificationControllerSendNotification: (data: CreateNotificationDto, params: RequestParams = {}) =>
-      this.request<string, any>({
-        path: `/api/notifications/send`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationControllerGetUserNotifications
-     * @request GET:/api/notifications
-     * @secure
-     */
-    notificationControllerGetUserNotifications: (
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        perPage?: number;
-        search?: string;
-        userId?: string;
-        isGlobal?: boolean;
-        type?: string;
-        createdBy?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<NotificationResponse, any>({
-        path: `/api/notifications`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationControllerMarkAsRead
-     * @request PATCH:/api/notifications/{id}/read
-     * @secure
-     */
-    notificationControllerMarkAsRead: (id: string, params: RequestParams = {}) =>
-      this.request<string, any>({
-        path: `/api/notifications/${id}/read`,
-        method: "PATCH",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationControllerDeleteNotification
-     * @request DELETE:/api/notifications/{id}
-     * @secure
-     */
-    notificationControllerDeleteNotification: (id: string, params: RequestParams = {}) =>
-      this.request<string, any>({
-        path: `/api/notifications/${id}`,
-        method: "DELETE",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags notifications
-     * @name NotificationGatewayStream
-     * @request GET:/api/notifications-sse/stream
-     */
-    notificationGatewayStream: (
-      query: {
-        userId: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/notifications-sse/stream`,
-        method: "GET",
-        query: query,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @tags lesson-submissions
      * @name LessonSubmissionControllerFindAll
      * @request GET:/api/lesson-submissions
@@ -3146,13 +3477,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags lesson-submissions
-     * @name LessonSubmissionControllerCreateSpeaking
-     * @request POST:/api/lesson-submissions/speaking
+     * @name LessonSubmissionControllerUpdateSpeaking
+     * @request POST:/api/lesson-submissions/speaking/{id}
      * @secure
      */
-    lessonSubmissionControllerCreateSpeaking: (data: CreateSpeakingSubmissionDTO, params: RequestParams = {}) =>
+    lessonSubmissionControllerUpdateSpeaking: (
+      id: string,
+      data: UpdateSpeakingSubmissionDTO,
+      params: RequestParams = {},
+    ) =>
       this.request<SpeakingSubmissionResponse, any>({
-        path: `/api/lesson-submissions/speaking`,
+        path: `/api/lesson-submissions/speaking/${id}`,
         method: "POST",
         body: data,
         secure: true,
@@ -3251,241 +3586,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         secure: true,
         format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetWallet
-     * @request GET:/api/token/wallet
-     * @secure
-     */
-    tokenControllerGetWallet: (params: RequestParams = {}) =>
-      this.request<TokenWalletResponse, any>({
-        path: `/api/token/wallet`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetPackages
-     * @request GET:/api/token/plans
-     * @secure
-     */
-    tokenControllerGetPackages: (params: RequestParams = {}) =>
-      this.request<TokenPackagesResponse, any>({
-        path: `/api/token/plans`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerCreateTransaction
-     * @request POST:/api/token/charge
-     * @secure
-     */
-    tokenControllerCreateTransaction: (data: CreateTransactionDto, params: RequestParams = {}) =>
-      this.request<PaymentUrlResponse, any>({
-        path: `/api/token/charge`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetTransactions
-     * @request GET:/api/token/transactions
-     * @secure
-     */
-    tokenControllerGetTransactions: (
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        perPage?: number;
-        search?: string;
-        paymentType?: string;
-        status?: string;
-        type?: string;
-        from?: string;
-        to?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<TransactionsResponse, any>({
-        path: `/api/token/transactions`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetAdminTransactions
-     * @request GET:/api/token/admin/transactions
-     * @secure
-     */
-    tokenControllerGetAdminTransactions: (
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        perPage?: number;
-        search?: string;
-        paymentType?: string;
-        status?: string;
-        type?: string;
-        from?: string;
-        to?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<TransactionsResponse, any>({
-        path: `/api/token/admin/transactions`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerUseTokens
-     * @request POST:/api/token/use
-     * @secure
-     */
-    tokenControllerUseTokens: (data: UseTokensDto, params: RequestParams = {}) =>
-      this.request<TransactionResponse, any>({
-        path: `/api/token/use`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerWithdrawTokens
-     * @request POST:/api/token/withdraw
-     * @secure
-     */
-    tokenControllerWithdrawTokens: (data: WithdrawTokensDto, params: RequestParams = {}) =>
-      this.request<TransactionResponse, any>({
-        path: `/api/token/withdraw`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetWithdrawalRequests
-     * @request GET:/api/token/withdrawal-requests
-     * @secure
-     */
-    tokenControllerGetWithdrawalRequests: (
-      query?: {
-        /** @default 1 */
-        page?: number;
-        /** @default 10 */
-        perPage?: number;
-        search?: string;
-        paymentType?: string;
-        status?: string;
-        type?: string;
-        from?: string;
-        to?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<TransactionsResponse, any>({
-        path: `/api/token/withdrawal-requests`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerGetWithdrawalRequestDetails
-     * @request GET:/api/token/withdrawal-requests/{requestId}
-     * @secure
-     */
-    tokenControllerGetWithdrawalRequestDetails: (requestId: string, params: RequestParams = {}) =>
-      this.request<TransactionWithUserResponse, any>({
-        path: `/api/token/withdrawal-requests/${requestId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags token
-     * @name TokenControllerApproveWithdrawalRequest
-     * @request POST:/api/token/withdrawal-requests/{requestId}/approve
-     * @secure
-     */
-    tokenControllerApproveWithdrawalRequest: (requestId: string, params: RequestParams = {}) =>
-      this.request<TransactionResponse, any>({
-        path: `/api/token/withdrawal-requests/${requestId}/approve`,
-        method: "POST",
-        secure: true,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags payments
-     * @name PaymentControllerHandleCallback
-     * @request POST:/api/payments/{provider}/callback
-     */
-    paymentControllerHandleCallback: (provider: string, params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/api/payments/${provider}/callback`,
-        method: "POST",
         ...params,
       }),
 
@@ -3685,6 +3785,96 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     studyActivityControllerDeleteActivity: (userId: string, date: string, params: RequestParams = {}) =>
       this.request<string, any>({
         path: `/api/study-activity/${userId}/${date}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags banner
+     * @name BannerControllerFindAll
+     * @request GET:/api/banner
+     */
+    bannerControllerFindAll: (
+      query?: {
+        /** @default 1 */
+        page?: number;
+        /** @default 10 */
+        perPage?: number;
+        search?: string;
+        orderIndex?: number;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<BannerResponse, any>({
+        path: `/api/banner`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags banner
+     * @name BannerControllerCreate
+     * @request POST:/api/banner
+     */
+    bannerControllerCreate: (data: CreateBannerDto, params: RequestParams = {}) =>
+      this.request<SingleBannerResponse, any>({
+        path: `/api/banner`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags banner
+     * @name BannerControllerFindOne
+     * @request GET:/api/banner/{id}
+     */
+    bannerControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<SingleBannerResponse, any>({
+        path: `/api/banner/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags banner
+     * @name BannerControllerUpdate
+     * @request PATCH:/api/banner/{id}
+     */
+    bannerControllerUpdate: (id: string, data: UpdateBannerDto, params: RequestParams = {}) =>
+      this.request<SingleBannerResponse, any>({
+        path: `/api/banner/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags banner
+     * @name BannerControllerRemove
+     * @request DELETE:/api/banner/{id}
+     */
+    bannerControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteBannerResponse, any>({
+        path: `/api/banner/${id}`,
         method: "DELETE",
         format: "json",
         ...params,

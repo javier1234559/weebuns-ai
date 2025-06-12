@@ -12,36 +12,21 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Plus, Check } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { useCreateVocabulary } from "@/feature/vocabulary/hooks/useVocabularyQueries";
-import { toast } from "sonner";
 
 interface VocabularyPanelProps {
   vocabulary_list: VocabularyItemDTO[];
+  savedVocabs: number[];
+  onSaveVocabulary: (vocab: VocabularyItemDTO, index: number) => Promise<void>;
+  isSaving: boolean;
 }
 
-export function VocabularyPanel({ vocabulary_list }: VocabularyPanelProps) {
+export function VocabularyPanel({
+  vocabulary_list,
+  savedVocabs,
+  onSaveVocabulary,
+  isSaving,
+}: VocabularyPanelProps) {
   const [count, setCount] = useState(5);
-  const [savedVocabs, setSavedVocabs] = useState<number[]>([]);
-  const createVocabularyMutation = useCreateVocabulary();
-
-  const handleSaveVocabulary = async (vocab: VocabularyItemDTO, index: number) => {
-    try {
-      await createVocabularyMutation.mutateAsync({
-        term: vocab.term,
-        meaning: vocab.meaning,
-        exampleSentence: vocab.example_sentence,
-        imageUrl: vocab.image_url,
-        referenceLink: vocab.reference_link,
-        referenceName: vocab.reference_name,
-        repetitionLevel: 1, // Start with level 1
-      });
-
-      setSavedVocabs(prev => [...prev, index]);
-      toast.success("Từ vựng đã được thêm vào danh sách của bạn");
-    } catch (error: any) {
-      toast.error("Không thể thêm từ vựng: " + error.message);
-    }
-  };
 
   return (
     <div className="space-y-4">
@@ -73,8 +58,8 @@ export function VocabularyPanel({ vocabulary_list }: VocabularyPanelProps) {
                 type="button"
                 variant={savedVocabs.includes(index) ? "outline" : "default"}
                 size="sm"
-                onClick={() => handleSaveVocabulary(item, index)}
-                disabled={savedVocabs.includes(index) || createVocabularyMutation.isPending}
+                onClick={() => onSaveVocabulary(item, index)}
+                disabled={savedVocabs.includes(index) || isSaving}
               >
                 {savedVocabs.includes(index) ? (
                   <>

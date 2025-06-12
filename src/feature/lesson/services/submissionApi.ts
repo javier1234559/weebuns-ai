@@ -3,7 +3,6 @@ import api from "@/services/baseApi";
 import {
   CreateListeningSubmissionDTO,
   CreateReadingSubmissionDTO,
-  CreateSpeakingSubmissionDTO,
   CreateWritingSubmissionDTO,
   DeleteLessonSubmissionResponse,
   LessonSubmissionsResponse,
@@ -15,6 +14,7 @@ import {
   SubmissionStatus,
   UpdateWritingSubmissionDTO,
   WritingSubmissionResultResponse,
+  UpdateSpeakingSubmissionDTO,
 } from "@/services/swagger-types";
 import { AxiosResponse } from "axios";
 
@@ -136,9 +136,9 @@ const submissionApi = {
       });
   },
 
-  createSpeaking(data: CreateSpeakingSubmissionDTO) {
+  updateSpeaking(id: string, data: UpdateSpeakingSubmissionDTO) {
     return api
-      .lessonSubmissionControllerCreateSpeaking(data)
+      .lessonSubmissionControllerUpdateSpeaking(id, data)
       .then((res: AxiosResponse<SpeakingSubmissionResponse>) => res.data)
       .catch((err: any) => {
         handleApiError(err);

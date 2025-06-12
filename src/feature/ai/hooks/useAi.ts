@@ -84,6 +84,21 @@ export const useChatSpeaking = () => {
   });
 };
 
+export const useCheckSpeakingSession = (sessionId: string) => {
+  return useQuery({
+    queryKey: [AI_KEY_FACTORY.speaking, sessionId],
+    queryFn: () => aiApi.checkSpeakingSession(sessionId),
+    staleTime: 0,
+    enabled: !!sessionId,
+  });
+};
+
+export const useClearSpeakingSession = () => {
+  return useMutation({
+    mutationFn: (sessionId: string) => aiApi.clearSpeakingSession(sessionId),
+  });
+};
+
 // Essay evaluation hooks
 export const useEvaluateEssay = () => {
   return useMutation({
@@ -93,17 +108,14 @@ export const useEvaluateEssay = () => {
 
 export const useRecommendAnswer = (
   sessionId: string,
+  isResultView: boolean,
   options?: UseQueryOptions<RecommendAnswerResponseDto>,
 ) => {
   return useQuery({
     queryKey: [AI_KEY_FACTORY.tts, sessionId],
     queryFn: () => aiApi.recommendAnswer(sessionId),
     staleTime: 0,
-    refetchOnMount: true,
-    refetchOnWindowFocus: false,
+    enabled: !isResultView,
     ...(typeof options === "object" ? options : {}),
   });
 };
-
-
-

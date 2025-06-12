@@ -12,16 +12,13 @@ import {
   Globe,
   Save,
 } from "lucide-react";
-import ChatPanel from "@/feature/writing/components/chat-panel";
-import { VocabularyPanel } from "@/feature/writing/components/vocabulary-panel";
-import { AnalysisGuidePanel } from "@/feature/writing/components/analyst-guide-panel";
-import { EvaluationPanel } from "@/feature/writing/components/evaluation-panel";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import {
   ContentWritingDTO,
   CreateWritingSubmissionDTO,
   SampleEssayDTO,
+  SubmissionStatus,
   User,
 } from "@/services/swagger-types";
 import { Label } from "@/components/ui/label";
@@ -50,11 +47,13 @@ import { CountUpTimer } from "@/components/feature/CountUpTimer";
 import { useActivityTracking } from "@/feature/activity/hooks/useActivityTracking";
 import { Timer } from "@/components/feature/Timer";
 import { useIsLogined } from "@/hooks/useIsLogined";
+import WritingToolPanelView from "@/feature/writing/views/WritingToolPanelView";
 
 interface WritingAgentLayoutProps {
   topic: string;
   isReadOnly?: boolean;
   onSubmit?: (data: CreateWritingSubmissionDTO) => void;
+  onSave?: (data: CreateWritingSubmissionDTO) => void;
   content?: ContentWritingDTO;
   lessonId?: string;
   createdBy?: User;
@@ -66,6 +65,7 @@ export default function WritingAgentLayout({
   topic,
   isReadOnly = false,
   onSubmit,
+  onSave,
   content,
   lessonId,
   createdBy,
@@ -110,6 +110,7 @@ export default function WritingAgentLayout({
         lessonId,
         submissionType: "writing",
         tokensUsed: TOKEN_COSTS.SUBMIT_ESSAY,
+        status: SubmissionStatus.Submitted,
         content: {
           user_data: {
             instruction: data.instruction,
@@ -148,34 +149,9 @@ export default function WritingAgentLayout({
     ].join("\n\n");
   };
 
-  const tabs = [
-    {
-      value: "chat",
-      icon: MessageSquare,
-      component: <ChatPanel topic={topic} content={getFullContent()} />,
-    },
-    {
-      value: "vocabulary_list",
-      icon: BookOpen,
-      component: (
-        <VocabularyPanel vocabulary_list={content?.vocabulary_list ?? []} />
-      ),
-    },
-    {
-      value: "analysis_guide",
-      icon: Check,
-      component: (
-        <AnalysisGuidePanel
-          analysis_guide={content?.resources?.analysis_guide ?? ""}
-        />
-      ),
-    },
-    {
-      value: "evaluate",
-      icon: Star,
-      component: <EvaluationPanel topic={topic} content={getFullContent()} />,
-    },
-  ];
+  const handleChat = () => {
+    setSelectedTab("chat");
+  };
 
   const handleGenerateOutline = () => {
     setSelectedTab("analysis_guide");
@@ -189,20 +165,30 @@ export default function WritingAgentLayout({
     setSelectedTab("evaluate");
   };
 
+  const handleSave = () => {
+    if (onSave && lessonId) {
+      const data = form.getValues();
+      const dataToSubmit: CreateWritingSubmissionDTO = {
+        lessonId,
+        submissionType: "writing",
+        tokensUsed: 0,
+        status: SubmissionStatus.Draft,
+        content: {
+          user_data: data,
+          lesson_id: lessonId,
+          chat_history: chatHistory,
+        },
+      };
+      onSave(dataToSubmit);
+    }
+  };
+
   const handleFormError = (errors: any) => {
     toast({
       title: "Error",
       description: "Please fill in all fields",
     });
     console.log(errors);
-  };
-
-  const handleChat = () => {
-    setSelectedTab("chat");
-  };
-
-  const handleSave = () => {
-    console.log("save");
   };
 
   return (
@@ -230,7 +216,7 @@ export default function WritingAgentLayout({
                     id: createdBy.id,
                     name: createdBy.username ?? "",
                     avatar: createdBy.profilePicture ?? "",
-                    bio: "IELTS coach with 10 years of experience helping students achieve band 7.0+",
+                    bio: createdBy.bio ?? "",
                     role: createdBy.role,
                     username: createdBy.username ?? "",
                   }}
@@ -278,7 +264,6 @@ export default function WritingAgentLayout({
                   size="large"
                 />
               )}
-
               {isPractice && <CountUpTimer />}
             </div>
             <Label htmlFor="show-examples">Hiện ví dụ</Label>
@@ -298,46 +283,13 @@ export default function WritingAgentLayout({
         direction={isMobile ? "horizontal" : "vertical"}
       >
         <Pane>
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                <div className="text-lg font-medium">Công cụ hỗ trợ</div>
-                <p className="text-sm font-normal text-muted-foreground">
-                  Công cụ hỗ trợ viết bài của bạn.
-                </p>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Tabs defaultValue="chat" value={selectedTab} className="w-full">
-                <TabsList
-                  className="grid w-full gap-2 rounded-lg bg-background p-1"
-                  style={{
-                    gridTemplateColumns: `repeat(${tabs.length}, 1fr)`,
-                  }}
-                >
-                  {tabs.map(({ value, icon: Icon }) => (
-                    <TabsTrigger
-                      key={value}
-                      value={value}
-                      onClick={() => setSelectedTab(value)}
-                      className={cn(
-                        "gap-2 rounded-md px-3 py-1.5 text-sm transition-all",
-                        "data-[state=active]:bg-card  data-[state=active]:shadow-sm",
-                        "data-[state=inactive]:text-muted-foreground",
-                      )}
-                    >
-                      <Icon className="size-4" />
-                    </TabsTrigger>
-                  ))}
-                </TabsList>
-                {tabs.map(({ value, component: Component }) => (
-                  <TabsContent key={value} value={value}>
-                    {Component}
-                  </TabsContent>
-                ))}
-              </Tabs>
-            </CardContent>
-          </Card>
+          <WritingToolPanelView
+            topic={topic}
+            content={content}
+            selectedTab={selectedTab}
+            getFullContent={getFullContent}
+            setSelectedTab={setSelectedTab}
+          />
         </Pane>
         <Pane>
           <Card className="h-full">

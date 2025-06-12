@@ -118,6 +118,26 @@ const aiApi = {
       });
   },
 
+  checkSpeakingSession: (sessionId: string) => {
+    return api
+      .aiControllerCheckSpeakingSession(sessionId)
+      .then((res: any) => res.data)
+      .catch((err: any) => {
+        handleApiError(err);
+        throw err.response.data;
+      });
+  },
+
+  clearSpeakingSession: (sessionId: string) => {
+    return api
+      .aiControllerClearSpeakingSession(sessionId)
+      .then((res: any) => res.data)
+      .catch((err: any) => {
+        handleApiError(err);
+        throw err.response.data;
+      });
+  },
+
   // Essay Evaluation
   evaluateEssay: (data: EvaluateEssayDto) => {
     return api

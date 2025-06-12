@@ -1,13 +1,9 @@
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { useState } from "react";
-import { toast } from "@/hooks/use-toast";
 import { Loader2, Lightbulb } from "lucide-react";
-import { useEvaluateEssay } from "@/feature/writing/hooks/useWritingClient";
 import {
-  EvaluateEssayResponseDto,
   CorrectionDTO,
+  EvaluateEssayResponseDto,
 } from "@/services/swagger-types";
 import { TokenProtectedButton } from "@/feature/token/components/TokenProtectedButton";
 import { TOKEN_COSTS } from "@/feature/token/constants";
@@ -15,6 +11,9 @@ import { TOKEN_COSTS } from "@/feature/token/constants";
 interface EvaluationPanelProps {
   topic: string;
   content: string;
+  onSendMessage: (message: string) => void;
+  loading: boolean;
+  result: EvaluateEssayResponseDto | null;
 }
 
 const CorrectionDetail = ({ correction }: { correction: CorrectionDTO }) => (
@@ -52,46 +51,22 @@ const ScoreCard = ({ title, score }: { title: string; score: number }) => (
   </Card>
 );
 
-export function EvaluationPanel({ topic, content }: EvaluationPanelProps) {
-  const [result, setResult] = useState<EvaluateEssayResponseDto | null>(null);
-
-  const { mutate: evaluateEssay, isPending } = useEvaluateEssay();
-
-  const handleEvaluate = async () => {
-    evaluateEssay({
-      topic,
-      user_content: content,
-    }, {
-      onSuccess: (response) => {
-        setResult(response);
-        console.log(JSON.stringify(response, null, 2));
-        toast({
-          title: "Evaluation Complete",
-          description: "Your essay has been evaluated successfully.",
-        });
-      },
-      onError: () => {
-        toast({
-          title: "Evaluation Failed",
-          description: "Failed to evaluate essay. Please try again.",
-            variant: "destructive",
-          });
-        },
-      },
-    );
-  };
-
+export function EvaluationPanel({
+  onSendMessage,
+  loading,
+  result,
+}: EvaluationPanelProps) {
   return (
     <div className="space-y-6">
       <TokenProtectedButton
         requiredTokens={TOKEN_COSTS.EVALUATE_ESSAY}
-        onAction={handleEvaluate}
+        onAction={async () => await onSendMessage("")}
         className="w-full py-2"
       >
-        {isPending ? (
+        {loading ? (
           <>
             <Loader2 className="mr-2 size-4 animate-spin" />
-            Evaluating...
+            Đang đánh giá...
           </>
         ) : (
           `Evaluate Essay (${TOKEN_COSTS.EVALUATE_ESSAY} Tokens)`
