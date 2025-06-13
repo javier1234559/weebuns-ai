@@ -57,12 +57,12 @@ export const TargetSettingSection = () => {
   const { mutate: updateStudentProfile } = useUpdateStudentProfile();
 
   const calculateOverallScore = () => {
-    if (!user?.studentProfile) return "0.0";
+    if (!user?.studentProfile) return "6.0";
     const scores = [
-      user.studentProfile.targetReading ?? 0,
-      user.studentProfile.targetListening ?? 0,
-      user.studentProfile.targetWriting ?? 0,
-      user.studentProfile.targetSpeaking ?? 0,
+      user.studentProfile.targetReading ?? 6,
+      user.studentProfile.targetListening ?? 6,
+      user.studentProfile.targetWriting ?? 6,
+      user.studentProfile.targetSpeaking ?? 6,
     ];
     return (scores.reduce((a, b) => a + b, 0) / 4).toFixed(1);
   };

@@ -48,6 +48,7 @@ import { useActivityTracking } from "@/feature/activity/hooks/useActivityTrackin
 import { Timer } from "@/components/feature/Timer";
 import { useIsLogined } from "@/hooks/useIsLogined";
 import WritingToolPanelView from "@/feature/writing/views/WritingToolPanelView";
+import Markdown from "react-markdown";
 
 interface WritingAgentLayoutProps {
   topic: string;
@@ -206,7 +207,7 @@ export default function WritingAgentLayout({
             <h2 className="text-xl font-medium">{topic}</h2>
             <div className="mt-4 rounded-lg border-2 border-muted">
               <p className="text-[18px] font-light leading-relaxed">
-                {content?.task}
+                <Markdown>{content?.task}</Markdown>
               </p>
             </div>
             <div className="mt-4 flex items-center gap-2">
