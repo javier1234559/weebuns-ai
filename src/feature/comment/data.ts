@@ -5,6 +5,7 @@ export const defaultComments: Comment[] = [
     id: "a5ca6255-5b75-436d-b44e-e90e9040525cb",
     content: "Cám ơn các bạn đã ủng hộ web",
     author: {
+      id: "a5ca6255-5b75-436d-b44e-e90e9040525cb",
       name: "Miss.Huyen",
       image: "https://example.com/teacher.jpg",
       role: "teacher",
@@ -27,6 +28,7 @@ export const defaultComments: Comment[] = [
     id: "a5ca6255-5b75-436d-b44e-e90e904055cb",
     content: "Bài viết này rất hữu ích, cảm ơn tác giả!",
     author: {
+      id: "a5ca6255-5b75-436d-b44e-e90e904055cb",
       name: "Thùy Thúy",
       image: "https://example.com/student1.jpg",
       role: "student",
@@ -50,6 +52,7 @@ export const defaultComments: Comment[] = [
     content:
       "Bắt đầu dùng web này từ 2 tháng trước khi điểm writing chỉ có 5.0, nhận được kết quả 2 ngày rồi mà vẫn chưa tin bản thân đạt 7.0 writing, cảm ơn web nhiều lắm ạ. Nhất định sẽ giới thiệu web với bạn bè ạ <3",
     author: {
+      id: "a5ca6255-5b75-436d-b44e-e90e90240552b",
       name: "Jacky",
       image: "https://example.com/student1.jpg",
       role: "student",
@@ -72,6 +75,7 @@ export const defaultComments: Comment[] = [
     id: "a5ca6255-5b75-436d-b44e-e90e29040552b",
     content: "em cảm ơn thầy cô ạ",
     author: {
+      id: "a5ca6255-5b75-436d-b44e-e90e29040552b",
       name: "Trang",
       image: "https://example.com/student1.jpg",
       role: "student",
