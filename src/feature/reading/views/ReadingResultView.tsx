@@ -41,7 +41,8 @@ export function ReadingResultView({
       lessonId={data?.data.lesson.id ?? ""}
       content={(data?.data.lesson.content as any)?.text ?? ""}
       questions={(data?.data.lesson.content as any)?.questions ?? []}
-      isPractice={(data?.data as any)?.lessonType === "test"}
+      youtubeEmbedUrl={(data?.data as any)?.feedback?.youtube_embed_url ?? ""}
+      isPractice={(data?.data as any)?.lessonType != "test"}
       timeLimit={(data?.data as any)?.timeLimit ?? 0}
       onSubmit={handleSubmit}
       isResultView
@@ -52,6 +53,8 @@ export function ReadingResultView({
           totalQuestions: (data?.data as any)?.feedback?.totalQuestions ?? 0,
           incorrectAnswers:
             (data?.data as any)?.feedback?.incorrectAnswers ?? 0,
+          youtube_embed_url:
+            (data?.data as any)?.feedback?.youtube_embed_url ?? "",
         },
         selectedAnswers: data?.data?.content?.questions.reduce(
           (acc: Record<string, string>, curr: any) => {

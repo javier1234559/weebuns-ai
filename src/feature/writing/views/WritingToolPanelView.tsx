@@ -56,7 +56,11 @@ export default function WritingToolPanelView({
   const handleSendMessage = async (message: string) => {
     await sendMessage({
       content: message,
-      extraBody: { topic, content: getFullContent() },
+      extraBody: {
+        topic,
+        content: getFullContent(),
+        teacherPrompt: content?.ai_prompt ?? "",
+      },
     });
   };
 

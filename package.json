@@ -142,6 +142,7 @@
     "reactjs-otp-input": "^2.0.10",
     "recharts": "^2.15.3",
     "redux-persist": "^6.0.0",
+    "rehype-raw": "^7.0.0",
     "sonner": "^1.7.3",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",

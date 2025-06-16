@@ -8,6 +8,7 @@ import WaveAudio from "@/components/feature/WaveAudio";
 import {
   QuestionDTO,
   CreateListeningSubmissionDTO,
+  ListeningFeedbackDto,
 } from "@/services/swagger-types";
 import { Button } from "@/components/ui/button";
 import { CircleCheckBig, Eye, Home } from "lucide-react";
@@ -22,18 +23,14 @@ import { useIsLogined } from "@/hooks/useIsLogined";
 interface ListeningTestProps {
   audioUrl: string;
   questions: QuestionDTO[];
+  youtubeEmbedUrl: string;
   isPractice?: boolean;
   lessonId: string;
   onSubmit?: (data: CreateListeningSubmissionDTO) => void;
   isResultView?: boolean;
   timeLimit?: number;
   resultListeningData?: {
-    feedback: {
-      accuracy: number;
-      correctAnswers: number;
-      totalQuestions: number;
-      incorrectAnswers: number;
-    };
+    feedback: ListeningFeedbackDto;
     selectedAnswers?: Record<string, string>;
   };
 }
@@ -41,6 +38,7 @@ interface ListeningTestProps {
 export function ListeningTest({
   audioUrl,
   questions,
+  youtubeEmbedUrl,
   isPractice = true,
   lessonId,
   onSubmit,
@@ -68,6 +66,7 @@ export function ListeningTest({
       tokensUsed: 0,
       content: {
         audio_url: audioUrl,
+        youtube_embed_url: youtubeEmbedUrl,
         question_list: questions.map((q) => ({
           id: q.id,
           question: q.question,

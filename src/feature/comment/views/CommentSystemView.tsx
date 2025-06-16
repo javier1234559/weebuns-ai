@@ -38,10 +38,12 @@ export default function CommentSystemView({
   const { mutate: deleteComment } = useDeleteComment();
 
   const handleAddComment = (content: string) => {
+    const actionLink = window.location.href;
     createComment(
       {
         identifierId,
         content,
+        actionLink,
       },
       {
         onSuccess: () => {
@@ -49,17 +51,20 @@ export default function CommentSystemView({
         },
         onError: (error) => {
           toast.error("Failed to add comment");
+          console.log(error);
         },
       },
     );
   };
 
   const handleAddReply = (content: string, parentId: string) => {
+    const actionLink = window.location.href;
     createComment(
       {
         identifierId,
         content,
         parentId,
+        actionLink,
       },
       {
         onSuccess: () => {
@@ -67,6 +72,7 @@ export default function CommentSystemView({
         },
         onError: (error) => {
           toast.error("Failed to add comment");
+          console.log(error);
         },
       },
     );
@@ -84,6 +90,7 @@ export default function CommentSystemView({
       {
         onError: (error) => {
           toast.error("Failed to add reaction");
+          console.log(error);
         },
       },
     );
@@ -96,6 +103,7 @@ export default function CommentSystemView({
       },
       onError: (error) => {
         toast.error("Failed to delete comment");
+        console.log(error);
       },
     });
   };

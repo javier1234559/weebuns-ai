@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CornerDownLeft, Home, Mic, Type } from "lucide-react";
+import { CornerDownLeft, Home, Loader2, Mic, Type } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -33,6 +33,8 @@ import { globalConfig } from "@/config";
 import { useAuthStore } from "@/store/auth-store";
 import { TOKEN_COSTS } from "@/feature/token/constants";
 import { useClearSpeakingSession } from "@/feature/ai/hooks/useAi";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 interface MainChatProps {
   context?: string;
@@ -51,7 +53,7 @@ const MainChat = ({
 }: MainChatProps) => {
   const router = useRouter();
   const { user } = useAuthStore();
-  const { suggestedResponses, firstGreeting, refetchRecommend } =
+  const { suggestedResponses, firstGreeting, refetchRecommend, isLoading } =
     useSuggestChat({
       sessionId,
       isResultView,
@@ -148,6 +150,8 @@ const MainChat = ({
     );
   };
 
+  console.log("MainChat", suggestedResponses);
+
   return (
     <div className="flex flex-col rounded-lg bg-card">
       <div className="flex items-center justify-between border-b p-4">
@@ -191,12 +195,7 @@ const MainChat = ({
               fallback={message.role === "user" ? "US" : "AI"}
             />
             <ChatBubbleMessage className="w-1/2">
-              <span
-                className="animate-fade-in"
-                dangerouslySetInnerHTML={{
-                  __html: simpleInlineMarkdownToHtml(message?.text ?? ""),
-                }}
-              />
+              <Markdown>{message?.text}</Markdown>
               <div className="mt-2 flex items-center gap-2">
                 <AudioMessage
                   text={message.text}
@@ -220,28 +219,34 @@ const MainChat = ({
         </AnimatePresence>
       </ChatMessageList>
 
-      <div className="mx-2 border-t bg-card p-4 ">
-        {chatHistory.length === 0 && !isResultView && (
+      <div className="g mx-2 border-t bg-card p-4">
+        {!isResultView && (
           <div className="mb-4 space-y-2">
-            {suggestedResponses?.map((response, index) => (
-              <motion.div
-                key={response}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-wrap break-words px-2 py-4 leading-5"
-                  onClick={() => {
-                    setInput(response);
-                    handleSubmit();
-                  }}
+            {isLoading ? (
+              <div className="flex items-center justify-center">
+                <Loader2 className="size-4 animate-spin" />
+              </div>
+            ) : suggestedResponses && suggestedResponses.length > 0 ? (
+              suggestedResponses.map((response, index) => (
+                <motion.div
+                  key={response}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  {response}
-                </Button>
-              </motion.div>
-            ))}
+                  <Button
+                    variant="outline"
+                    className="h-fit w-full justify-start whitespace-normal px-2 text-left leading-5"
+                    onClick={() => {
+                      setInput(response);
+                      handleSubmit();
+                    }}
+                  >
+                    {response}
+                  </Button>
+                </motion.div>
+              ))
+            ) : null}
           </div>
         )}
         {!isResultView && (

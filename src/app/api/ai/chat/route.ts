@@ -9,7 +9,7 @@ const groq = createOpenAI({
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { messages, topic, content } = await req.json();
+  const { messages, topic, content, teacherPrompt } = await req.json();
   console.log(messages, topic, content);
 
   const response = await streamText({
@@ -25,10 +25,16 @@ export async function POST(req: Request) {
         - Đánh giá bài viết nếu có
         - Gợi ý cách diễn đạt tự nhiên, nâng cao
         Nếu người học hỏi ngoài phạm vi bài viết, hãy vẫn hỗ trợ tận tình theo đúng tinh thần giúp học viết tốt hơn.
+        Hướng dẫn từ giáo viên: "${teacherPrompt}"
+        Hãy tuân thủ nghiêm ngặt các hướng dẫn và yêu cầu của giáo viên ở trên.
         Topic: "${topic}"
         User draft: "${content}"
-        Luôn trả lời và giải thích bằng "tiếng Việt" trừ những ý về tiếng Anh, tập trung đúng nhu cầu người học.`
 
+        IMPORTANT:
+        Luôn trả lời và giải thích bằng "tiếng Việt" trừ những ý về tiếng Anh.
+        Tập trung đúng nhu cầu người học và các yêu cầu cụ thể từ giáo viên.
+        Nếu giáo viên có đưa ra các quy tắc hay yêu cầu đặc biệt, hãy ưu tiên tuân thủ các yêu cầu đó.
+        Nếu người học hỏi ngoài phạm vi bài viết, hãy vẫn hỗ trợ tận tình theo đúng tinh thần giúp học viết tốt hơn, nhưng vẫn trong khuôn khổ các quy tắc của giáo viên đề ra.`,
       },
       ...messages,
     ],

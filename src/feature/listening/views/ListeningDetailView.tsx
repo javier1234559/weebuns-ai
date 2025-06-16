@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import UserPreview from "@/feature/user/components/UserPreview";
 import { Card, CardTitle, CardHeader } from "@/components/ui/card";
 import ListeningDetailViewSkeleton from "@/feature/listening/components/ListeningDetailViewSkeleton";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 interface ListeningDetailViewProps {
   id: string;
@@ -63,8 +65,10 @@ export function ListeningDetailView({ id }: ListeningDetailViewProps) {
           <CardTitle>
             <h2 className="text-2xl font-medium">{data?.data.title}</h2>
             <div className="mt-4 rounded-lg border-2 border-muted">
-              <p className="text-[18px] font-light leading-relaxed">
-                {data?.data.description}
+              <p className="p-2 text-[18px] font-light leading-relaxed">
+                <Markdown rehypePlugins={[rehypeRaw]}>
+                  {data?.data.description}
+                </Markdown>
               </p>
             </div>
             <div className="mt-4 flex items-center gap-2">
@@ -74,7 +78,7 @@ export function ListeningDetailView({ id }: ListeningDetailViewProps) {
                     id: data?.data.createdBy.id,
                     name: data?.data.createdBy.username ?? "",
                     avatar: data?.data.createdBy.profilePicture ?? "",
-                    bio: "IELTS coach with 10 years of experience helping students achieve band 7.0+",
+                    bio: data?.data.createdBy.bio ?? "",
                     role: data?.data.createdBy.role,
                     username: data?.data.createdBy.username ?? "",
                   }}
@@ -88,6 +92,7 @@ export function ListeningDetailView({ id }: ListeningDetailViewProps) {
         <ListeningTest
           audioUrl={data?.data.content?.audio_url ?? ""}
           questions={data?.data.content?.questions ?? []}
+          youtubeEmbedUrl={data?.data.content?.youtube_embed_url ?? ""}
           isPractice={data?.data.lessonType != "test"}
           timeLimit={data?.data.timeLimit ?? 0}
           lessonId={id}

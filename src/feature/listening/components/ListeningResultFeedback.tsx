@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ListeningFeedbackDto } from "@/feature/lesson/lesson.type";
+import { ListeningFeedbackDto } from "@/services/swagger-types";
 import { XCircle } from "lucide-react";
 import { CheckCircle } from "lucide-react";
 
@@ -46,52 +46,71 @@ export function ListeningResultFeedback({
             {getFeedbackMessage(feedback.accuracy)}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex w-full gap-4">
-          <div className="flex w-full flex-col gap-4">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-primary">
-                {feedback.correctAnswers}/{feedback.totalQuestions}
+        <CardContent className="flex w-full items-center gap-8">
+          <div className="flex flex-1 gap-4">
+            <div className="flex w-full flex-col gap-4">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-primary">
+                  {feedback.correctAnswers}/{feedback.totalQuestions}
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Số câu trả lời đúng
+                </p>
               </div>
-              <p className="text-sm text-muted-foreground">
-                Số câu trả lời đúng
-              </p>
+
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Độ chính xác</span>
+                  <span className="text-sm font-medium">
+                    {feedback.accuracy}%
+                  </span>
+                </div>
+                <Progress value={feedback.accuracy} className="h-2.5" />
+              </div>
             </div>
 
-            <div className="space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Độ chính xác</span>
-                <span className="text-sm font-medium">
-                  {feedback.accuracy}%
-                </span>
+            <div className="flex w-full flex-col gap-4">
+              <div className="flex items-center rounded-lg bg-green-50 p-2 dark:bg-green-950/30">
+                <CheckCircle className="mr-2 size-6 text-green-500" />
+                <div className="flex items-center">
+                  <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                    {feedback.correctAnswers}
+                  </span>
+                  <span className="ml-1 text-xs text-muted-foreground">
+                    Câu đúng
+                  </span>
+                </div>
               </div>
-              <Progress value={feedback.accuracy} className="h-2.5" />
+              <div className="flex items-center rounded-lg bg-red-50 p-2 dark:bg-red-950/30">
+                <XCircle className="mr-2 size-6 text-red-500" />
+                <div className="flex items-center">
+                  <span className="text-lg font-bold text-red-600 dark:text-red-400">
+                    {feedback.incorrectAnswers}
+                  </span>
+                  <span className="ml-1 text-xs text-muted-foreground">
+                    Câu sai
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="flex w-full flex-col gap-4">
-            <div className="flex items-center rounded-lg bg-green-50 p-2 dark:bg-green-950/30">
-              <CheckCircle className="mr-2 size-6 text-green-500" />
-              <div className="flex items-center">
-                <span className="text-lg font-bold text-green-600 dark:text-green-400">
-                  {feedback.correctAnswers}
-                </span>
-                <span className="ml-1 text-xs text-muted-foreground">
-                  Câu đúng
-                </span>
+          {feedback?.youtube_embed_url && (
+            <div className="flex flex-col gap-4">
+              <span className="font-medium">
+                Bạn có thể theo dõi bài chữa tại đây nhé!
+              </span>
+              <div className="shrink-0">
+                <iframe
+                  src={feedback.youtube_embed_url ?? ""}
+                  width="400"
+                  height="200"
+                  frameBorder="0"
+                  className="rounded-lg"
+                />
               </div>
             </div>
-            <div className="flex items-center rounded-lg bg-red-50 p-2 dark:bg-red-950/30">
-              <XCircle className="mr-2 size-6 text-red-500" />
-              <div className="flex items-center">
-                <span className="text-lg font-bold text-red-600 dark:text-red-400">
-                  {feedback.incorrectAnswers}
-                </span>
-                <span className="ml-1 text-xs text-muted-foreground">
-                  Câu sai
-                </span>
-              </div>
-            </div>
-          </div>
+          )}
         </CardContent>
       </Card>
     </div>

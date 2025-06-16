@@ -107,11 +107,11 @@ const Header = () => {
             ) : (
               <>
                 <Link href={RouteNames.SignUp}>
-                  <Button>Sign Up</Button>
+                  <Button>Đăng ký</Button>
                 </Link>
                 <Link href={RouteNames.SignIn}>
                   <Button variant="outline" className="transition-colors">
-                    Sign In
+                    Đăng nhập
                   </Button>
                 </Link>
               </>
@@ -202,14 +202,14 @@ const Header = () => {
                       ) : (
                         <>
                           <Link href={RouteNames.SignUp}>
-                            <Button className="w-full">Sign Up</Button>
+                            <Button className="w-full">Đăng ký</Button>
                           </Link>
                           <Link href={RouteNames.SignIn}>
                             <Button
                               variant="outline"
                               className="w-full hover:bg-secondary/50"
                             >
-                              Sign In
+                              Đăng nhập
                             </Button>
                           </Link>
                         </>

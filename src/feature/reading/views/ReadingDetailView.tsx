@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 import UserPreview from "@/feature/user/components/UserPreview";
 import { Card, CardTitle, CardHeader, CardContent } from "@/components/ui/card";
 import ReadingDetailViewSkeleton from "@/feature/reading/components/ReadingDetailViewSkeleton";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 interface ReadingDetailViewProps {
   id: string;
@@ -69,8 +71,10 @@ export function ReadingDetailView({ id }: ReadingDetailViewProps) {
           <CardTitle>
             <h2 className="text-2xl font-medium">{data?.data.title}</h2>
             <div className="mt-4 rounded-lg border-2 border-muted">
-              <p className="text-[18px] font-light leading-relaxed">
-                {data?.data.description}
+              <p className="p-2 text-[18px] font-light leading-relaxed">
+                <Markdown rehypePlugins={[rehypeRaw]}>
+                  {data?.data.description}
+                </Markdown>
               </p>
             </div>
             <div className="mt-4 flex items-center gap-2">
@@ -95,8 +99,9 @@ export function ReadingDetailView({ id }: ReadingDetailViewProps) {
           content={data?.data.content?.text ?? ""}
           questions={data?.data.content?.questions ?? []}
           isPractice={data?.data.lessonType != "test"}
-          lessonId={id}
+          youtubeEmbedUrl={data?.data.content?.youtube_embed_url ?? ""}
           timeLimit={data?.data.timeLimit ?? 0}
+          lessonId={id}
           onSubmit={handleSubmitWithConfirmation}
         />
       </div>

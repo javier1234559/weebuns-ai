@@ -144,9 +144,9 @@ export function LoginForm() {
           <div className="p-8 lg:p-12">
             <div className="mx-auto max-w-md space-y-8">
               <div className="text-center lg:text-left">
-                <h2 className="mb-2 text-2xl font-bold">Welcome Back!</h2>
+                <h2 className="mb-2 text-2xl font-bold">Chào mừng bạn!</h2>
                 <p className="text-muted-foreground">
-                  Continue with Google or enter your details.
+                  Tiếp tục với Google hoặc nhập thông tin của bạn.
                 </p>
               </div>
 
@@ -154,12 +154,12 @@ export function LoginForm() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="space-y-2">
                   <label htmlFor="email" className="text-sm font-medium">
-                    Username
+                    Tên đăng nhập
                   </label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Nhập email của bạn"
                     {...register("email")}
                   />
                   {errors.email && (
@@ -171,13 +171,13 @@ export function LoginForm() {
 
                 <div className="space-y-2">
                   <label htmlFor="password" className="text-sm font-medium">
-                    Password
+                    Mật khẩu
                   </label>
                   <div className="relative">
                     <Input
                       id="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder="Nhập mật khẩu của bạn"
                       {...register("password")}
                     />
                     <button
@@ -202,7 +202,7 @@ export function LoginForm() {
                       href={RouteNames.ForgotPassword}
                       className="text-sm text-primary hover:underline"
                     >
-                      Forgot password?
+                      Quên mật khẩu?
                     </Link>
                   </div>
                 </div>
@@ -212,17 +212,17 @@ export function LoginForm() {
                   className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Logging in..." : "Login"}
+                  {isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
                 </Button>
               </form>
 
               <div className="text-center text-sm">
-                {"Doesn't have an account? "}
+                {"Không có tài khoản? "}
                 <Link
                   href={RouteNames.SignUp}
                   className="text-primary hover:underline"
                 >
-                  Sign Up for free
+                  Đăng ký miễn phí
                 </Link>
               </div>
             </div>
@@ -232,7 +232,7 @@ export function LoginForm() {
                 href={RouteNames.Landing}
                 className="text-sm text-muted-foreground hover:underline"
               >
-                skip for now →
+                Bỏ qua →
               </Link>
             </div>
           </div>

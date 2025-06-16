@@ -19,6 +19,7 @@ export interface Comment {
   id: string;
   content: string;
   author: {
+    id: string;
     name: string;
     image?: string;
     isAuthor?: boolean;

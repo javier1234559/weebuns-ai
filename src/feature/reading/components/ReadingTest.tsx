@@ -10,6 +10,7 @@ import ReadingViewer from "@/feature/reading/components/ReadingViewer";
 import {
   CreateReadingSubmissionDTO,
   QuestionDTO,
+  ReadingFeedbackDto,
 } from "@/services/swagger-types";
 import { Button } from "@/components/ui/button";
 import { CircleCheckBig, Eye, Home } from "lucide-react";
@@ -21,23 +22,17 @@ import { useActivityTracking } from "@/feature/activity/hooks/useActivityTrackin
 import { CountUpTimer } from "@/components/feature/CountUpTimer";
 import { useIsLogined } from "@/hooks/useIsLogined";
 
-interface ReadingFeedback {
-  accuracy: number;
-  correctAnswers: number;
-  totalQuestions: number;
-  incorrectAnswers: number;
-}
-
 interface ReadingTestProps {
   content: string;
   questions: QuestionDTO[];
   isPractice?: boolean;
+  youtubeEmbedUrl: string;
   lessonId: string;
   timeLimit: number;
   onSubmit?: (data: CreateReadingSubmissionDTO) => void;
   isResultView?: boolean;
   resultReadingData?: {
-    feedback: ReadingFeedback;
+    feedback: ReadingFeedbackDto;
     selectedAnswers?: Record<string, string>;
   };
 }
@@ -47,6 +42,7 @@ export function ReadingTest({
   questions,
   isPractice = true,
   lessonId,
+  youtubeEmbedUrl,
   onSubmit,
   isResultView = false,
   resultReadingData,
@@ -73,6 +69,7 @@ export function ReadingTest({
       tokensUsed: 0,
       content: {
         text: content,
+        youtube_embed_url: youtubeEmbedUrl,
         questions: questions.map((q) => ({
           id: q.id,
           question: q.question,

@@ -1,5 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { INotification, NotificationType } from "@/feature/notification/notification.type";
+import {
+  INotification,
+  NotificationType,
+} from "@/feature/notification/notification.type";
 import NotificationCard from "./NotificationCard";
 import { BellRing } from "lucide-react";
 import NotificationShowMore from "./NotificationShowMore";
@@ -21,7 +24,7 @@ export default function NotificationList({
         </div>
         <NotificationShowMore />
       </div>
-      <CardContent className="thin-scrollbar max-h-[224px] overflow-y-auto rounded-lg p-1">
+      <CardContent className="thin-scrollbar max-h-[310px] overflow-y-auto rounded-lg p-1">
         <div className="divide-y">
           {notifications.map((notification, index) => (
             <NotificationCard

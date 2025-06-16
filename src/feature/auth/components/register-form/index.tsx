@@ -11,7 +11,11 @@ import { Label } from "@/components/ui/label";
 import { RouteNames } from "@/constraints/route-name";
 import { toast } from "sonner";
 import { useAuthStore } from "@/store/auth-store";
-import { defaultValues, schema, FormData } from "@/feature/auth/components/register-form/schema";
+import {
+  defaultValues,
+  schema,
+  FormData,
+} from "@/feature/auth/components/register-form/schema";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -91,20 +95,20 @@ export function RegisterForm() {
           <div className="p-8 lg:p-12">
             <div className="mx-auto max-w-md space-y-8">
               <div className="text-center lg:text-left">
-                <h2 className="mb-2 text-2xl font-bold">Create Account</h2>
+                <h2 className="mb-2 text-2xl font-bold">Tạo tài khoản</h2>
                 <p className="text-muted-foreground">
-                  Sign up to get started with your account
+                  Đăng ký để bắt đầu sử dụng tài khoản của bạn
                 </p>
               </div>
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName">First Name</Label>
+                    <Label htmlFor="firstName">Tên</Label>
                     <Input
                       id="firstName"
                       type="text"
-                      placeholder="Enter your first name"
+                      placeholder="Nhập tên của bạn"
                       {...register("firstName")}
                     />
                     {errors.firstName && (
@@ -115,11 +119,11 @@ export function RegisterForm() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="lastName">Last Name</Label>
+                    <Label htmlFor="lastName">Họ</Label>
                     <Input
                       id="lastName"
                       type="text"
-                      placeholder="Enter your last name"
+                      placeholder="Nhập họ của bạn"
                       {...register("lastName")}
                     />
                     {errors.lastName && (
@@ -131,11 +135,11 @@ export function RegisterForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="username">Username</Label>
+                  <Label htmlFor="username">Tên đăng nhập</Label>
                   <Input
                     id="username"
                     type="text"
-                    placeholder="Enter your username"
+                    placeholder="Nhập tên đăng nhập của bạn"
                     {...register("username")}
                   />
                   {errors.username && (
@@ -146,11 +150,11 @@ export function RegisterForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">Email của bạn</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="Nhập email của bạn"
                     {...register("email")}
                   />
                   {errors.email && (
@@ -161,11 +165,11 @@ export function RegisterForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Mật khẩu</Label>
                   <Input
                     id="password"
                     type="password"
-                    placeholder="Enter your password"
+                    placeholder="Nhập mật khẩu của bạn"
                     {...register("password")}
                   />
                   {errors.password && (
@@ -176,11 +180,11 @@ export function RegisterForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
                   <Input
                     id="confirmPassword"
                     type="password"
-                    placeholder="Confirm your password"
+                    placeholder="Xác nhận mật khẩu của bạn"
                     {...register("confirmPassword")}
                   />
                   {errors.confirmPassword && (
@@ -195,17 +199,17 @@ export function RegisterForm() {
                   className="w-full"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Creating account..." : "Create account"}
+                  {isSubmitting ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
                 </Button>
               </form>
 
               <div className="text-center text-sm">
-                Already have an account?{" "}
+                Đã có tài khoản?{" "}
                 <Link
                   href={RouteNames.SignIn}
                   className="text-primary hover:underline"
                 >
-                  Login here
+                  Đăng nhập ở đây
                 </Link>
               </div>
 
@@ -214,7 +218,7 @@ export function RegisterForm() {
                   href={RouteNames.Landing}
                   className="text-sm text-muted-foreground hover:underline"
                 >
-                  skip for now →
+                  bỏ qua →
                 </Link>
               </div>
             </div>

@@ -49,6 +49,7 @@ import { Timer } from "@/components/feature/Timer";
 import { useIsLogined } from "@/hooks/useIsLogined";
 import WritingToolPanelView from "@/feature/writing/views/WritingToolPanelView";
 import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 interface WritingAgentLayoutProps {
   topic: string;
@@ -206,8 +207,8 @@ export default function WritingAgentLayout({
           <CardTitle>
             <h2 className="text-xl font-medium">{topic}</h2>
             <div className="mt-4 rounded-lg border-2 border-muted">
-              <p className="text-[18px] font-light leading-relaxed">
-                <Markdown>{content?.task}</Markdown>
+              <p className="p-2 text-[18px] font-light leading-relaxed">
+                <Markdown rehypePlugins={[rehypeRaw]}>{content?.task}</Markdown>
               </p>
             </div>
             <div className="mt-4 flex items-center gap-2">

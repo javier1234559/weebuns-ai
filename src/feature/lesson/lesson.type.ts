@@ -14,10 +14,3 @@ export type ContentStatus = "draft" | "published" | "archived";
 export interface Lesson extends LessonType {}
 
 export type LevelType = "beginner" | "intermediate" | "advanced";
-
-export interface ListeningFeedbackDto {
-  accuracy: number;
-  totalQuestions: number;
-  correctAnswers: number;
-  incorrectAnswers: number;
-}

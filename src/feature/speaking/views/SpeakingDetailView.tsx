@@ -6,6 +6,8 @@ import { SpeakingDetailSkeleton } from "@/feature/speaking/components/SpeakingDe
 import UserPreview from "@/feature/user/components/UserPreview";
 import { Card, CardHeader } from "@/components/ui/card";
 import { SpeakingSessionManager } from "@/feature/speaking/components/SpeakingSessionManager";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 interface SpeakingDetailViewProps {
   id: string;
@@ -28,8 +30,10 @@ export function SpeakingDetailView({ id }: SpeakingDetailViewProps) {
         <CardHeader>
           <h2 className="text-2xl font-medium">{data?.data.title}</h2>
           <div className="mt-4 rounded-lg border-2 border-muted">
-            <p className="text-[18px] font-light leading-relaxed">
-              {data?.data.description}
+            <p className="p-2 text-[18px] font-light leading-relaxed">
+              <Markdown rehypePlugins={[rehypeRaw]}>
+                {data?.data.description}
+              </Markdown>
             </p>
           </div>
           <div className="mt-4 flex items-center gap-2">
@@ -39,7 +43,7 @@ export function SpeakingDetailView({ id }: SpeakingDetailViewProps) {
                   id: data?.data.createdBy.id,
                   name: data?.data.createdBy.username ?? "",
                   avatar: data?.data.createdBy.profilePicture ?? "",
-                  bio: "IELTS coach with 10 years of experience helping students achieve band 7.0+",
+                  bio: data?.data.createdBy.bio ?? "",
                   role: data?.data.createdBy.role,
                   username: data?.data.createdBy.username ?? "",
                 }}

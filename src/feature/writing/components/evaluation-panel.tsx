@@ -69,7 +69,7 @@ export function EvaluationPanel({
             Đang đánh giá...
           </>
         ) : (
-          `Evaluate Essay (${TOKEN_COSTS.EVALUATE_ESSAY} Tokens)`
+          `Đánh giá bài viết (${TOKEN_COSTS.EVALUATE_ESSAY} Tokens)`
         )}
       </TokenProtectedButton>
 

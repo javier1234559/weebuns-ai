@@ -13,12 +13,18 @@ export const useSuggestChat = ({
   const [firstGreeting, setFirstGreeting] = useState<string>(
     `Hello! I'm your AI assistant. Let's talk`,
   );
-  const { data, refetch } = useRecommendAnswer(sessionId, isResultView);
+  const { data, refetch, isLoading } = useRecommendAnswer(
+    sessionId,
+    isResultView,
+  );
+
+  console.log("suggest chat", JSON.stringify(data, null, 2));
 
   return {
     suggestedResponses: data?.suggestedResponses,
     firstGreeting,
     setFirstGreeting,
     refetchRecommend: refetch,
+    isLoading,
   };
 };

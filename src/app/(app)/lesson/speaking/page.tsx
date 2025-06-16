@@ -9,7 +9,7 @@ const configData = {
   keywords: ["Speaking", "Weebuns", "Logical Framework"],
   author: "Weebuns",
   instructions: [
-    "1. Luyện IELTS Speaking với AI theo phương pháp Logical Framework của Weebuns.",
+    "Luyện tập nói tiếng Anh với các bài tập được tạo bởi đội ngũ giáo viên của Weebuns.",
   ],
 };
 

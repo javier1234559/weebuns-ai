@@ -11,7 +11,7 @@ const heroData = {
   description:
     "Nền tảng học tiếng Anh toàn diện: Luyện Viết, Đọc, Nghe, Nói với công nghệ AI hỗ trợ & hệ thống giáo viên đồng hành. Theo dõi, đánh giá và kết nối với giáo viên yêu thích của bạn.",
   primaryCta: {
-    text: "Get Started",
+    text: "Bắt đầu",
     href: RouteNames.SignIn,
   },
   mockupImage: {

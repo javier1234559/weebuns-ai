@@ -27,6 +27,7 @@ export function ReadingResultFeedback({
 }: ReadingResultFeedbackProps) {
   if (!isResultView || !resultReadingData) return null;
 
+  console.log(resultReadingData);
   const feedback = resultReadingData.feedback;
 
   const getFeedbackMessage = (accuracy: number) => {
@@ -48,7 +49,7 @@ export function ReadingResultFeedback({
             {getFeedbackMessage(feedback.accuracy)}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex w-full gap-4">
+        <CardContent className="flex w-full items-center gap-8">
           <div className="flex w-full flex-col gap-4">
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">
@@ -94,6 +95,23 @@ export function ReadingResultFeedback({
               </div>
             </div>
           </div>
+
+          {feedback?.youtube_embed_url && (
+            <div className="flex flex-col gap-4">
+              <span className="font-medium">
+                Bạn có thể theo dõi bài chữa tại đây nhé!
+              </span>
+              <div className="shrink-0">
+                <iframe
+                  src={feedback.youtube_embed_url ?? ""}
+                  width="400"
+                  height="200"
+                  frameBorder="0"
+                  className="rounded-lg"
+                />
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

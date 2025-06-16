@@ -6,6 +6,8 @@ import {
 import { simpleInlineMarkdownToHtml } from "@/lib/text";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 interface StreamingMessageProps {
   parts: string[];
@@ -73,11 +75,7 @@ export default function StreamingMessage({
                 console.log(`Part ${idx} animation complete`);
               }}
             >
-              <span
-                dangerouslySetInnerHTML={{
-                  __html: simpleInlineMarkdownToHtml(part),
-                }}
-              />
+              <Markdown rehypePlugins={[rehypeRaw]}>{part}</Markdown>
             </motion.span>
           ))}
         </motion.div>

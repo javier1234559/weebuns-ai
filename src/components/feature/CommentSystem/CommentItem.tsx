@@ -10,7 +10,7 @@ import {
   Trash2,
   ChevronDown,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Comment } from "./type";
 import usePaginationUrl from "@/hooks/usePaginationUrl";
 import { useCommentReplies } from "@/feature/comment/hooks/useComment";
@@ -31,24 +31,6 @@ export interface CommentItemProps {
     role: string;
   };
 }
-
-const formatComment = (comment: CommentResponse): Comment => ({
-  id: comment.id,
-  content: comment.content,
-  author: {
-    name: comment.user.username,
-    image: comment.user.profilePicture,
-    role: comment.user.role,
-  },
-  likes: comment.likesCount,
-  specialLikes: comment.lovesCount,
-  createdAt: formatDistanceToNow(new Date(comment.createdAt), {
-    addSuffix: true,
-  }),
-  hasReplies: comment.hasReplies,
-  userReaction: comment.userReaction || null,
-  reactions: comment.reactions,
-});
 
 const hasUserReacted = (
   reactions: any[],
@@ -88,6 +70,28 @@ export default function CommentItem({
     },
   );
 
+  const formatComment = useCallback(
+    (comment: CommentResponse): Comment => ({
+      id: comment.id,
+      content: comment.content,
+      author: {
+        id: comment.user.id,
+        name: comment.user.username,
+        image: comment.user.profilePicture,
+        role: comment.user.role,
+      },
+      likes: comment.likesCount,
+      specialLikes: comment.lovesCount,
+      createdAt: formatDistanceToNow(new Date(comment.createdAt), {
+        addSuffix: true,
+      }),
+      hasReplies: comment.hasReplies,
+      userReaction: comment.userReaction || null,
+      reactions: comment.reactions,
+    }),
+    [currentUser],
+  );
+
   const formattedReplies =
     replies?.data.map((reply) =>
       formatComment(reply as unknown as CommentResponse),
@@ -122,7 +126,7 @@ export default function CommentItem({
                 {comment.createdAt}
               </span>
             </div>
-            {comment.author.isAuthor && (
+            {currentUser?.id === comment.author.id && (
               <Button
                 variant="ghost"
                 size="icon"

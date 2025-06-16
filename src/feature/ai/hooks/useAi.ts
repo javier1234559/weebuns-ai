@@ -112,10 +112,10 @@ export const useRecommendAnswer = (
   options?: UseQueryOptions<RecommendAnswerResponseDto>,
 ) => {
   return useQuery({
-    queryKey: [AI_KEY_FACTORY.tts, sessionId],
+    queryKey: [AI_KEY_FACTORY.answer, sessionId, isResultView],
     queryFn: () => aiApi.recommendAnswer(sessionId),
     staleTime: 0,
-    enabled: !isResultView,
+    enabled: !!sessionId && !isResultView,
     ...(typeof options === "object" ? options : {}),
   });
 };

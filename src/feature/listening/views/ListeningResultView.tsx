@@ -40,6 +40,7 @@ export function ListeningResultView({
       lessonId={data?.data.lesson.id ?? ""}
       audioUrl={(data?.data.lesson.content as any)?.audio_url ?? ""}
       questions={(data?.data.lesson.content as any)?.questions ?? []}
+      youtubeEmbedUrl={(data?.data as any)?.feedback?.youtube_embed_url ?? ""}
       isPractice={(data?.data as any)?.lessonType != "test"}
       onSubmit={handleSubmit}
       isResultView={true}
@@ -51,6 +52,7 @@ export function ListeningResultView({
           totalQuestions: (data?.data as any)?.feedback?.totalQuestions ?? 0,
           incorrectAnswers:
             (data?.data as any)?.feedback?.incorrectAnswers ?? 0,
+          youtube_embed_url: (data?.data as any)?.feedback?.youtube_embed_url ?? "",
         },
         selectedAnswers: data?.data?.content?.question_list.reduce(
           (acc: Record<string, string>, curr: any) => {
