@@ -13,7 +13,7 @@ export const defaultComments: Comment[] = [
     likes: 0,
     specialLikes: 1,
     createdAt: "about 3 hours ago",
-    hasReplies: false,
+    hasReplies: true,
     userReaction: null,
     reactions: [
       {

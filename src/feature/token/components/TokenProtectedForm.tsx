@@ -104,15 +104,22 @@ export const TokenProtectedForm = ({
             <DialogTitle>{confirmTitle}</DialogTitle>
             <DialogDescription>
               {confirmDescription}
-              <div className="mt-2">
+              <div className="mt-2 flex flex-col gap-2">
                 <p className="text-sm font-medium">
-                  Required tokens: {requiredTokens}
+                  Token cần:{" "}
+                  <span className="font-bold text-primary">
+                    {requiredTokens}
+                  </span>
                 </p>
                 <p className="text-sm font-medium">
-                  Current balance: {balance}
+                  Token hiện có:{" "}
+                  <span className="font-bold text-primary">{balance}</span>
                 </p>
                 <p className="text-sm font-medium">
-                  Remaining after submission: {balance - requiredTokens}
+                  Token còn lại:{" "}
+                  <span className="font-bold text-primary">
+                    {balance - requiredTokens}
+                  </span>
                 </p>
               </div>
             </DialogDescription>

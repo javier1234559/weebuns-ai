@@ -24,7 +24,7 @@ export default function WritingResultPage({ params, searchParams }: PageProps) {
         <WritingResultView id={id} submissionId={submissionId} />
       </div>
       <div>
-        <CommentSystemView identifierId={`writingResult_${id}`} />
+        <CommentSystemView identifierId={`writingResult_${submissionId}`} />
       </div>
     </div>
   );

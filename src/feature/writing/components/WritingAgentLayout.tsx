@@ -79,20 +79,22 @@ export default function WritingAgentLayout({
   const [selectedTab, setSelectedTab] = useState<string>("chat");
   const [isShowExamples, setIsShowExamples] = useState<boolean>(false);
   const [chatHistory, setChatHistory] = useState<any[]>([]);
+  const [userContent, setUserContent] = useState<UserDataDTO>(defaultValues);
 
   const form = useForm<UserDataDTO>({
     resolver: zodResolver(userDataSchema),
     defaultValues,
   });
 
-  // Get sample essay content
   const sampleEssay: SampleEssayDTO | undefined =
     content?.resources?.sample_essay;
 
-  // Toggle example content
   const toggleExamples = () => {
     if (!isShowExamples && sampleEssay) {
-      console.log(JSON.stringify(sampleEssay, null, 2));
+      // Save current user content before showing examples
+      setUserContent(form.getValues());
+
+      // Show examples
       form.reset({
         instruction: sampleEssay.instruction,
         body1: sampleEssay.body1,
@@ -100,7 +102,8 @@ export default function WritingAgentLayout({
         conclusion: sampleEssay.conclusion,
       });
     } else {
-      form.reset(defaultValues);
+      // Restore user's previous content
+      form.reset(userContent);
     }
     setIsShowExamples(!isShowExamples);
   };

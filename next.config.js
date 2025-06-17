@@ -2,7 +2,7 @@
 const nextConfig = {
   swcMinify: true,
   images: {
-    domains: ["cms.youpass.vn", "weebuns.blog", "images.pexels.com", "utfs.io"],
+    domains: ["cms.youpass.vn", "waebuns.com", "images.pexels.com", "utfs.io"],
     remotePatterns: [
       {
         protocol: "https",
