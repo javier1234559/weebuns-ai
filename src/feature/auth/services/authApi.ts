@@ -11,10 +11,6 @@ import {
 const authApi = {
   login(form: LoginDto) {
     return api.authControllerLogin(form).then((res) => res.data);
-    // .catch((err) => {
-    //   handleApiError(err);
-    //   throw err.response.data;
-    // });
   },
   register(form: RegisterDto) {
     return api
@@ -51,17 +47,9 @@ const authApi = {
   },
   logout() {
     return api.authControllerLogout();
-    // .catch((err) => {
-    //   handleApiError(err);
-    //   return null;
-    // });
   },
   refreshToken() {
     return api.authControllerRefreshToken();
-    // .catch((err) => {
-    //   handleApiError(err);
-    //   return null;
-    // });
   },
   requestResetPass(data: RequestResetPasswordDto) {
     return api
@@ -69,7 +57,7 @@ const authApi = {
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err);
-        return null;
+        throw err;
       });
   },
   verifyResetPass(data: VerifyResetCodeDto) {
@@ -78,7 +66,7 @@ const authApi = {
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err);
-        return null;
+        throw err;
       });
   },
   resetPassword(data: ResetPasswordDto) {
@@ -87,7 +75,7 @@ const authApi = {
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err);
-        return null;
+        throw err;
       });
   },
 };

@@ -59,20 +59,19 @@ export default function ForgotPasswordPage() {
   const handleEmailSubmit = async (submittedEmail: string) => {
     try {
       setIsLoading(true);
-      // const response = await authApi.requestResetPass({
-      //   email: submittedEmail,
-      // });
-      const response = true;
+      const response = await authApi.requestResetPass({
+        email: submittedEmail,
+      });
 
-      if (response) {
-        setEmail(submittedEmail);
-        setCurrentStep("code");
-        setCanNavigateToStep((prev) => ({ ...prev, code: true }));
-        toast.success("Recovery code sent to your email");
-      }
-    } catch (error) {
-      toast.error("Failed to send recovery code");
-      console.error("Failed to send recovery code:", error);
+      setEmail(submittedEmail);
+      setCurrentStep("code");
+      setCanNavigateToStep((prev) => ({ ...prev, code: true }));
+      toast.success("Mã xác thực đã được gửi đến email của bạn");
+    } catch (error: any) {
+      const errorMessage =
+        error?.response?.data?.message || "Lỗi khi gửi mã xác thực";
+      toast.error(errorMessage);
+      console.error("Error in handleEmailSubmit:", error);
     } finally {
       setIsLoading(false);
     }
@@ -81,21 +80,20 @@ export default function ForgotPasswordPage() {
   const handleCodeSubmit = async (code: string) => {
     try {
       setIsLoading(true);
-      // const response = await authApi.verifyResetPass({
-      //   email,
-      //   code,
-      // });
-      const response = true;
+      const response = await authApi.verifyResetPass({
+        email,
+        code,
+      });
 
       if (response) {
         setVerificationCode(code); // Save code for final password reset
         setCurrentStep("reset");
         setCanNavigateToStep((prev) => ({ ...prev, reset: true }));
-        toast.success("Code verified successfully");
+        toast.success("Mã xác thực đã được xác thực thành công");
       }
     } catch (error) {
-      toast.error("Invalid verification code");
-      console.error("Invalid verification code:", error);
+      toast.error("Mã xác thực không hợp lệ");
+      console.error("Mã xác thực không hợp lệ:", error);
     } finally {
       setIsLoading(false);
     }
@@ -104,17 +102,16 @@ export default function ForgotPasswordPage() {
   const handleResendCode = async () => {
     try {
       setIsLoading(true);
-      // const response = await authApi.requestResetPass({
-      //   email,
-      // });
-      const response = true;
+      const response = await authApi.requestResetPass({
+        email,
+      });
 
       if (response) {
-        toast.success("Recovery code resent to your email");
+        toast.success("Mã xác thực đã được gửi lại đến email của bạn");
       }
     } catch (error) {
-      toast.error("Failed to resend code");
-      console.error("Failed to resend code:", error);
+      toast.error("Lỗi khi gửi lại mã xác thực");
+      console.error("Lỗi khi gửi lại mã xác thực:", error);
     } finally {
       setIsLoading(false);
     }
@@ -123,20 +120,19 @@ export default function ForgotPasswordPage() {
   const handlePasswordReset = async (newPassword: string) => {
     try {
       setIsLoading(true);
-      // const response = await authApi.resetPassword({
-      //   email,
-      //   code: verificationCode,
-      //   newPassword,
-      // });
-      const response = true;
+      const response = await authApi.resetPassword({
+        email,
+        code: verificationCode,
+        newPassword,
+      });
 
       if (response) {
-        toast.success("Password reset successfully");
+        toast.success("Mật khẩu đã được làm lại thành công");
         router.push(RouteNames.SignIn);
       }
     } catch (error) {
-      toast.error("Failed to reset password");
-      console.error("Failed to reset password:", error);
+      toast.error("Lỗi khi làm lại mật khẩu");
+      console.error("Lỗi khi làm lại mật khẩu:", error);
     } finally {
       setIsLoading(false);
     }
@@ -158,10 +154,10 @@ export default function ForgotPasswordPage() {
             transition={{ delay: 0.2 }}
             className="mb-4 text-center text-2xl font-semibold"
           >
-            Reset Password
+            Làm lại mật khẩu
           </motion.h2>
           <p className="mb-8 text-center text-sm text-muted-foreground">
-            Please enter your email to receive a verification code.
+            Vui lòng nhập email để nhận mã xác thực.
           </p>
 
           <div className="mb-8 flex w-full justify-between gap-4 px-4 md:gap-20">

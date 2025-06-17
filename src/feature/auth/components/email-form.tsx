@@ -42,14 +42,14 @@ export function EmailForm({ initialEmail, onSubmit }: EmailFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder="Enter your email" {...field} />
+                <Input placeholder="Nhập email của bạn" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" className="w-full">
-          Send Recovery Code
+          Gửi mã xác thực
         </Button>
       </form>
     </Form>
